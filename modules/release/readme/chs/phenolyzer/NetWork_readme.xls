@@ -1,0 +1,20 @@
+﻿通过输入疾病的名称或关键字，用Phenolyzer软件对分析得到的候选基因进行排序，排名越靠前的基因，与该疾病相关的可能性越大。NetWork目录下包括以下文件：	
+	（1）AllGene_list.xls：列出所有相关基因的排名信息。
+	（2）CandidateGene_list.xls：从文件AllGene_list.xls中提取出所有候选基因的排名信息。
+	（3）AllGene_score.xls：该文件给出所有基因的详细得分信息；给出seedgene的来源，即该disease-gene关联是被哪个数据库收录了。
+	（4）CandidateGene_score.xls：从文件AllGene_score.xls中提取出所有候选基因的信息。
+
+（1）（2）文件中各列含义的解释如下：	
+	Rank：基因的排名。
+	Gene：基因名称。
+	ID：基因在NCBI中的ID。
+	Score：基因的分值，取值范围为0-1。分值越大，与疾病的关联越强。
+	Status：有两种取值，即SeedGene和Predicted。SeedGene表示在已有数据库中已经报导了该基因与查询关键词有关联；Predicted表示以往数据库中没有报导过该基因与查询关键词的关联，但该基因与已发现的SeedGene之间存在关联。
+	HaploinsufficiencyScore：单倍剂量不足的分值，取值范围为0-1。分值越大，说明该基因发生单倍剂量不足的可能性越大。
+	GeneIntoleranceScore：转置后的RVIS分值，用以描述基因耐受性，取值范围为0-1。分值越大，说明基因耐受性越差。
+（3）（4）文件的说明如下：	
+	该文件描述基因详细关联信息，包括disease-gene关联和gene-gene关联。不同基因之间用一个空行间隔。
+	每个基因的第一行包括基因名称、基因ID、SeedGene/Predicted、基因的初始分值、转换后的分值
+	从第二行开始是该基因的细节部分，首先是disease-gene关联部分，格式为数据库信息、匹配上的疾病名称、输入的关键字、该项贡献的初始分值
+	然后是gene-gene关联部分，格式为数据库信息、基因之间的关联类型、相关联的SeedGene、该项贡献的初始分值
+	SeedGene一定有disease-gene关联部分，不一定有gene-gene关联部分；而Predicted Gene只有gene-gene关联部分。

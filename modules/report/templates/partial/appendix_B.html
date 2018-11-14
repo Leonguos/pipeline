@@ -1,0 +1,56 @@
+{% if muts_res %}
+  <h4>1. SNV/InDel的验证方法</h4>
+  <p class="paragraph">1.1 Sanger测序</p>
+  <p class="tremark"><b>技术特点：</b>疾病研究中应用最为广泛的验证二代测序结果的方法；验证精准度高；试验周期短，一个测序反应从引物设计合成到测序结果获得只需5d左右。通量小，不能批量验证；对于位于重复序列和GC含量高的序列上的变异，Sanger测序进行验证的成功率不高。</p>
+  <p class="tremark"><b><u>技术适用范围：变异位点集中，小规模的验证项目。</u></b></p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">Mutations in HFM1 in recessive primary ovarian insufficiency.The New England Journal of Medicine. 2014,370(10):972-974 </p>
+  <p class="tremark">Whole-genoma sequencing of quartet families with autism spectrum disorder. Nature Medicine.2015,21:185-191</p>
+  <p class="premark">&nbsp</p>
+
+  <p class="paragraph">1.2 SNaPshot</p>
+  <p class="tremark"><b>技术特点：</b>引物探针合成周期短：可以通过检查分型峰谱是否偏离正常分布推测样本是否污染；灵敏度高于标准测序；位点成功率和准确率>95%；多重SNaPshot提高了通量，但是多重SNaPshot技术（多引物多模板）对引物Tm值要求很高。需要预实验确定PCR延伸条件，耗时比较长；样本量需求较高，与二代测序所需样本量一样。</p>
+  <p class="tremark"><b><u>技术适用范围：样本数多，位点数最好8个以上的项目。</u></b>（样本量较低的情况下，试剂盒花费较大）。</p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">Whole exome sequencing in an India family links Coats plus syndrome and dextrocardia with a homozygous novel CTC1 and a rare HES7 variation. BMC Medical Genetics.2015,16:5. DOI 10.1186/s12881-015-0151-8</p>
+  <p class="premark">&nbsp</p>
+
+  <p class="paragraph">1.3 MassArray</p>
+  <p class="tremark"><b>技术特点：</b>通量高，几秒检测完一个反应孔，每个反应孔可实现多达40重反应，一张芯片完成384个样品的多重iPLEX GOLD实验；引物总长80bp，无需荧光标记，对于位点数和样本数较多的验证项目，此方法比较便宜。条件摸索，尤其是每个反应孔引物浓度的确定比较耗时；单次实验试剂盒较贵。</p>
+  <p class="tremark"><b><u>技术适用范围：样本数500以上，SNV位点数约为25倍数的验证项目。</u></b></p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">A large-scale screen for coading variants predisposing to psoriasis.Nature Genetics.2014,46(1):45-50</p>
+  <p class="tremark">Rare Variants in FBN1 are associated with severe adolescent idiopathic scoliosis.Human Molecular Genetics.2014,23(19):5271-5282.</p>
+  <p class="premark">&nbsp</p>
+{% endif %}
+
+
+{% if cnv_res %}
+  <h4>2. CNV的验证方法</h4>
+  <p class="paragraph">微滴式数字PCR（Droplet Digital PCR）</p>
+  <p class="tremark"><b>技术特点：</b>灵敏度高，可以检测样本中低至 0.001% 的突变，高特异性检测复杂背景下的靶目标序列；可以实现绝对定量，而不需要准曲线;所需样品量少，能解决稀有样本中的核酸精确检测问题。不能批量检测；引物设计要避免重复序列和GC含量高的片段；PCR反应条件需要摸索；TaqMan探针需要定制，价格贵且订制周期长；市面上仅有少数公司承接相关实验</p>
+  <p class="tremark"><b><u>技术适用范围：样本数不多，位点少的验证项目。</u></b></p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">Structural forms of the human amylase locus and their relationships to SNPs，haplotypes and obesity.Natural Genetics.2015,doi:10.1038/ng.3340</p>
+  <p class="premark">&nbsp</p>
+{% endif %}
+
+
+{% if sv_res %}
+  <h4>3. SV的验证方法</h4>
+  <p class="paragraph">3.1 PCR扩增结合Sanger测序</p>
+  <p class="tremark"><b>技术特点：</b>对于结构变异当中的倒位，易位，缺失有很好的验证效果，验证精准度高，可以确定 breakpoint的位置；单次验证费用较省；实验周期短。通量低，不能批量验证，；单次验证费用较省实周期短。通量低，一次只能检测出一个SV的breakpoint，且可能需要多次设计 ，且可能需要多次设计PCR引物；稳定性不好，对于位于重复序列和GC含量高的序列上的变异，Sanger测序进行验证的成功率不高；对验证所需基因组DNA的起始量以及纯度要求比较高。</p>
+  <p class="tremark"><b><u>技术适用范围：小规模的验证项目。</u></b></p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">Precise detection of chromosomal translocation or inversion breakpoints by whole-genome sequencing. Journal of Human Genetics.2014,1-6</p>
+  <p class="tremark">Breakpoint mapping by next generation sequencing reveals causative gene disruption in patients carrying apparently blanced chromosome rearrangements with intellectual deficiency and/or congenital malformations.Journal of Medical Genetics.2013,50:144-150</p>
+  <p class="premark">&nbsp</p>
+
+  <p class="paragraph">3.2 荧光原位杂交（FISH）</p>
+  <p class="tremark"><b>技术特点：</b>操作简单，结果直观；能够准确检测大片段染色体构变异，假阳性和假阴性发生概率较低，同时能够定位变异发生的位置。不能达到100%杂交，特别是在应用较短的cDNA探针检测时效率明显下降，验证小片段染色体结构变异敏感度差；分辨率低；对于邻位重复的CNV不能精确定量；通量小；不能检测杂合性缺失；探针订制周期长，价格贵，如果是验证数量变化（非重排），一般需要设置阳性对照（着丝粒探针）。</p>
+  <p class="tremark"><b><u>技术适用范围：样本量少，位点少的验证项目。</u></b></p>
+  <p class="tremark"><b>参考文献</b></p>
+  <p class="tremark">Breakpoint mapping by next generation sequencing reveals causative gene disruption in patients carrying apparently blanced chromosome rearrangements with intellectual deficiency and/or congenital malformations.Journal of Medical Genetics.2013,50:144-150</p>
+  <p class="premark">&nbsp</p>
+{% endif %}
+

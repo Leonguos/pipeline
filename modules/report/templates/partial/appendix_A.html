@@ -1,0 +1,124 @@
+
+<div class="center">
+  <p class="name_fig">{% if WGS %}全基因组分析软件列表{% else %}外显子分析软件列表{% endif %}</p>
+</div>
+
+<div id="tb">
+
+
+<table class="gy">
+  <tr>
+    <th>Analysis</th><th>Software</th><th>Notes</th><th>Version</th>
+  </tr>
+  
+  <!-- Mapping -->
+  {% if GATK_realign %}
+    <tr>
+      <td rowspan=4 style="text-align:left">比对</td>
+      <td><a href="http://sourceforge.net/projects/bio-bwa/" target=_blank>BWA</a></td>
+      <td>测序结果与参考基因组进行比对，得到bam结果</td>
+      <td>0.7.8-r455</td>
+    </tr>
+    <tr>
+      <td><a href="http://samtools.sourceforge.net/" target=_blank>SAMtools</a></td>
+      <td>对比对结果进行排序</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/biod/sambamba/" target=_blank>Sambamba</a></td>
+      <td>合并同一样本bam结果并标记重复read</td>
+      <td>0.6.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.broadinstitute.org/gatk/" target=_blank>GATK</a></td>
+      <td>局部重新比对和碱基质量校正</td>
+      <td>v3.1</td>
+    </tr>
+  {% elif mapping_withSentieon %}
+    <tr>
+      <td style="text-align:left">比对</td>
+      <td><a href="https://www.sentieon.com" target=_blank>Sentieon</a></td>
+      <td>测序结果与参考基因组进行比对，得到bam结果</td>
+      <td>sentieon-genomics-201704.02</td>
+    </tr>
+  {% else %}
+    <tr>
+      <td rowspan=3 style="text-align:left">&nbsp;&nbsp;比对</td>
+      <td><a href="http://sourceforge.net/projects/bio-bwa/" target=_blank>BWA</a></td>
+      <td>测序结果与参考基因组进行比对，得到bam结果</td>
+      <td>0.7.8-r455</td>
+    </tr>
+    <tr>
+      <td><a href="http://samtools.sourceforge.net/" target=_blank>SAMtools</a></td>
+      <td>对比对结果进行排序</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/biod/sambamba/" target=_blank>Sambamba</a></td>
+      <td>合并同一样本bam结果并标记重复read</td>
+      <td>0.6.6</td>
+    </tr>
+  {% endif %}
+
+  <!-- Mutation -->
+  {% if samtools %}
+    <tr>
+      <td rowspan=2 style="text-align:left">&nbsp;&nbsp;SNP/INDEL检测</td>
+      <td><a href="http://samtools.sourceforge.net/" target=_blank>SAMtools</a></td>
+      <td>检测、过滤SNP及InDel信息，并将结果分开</td><td>1.0</td>
+    </tr>
+  {% elif sentieon %}
+    <tr>
+      <td rowspan=2 style="text-align:left">&nbsp;&nbsp;SNP/INDEL检测</td>
+      <td><a href="https://www.sentieon.com" target=_blank>Sentieon</a></td>
+      <td>检测、过滤SNP及InDel信息，并将结果分开</td>
+      <td>sentieon-genomics-201704.02</td>
+    </tr>
+  {% else %}
+
+<tr>
+  <td rowspan=2 style="text-align:left">&nbsp;&nbsp;SNP/INDEL检测</td>
+  <td><a href="https://www.broadinstitute.org/gatk/" target=_blank>GATK</a></td>
+  <td>检测、过滤SNP及InDel信息，并将结果分开</td>
+  <td>v3.1</td></tr>
+{% endif %}
+<tr>
+  <td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td>
+  <td>注释SNP及InDel结果</td>
+  <td>2017June8</td></tr>
+
+{% if freec %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;CNV检测结果</td><td><a href="http://boevalab.com/FREEC/" target=_blank>Control-FREEC</a></td><td>检测样本CNV</td><td>V7.0</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释CNV</td><td>2017June8</td></tr>
+{% endif %}
+{% if cnvnator %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;CNV检测结果</td><td><a href="http://sv.gersteinlab.org/cnvnator/" target=_blank>Cnvnator</a></td><td>检测样本CNV</td><td>V0.3</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释CNV</td><td>2017June8</td></tr>
+{% endif %}
+{% if WES_cnv_CoNIFER %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;CNV检测结果</td><td><a href="http://conifer.sourceforge.net/" target=_blank>CoNIFER</a></td><td>检测样本CNV</td><td>V0.2.2</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释CNV</td><td>2017June8</td></tr>
+{% endif %}
+
+{% if breakdancer %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;SV检测</td><td><a href="http://breakdancer.sourceforge.net/" target=_blank>BreakDancer</a></td><td>检测样本SV</td><td>1.4.4</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释SV</td><td>2017June8</td></tr>
+{% endif %}
+{% if crest %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;SV检测</td><td><a href="http://www.stjuderesearch.org/site/lab/zhang" target=_blank>CREST</a></td><td>检测样本SV</td><td>V0.0.1</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释SV</td><td>2017June8</td></tr>
+{% endif %}
+{% if BreaKmer %}
+<tr><td rowspan=2 style="text-align:left">&nbsp;&nbsp;SV检测</td><td><a href="https://github.com/ccgd-profile/BreaKmer" target=_blank>BreaKmer</a></td><td>检测样本SV</td><td>V0.0.6</td></tr>
+<tr><td><a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a></td><td>注释SV</td><td>2017June8</td></tr>
+{% endif %}
+{% if Linkage %}
+<tr><td rowspan=1 style="text-align:left">&nbsp;&nbsp;连锁区域检测</td><td><a href="http://csg.sph.umich.edu/abecasis/Merlin/index.html" target=_blank>Merlin</a></td><td>检测家系样本连锁区域</td><td>1.1.2</td></tr>
+{% endif %}
+
+{% if roh_res %}
+<tr><td rowspan=1 style="text-align:left">&nbsp;&nbsp;ROH区域检测</td><td><a href="http://sourceforge.net/projects/h3m2/" target=_blank>H3M2</a></td><td>检测近亲结婚家系样本ROH区域</td><td>1.0</td></tr>
+{% endif %}
+
+</table>
+</div>

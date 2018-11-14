@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="IE=11,edge" />
+
+  {% if rep_advance %}
+  <title> {{title}}项目高级分析结题报告</title>
+  {% elif rep_primary %}
+  <title> {{title}}项目基本分析结题报告</title>
+  {% elif rep_mapping %}
+  <title> {{title}}项目质控与覆盖度报告</title>
+  {% elif rep_qc %}
+  <title> {{title}}项目质控报告</title>
+  {% endif%}
+
+  {% block src %}
+  
+  <link rel="shortcut icon" type="image/x-icon" href="src/images/favicon.ico" media="screen" />
+  
+  <link href="src/css/buttons.css" rel="stylesheet" />
+  <link href="src/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+  <link href="src/css/bootstrap-switch.css" rel="stylesheet" />
+  <link rel="stylesheet" href="src/css/style.css" />
+  <link href="src/css/flexslider.css" type="text/css" rel="stylesheet">
+  <link href="src/css/material-scrollTop.css" type="text/css" rel="stylesheet">
+  <link href="src/css/jquery.dataTables.css" type="text/css" rel="stylesheet">
+  
+  {% if pdf_report %}
+  <link href="src/css/base_new.pdf.css" type="text/css" rel="stylesheet">
+  {% else %}
+  <link href="src/css/base_new.css" type="text/css" rel="stylesheet">
+  {% endif %}
+  
+  <script src='src/js/jquery-1.8.3.min.js'></script>
+  <script src='src/js/jquery.flexslider.js'></script>
+  <script src='src/js/jquery.dataTables.js'></script>
+  <script src="src/js/material-scrollTop.js"></script>
+  <script src="src/js/bootstrap.min.js"></script>
+  <script src="src/js/bootstrap-select.min.js"></script>
+  <script src="src/js/bootstrap-switch.js"></script>
+  <script src="src/js/network.js"></script>
+  <script src="src/js/d3.v3.min.js"></script>
+  <script src="src/js/dagre-d3.min.js"></script>
+  
+  <script src="src/js/cytoscape.min.js"></script>
+  <script src="src/js/jquery.cytoscape.js-panzoom.js"></script>
+  <script src="src/js/final.js"></script>
+  
+  <script src="src/js/echarts.min.js"></script>
+  <script src="src/js/test.js"></script>
+  {% endblock src %}
+
+  {% block style %}
+  {% endblock style %}
+</head>
+<body id="body">
+  {% block body %}
+  {% endblock body %}
+
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

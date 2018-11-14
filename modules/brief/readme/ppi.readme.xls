@@ -1,0 +1,8 @@
+诺禾致源使用GeneMania软件（Warde-Farley D et al.2010-7）对候选基因进行蛋白功能互作网络分析。
+
+本文件中对应3个sheet表:
+Gene_interactions: 候选基因蛋白相互作用;
+Networks.description: 依赖的网络数据详情,包括基因网络及其分类，权重为百分比，同时还包括各个基因网络的相关文献;
+Gene_description: PPI蛋白的基因列表，并给出简单功能注释和基因别名.
+
+Gene_interactions中Gene 1对应基因1; Gene 2对应基因2; Weight对应数据来源权重; Network group对应网络所属类别; Network对应网络名称。

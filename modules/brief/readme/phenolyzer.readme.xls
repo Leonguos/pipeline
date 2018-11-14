@@ -1,0 +1,59 @@
+通过输入疾病的名称或关键字，用Phenolyzer软件对分析得到的候选基因进行排序，排名越靠前的基因，与该疾病相关的可能性越大。
+该软件的基本原理为：
+（1）通过输入疾病或表型的关键词，在数据库中匹配标准的疾病名，一个关键词会匹配到多种疾病名，每种疾病名有自己的权重，因此，输入的表型或疾病名称越准确，结果的可靠性就越高；
+（2）寻找与这些疾病名相关的基因（SeedGene）；
+（3）然后寻找不直接与这些疾病名相关，但是与SeedGene相关的基因（Predicted）
+
+对于每个基因，都会有多条关联记录，每一条记录有一个权重的原始得分，最后算出所有基因的得分，并做标准化处理。											
+																								
+	NetWork目录下文件中有3个sheet表包含了以下内容：
+	（1）AllGene_list：列出所有相关基因的排名信息。
+	（2）CandidateGene_list：从文件AllGene_list.xls中提取出所有候选基因的排名信息。
+	（3）CandidateGene_score：该文件给出所有候选基因的详细得分信息；给出seedgene的来源，即该disease-gene关联是被哪个数据库收录了。			
+																								
+	（1）（2）中各列含义的解释如下：																				
+		Rank：基因的排名。																					
+		Gene：基因名称。																					
+		ID：基因在NCBI中的ID。																					
+		Score：基因的分值，取值范围为0-1。分值越大，与疾病的关联越强。																
+		Status：有两种取值，即SeedGene和Predicted。SeedGene表示在已有数据库中已经报导了该基因与查询关键词有关联；Predicted表示以往数据库中没有报导过该基因与查询关键词的关联，但该基因与已发现的SeedGene之间存在关联，从而有可能间接的影响到了查询关键词。																	
+		HaploinsufficiencyScore：单倍剂量不足的分值，取值范围为0-1。分值越大，说明该基因发生单倍剂量不足的可能性越大。										
+		GeneIntoleranceScore：转置后的RVIS分值，用以描述基因耐受性，取值范围为0-1。分值越大，说明基因耐受性越差。										
+																								
+	（3）的说明如下：																						
+		该文件描述基因详细关联信息，包括disease-gene关联和gene-gene关联。不同基因之间用一个空行间隔。												
+		每个基因的第一行包括基因名称、基因ID、SeedGene/Predicted、基因的初始分值、转换后的分值													
+		从第二行开始是该基因的细节部分，首先是disease-gene关联部分，格式为数据库信息、匹配上的疾病名称、输入的关键字、该项贡献的初始分值							
+		然后是gene-gene关联部分，格式为数据库信息、基因之间的关联类型、相关联的SeedGene、该项贡献的初始分值											
+		SeedGene一定有disease-gene关联部分，不一定有gene-gene关联部分；而Predicted Gene只有gene-gene关联部分。											
+																								
+下面展示了一个实例																						
+																								
+CYP19A1	ID:1588 - SeedGene	9.7516819809	Normalized score: 1																
+OMIM:613546 (OMIM)	aromatase deficiency	male infertility	2.16518506602			如果第三列为输入关键词，则表示该条记录为直接关联（disease-gene关联）
+OMIM:613546 (CLINVAR)	aromatase deficiency	male infertility	0.135324066626			第一列：该关联记录的数据库来源
+ORPHANET:91 (ORPHANET)	aromatase deficiency	male infertility	2.16518506602			第二列：依据输入关键词，在数据库中匹配到的疾病名
+umls:C1970109 (DISGENET)	aromatase deficiency	male infertility	0.327938067815			第三列：输入的关键词
+unknown (GENE_CARDS)	aromatase deficiency	male infertility	0.135324066626			第四列：该条记录原始得分
+OMIM:139300 (OMIM)	aromatase excess syndrome	male infertility	2.16518506602			
+ORPHANET:178345 (ORPHANET)	aromatase excess syndrome	male infertility	2.16518506602			
+PUBMED:9543166 9543166 (GAD)	aromatase excess syndrome	male infertility	0.00322200158634			
+unknown (GENE_CARDS)	aromatase excess syndrome	male infertility	0.135324066626			
+OMIM:139300 (CLINVAR)	familial gynecomastia due to increased aromatase activity	male infertility	0.135324066626			
+PUBMED:7768959 (HTRI)	Electrophoretic Mobility Shift Assay	Regulated by NR5A1	0.0184175680671			如果第三列包含基因名，则表示该条记录为间接关联（gene-gene关联）
+PUBMED:20610535 (HTRI)	Chromatin Immunoprecipitation coupled with microarray	Regulated by AR	0.0293592053213			第一列：该关联记录的数据库来源
+BIOSYSTEM:105698 198837 477135 (BIOSYSTEM)	In the same (Biological oxidations; metapathway biotransformation; Metabolism)	With GSTP1	1.30560152736e-05			第二列：基因间关联的描述信息
+BIOSYSTEM:198801 (BIOSYSTEM)	In the same (Ovarian Infertility Genes)	With ESR2	4.94546033093e-05			第三列：关联的基因
+BIOSYSTEM:160976 477135 (BIOSYSTEM)	In the same (Metabolism of lipids and lipoproteins; Metabolism)	With CHKB	0.000997004802715			第四列：该条记录原始得分
+BIOSYSTEM:105698 198837 477135 (BIOSYSTEM)	In the same (Biological oxidations; metapathway biotransformation; Metabolism)	With GSTM3	1.30560152736e-05			
+不同基因间用空行隔开						
+AR	ID:367 - SeedGene	1.29222510919	Normalized score: 0.132513048694761			
+umls:C0021364 (DISGENET)	infertility male	male infertility	0.200722673932			
+PUBMED:16865224 16865224 (GAD)	infertility male	male infertility	0.00322200158634			
+unknown (GENE_CARDS)	oligospermia	male infertility	0.135324066626			
+PUBMED:9360540 9360540 (GAD)	reduced trans activation impaired sperm production and male infertility	male infertility	0.00322200158634			
+unknown (GENE_CARDS)	spermatogenesis arrest	male infertility	0.135324066626			
+PUBMED:11518799 (HPRD)	in vitro	With NR5A1	0.00748844639574			
+PUBMED:17392787 (HPRD)	in vivo	With AHR	0.00813006408999			
+PUBMED:12389206 (HPRD)	in vitro	With ESR1	0.0119512946615			
+PUBMED:8349631 (HPRD)	in vitro	With RAF1	0.0237331511444		

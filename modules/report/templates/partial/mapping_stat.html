@@ -1,0 +1,106 @@
+
+{% if WGS %}
+
+  <p class="tremark">注：</p>
+  <p class="tremark">(1) Sample:样本名称</p>
+  <p class="tremark">(2) Total: clean data中双端总reads数目（read1和read2的总数）。下面的内容都是基于clean reads进行统计</p>
+  <p class="tremark">(3) Duplicate:重复的reads数目（比例：重复的reads数/clean reads数）</p>
+  <p class="tremark">(4) Mapped: 比对到参考基因组上的总reads数目（比例）</p>
+  <p class="tremark">(5) Properly mapped: 比对到参考基因组且方向正确的reads数目（比例）</p>
+  <p class="tremark">(6) PE mapped: 双端reads都比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(7) SE mapped: 仅单端read比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(8) With mate mapped to a different chr: 一对reads分别比对到不同染色体上，该项统计了这样的reads总数（比例）</p>
+  <p class="tremark">(9) With mate mapped to a different chr(mapQ≥5): 一对reads分别比对到不同染色体上，且比对质量不低于5，该项统计了这样的reads总数（比例）</p>
+  <p class="tremark">(10) Average_sequencing_depth: 比对到参考基因组的<span class="span" title="平均测序深度是评价测序量的指标之一。测序深度与基因组覆盖度之间是一个正相关的关系，测序带来的错误率或假阳性结果会随着测序深度的提升而下降。重测序的个体，如果采用的是pair-end或Mate-Pair方案，当测序深度在10~15X以上时，基因组覆盖度和测序错误率的控制均得以保证。">平均测序深度</span>（clean data总数据量/基因组大小）</p>
+  <p class="tremark">(11) Coverage:比对数据对全基因组区域的覆盖度（碱基覆盖长度占全基因组碱基总长的比例）</p>
+  <p class="tremark">(12) Coverage_at_least_4X: 全基因组区域中碱基覆盖深度不低于4X的碱基比例</p>
+  <p class="tremark">(13) Coverage_at_least_10X: 全基因组区域中碱基覆盖深度不低于10X的碱基比例</p>
+  <p class="tremark">(14) Coverage_at_least_20X: 全基因组区域中碱基覆盖深度不低于20X的碱基比例</p>
+
+{% elif TS %}
+
+  <p class="tremark">注：</p>
+  <p class="tremark">(1) Sample: 样本名称</p>
+  <p class="tremark">(2) Total: clean data双端总reads数目（read1和read2的总数）。下面的内容都是基于clean reads进行统计</p>
+  <p class="tremark">(3) Duplicate: 重复的reads数目（比例：重复的reads数/clean reads数）</p>
+  <p class="tremark">(4) Mapped: 比对到参考基因组上的总reads数目（比例）</p>
+  <p class="tremark">(5) Properly mapped: 比对到参考基因组且方向正确的reads数目（比例）</p>
+  <p class="tremark">(6) PE mapped: 双端reads都比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(7) SE mapped: 仅单端read比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(8) Initial_base_on_target: 目标区域的总长度（以碱基为单位）；目标区域是指我们所要捕获的外显子区域。</p>
+  <p class="tremark">(9) Initial_base_near_target: 目标附近区域的总长度（以碱基为单位）；目标附近区域是指目标区域上下游200bp的区域（又称flanking region）</p>
+  <p class="tremark">(10) Total_effective_yield(Mb): 能比对到参考基因组上的有效数据量（以百万碱基为单位）</p>
+  <p class="tremark">(11) Effective_yield_on_target(Mb):比对到参考基因组中目标区域的数据量</p>
+  <p class="tremark">(12) Fraction_of_effective_bases_on_target: 比对到参考基因组中目标区域的数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(13) Fraction_of_effective_bases_on_near_target: 比对到参考基因组中目标区域和flanking区域数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(14) Average_sequencing_depth_on_target: 目标区域的平均<span class="span" title="测序深度是评价测序量的指标之一。测序深度与基因组覆盖度之间是一个正相关的关系，测序带来的错误率或假阳性结果会随着测序深度的提升而下降。重测序的个体，如果采用的是双末端或Mate-Pair方案，当测序深度在10~15X以上时，基因组覆盖度和测序错误率的控制均得以保证。">测序深度</span>（比对到目标区域的总数据量/目标区域的总长度）</p>
+  <p class="tremark">(15) Base_covered_on_target: 目标区域中被reads覆盖的碱基数（以碱基为单位）</p>
+  <p class="tremark">(16) Coverage_of_target_region: 目标区域的覆盖度，即目标区域中被reads覆盖的碱基比例（被覆盖的碱基长度占目标区域碱基总长的比例）</p>
+  <p class="tremark">(17) Fraction_of_target_covered_with_at_least_100X: 目标区域中，覆盖深度不低于100X的碱基所占的比例</p>
+  <p class="tremark">(18) Fraction_of_target_covered_with_at_least_50X: 目标区域中，覆盖深度不低于50X的碱基所占的比例</p>
+  <p class="tremark">(19) Fraction_of_target_covered_with_at_least_20X: 目标区域中，覆盖深度不低于20X的碱基所占的比例</p>
+  <p class="tremark">(20) Fraction_of_target_covered_with_at_least_10X: 目标区域中，覆盖深度不低于10X的碱基所占的比例</p>
+  <p class="tremark">(21) Fraction_of_target_covered_with_at_least_4X: 目标区域中，覆盖深度不低于4X的碱基所占的比例</p>
+
+{% elif WES_ag %}
+
+  <p class="tremark">注：</p>
+  <p class="tremark">(1) Sample: 样本名称</p>
+  <p class="tremark">(2) Total: clean data双端总reads数目（read1和read2的总数）。下面的内容都是基于clean reads进行统计</p>
+  <p class="tremark">(3) Duplicate: 重复的reads数目（比例：重复的reads数/clean reads数）</p>
+  <p class="tremark">(4) Mapped:  比对到参考基因组上的总reads数目（比例）</p>
+  <p class="tremark">(5) Properly mapped: 比对到参考基因组且方向正确的reads数目（比例）</p>
+  <p class="tremark">(6) PE mapped:  双端reads都比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(7) SE mapped: 仅单端read比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(8) Initial_base_on_target: 目标区域的总长度（以碱基为单位）；目标区域是指我们所要捕获的外显子区域。</p>
+  <p class="tremark">(9) Initial_base_near_target: 目标附近区域的总长度（以碱基为单位）；目标附近区域是指目标区域上下游200bp的区域（又称flanking region）</p>
+  <p class="tremark">(10) Total_effective_yield(Mb): 能比对到参考基因组上的有效数据量（以百万碱基为单位）</p>
+  <p class="tremark">(11) Effective_yield_on_target(Mb): 比对到参考基因组中目标区域的数据量</p>
+  <p class="tremark">(12) Fraction_of_effective_bases_on_target: 比对到参考基因组中目标区域的数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(13) Fraction_of_effective_bases_on_near_target:  比对到参考基因组中目标区域和flanking区域数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(14) Average_sequencing_depth_on_target: 目标区域的平均<span class="span" title="测序深度是评价测序量的指标之一。测序深度与基因组覆盖度之间是一个正相关的关系，测序带来的错误率或假阳性结果会随着测序深度的提升而下降。重测序的个体，如果采用的是双末端或Mate-Pair方案，当测序深度在10~15X以上时，基因组覆盖度和测序错误率的控制均得以保证。">测序深度</span>（比对到目标区域的总数据量/目标区域的总长度）</p>
+  <p class="tremark">(15) Base_covered_on_target: 目标区域中被reads覆盖的碱基数（以碱基为单位）</p>
+  <p class="tremark">(16) Coverage_of_target_region: 目标区域的覆盖度，即目标区域中被reads覆盖的碱基比例（被覆盖的碱基长度占目标区域碱基总长的比例）</p>
+  <p class="tremark">(17) Fraction_of_target_covered_with_at_least_100X: 目标区域中，覆盖深度不低于100X的碱基所占的比例</p>
+  <p class="tremark">(18) Fraction_of_target_covered_with_at_least_50X: 目标区域中，覆盖深度不低于50X的碱基所占的比例</p>
+  <p class="tremark">(19) Fraction_of_target_covered_with_at_least_20X: 目标区域中，覆盖深度不低于20X的碱基所占的比例</p>
+  <p class="tremark">(20) Fraction_of_target_covered_with_at_least_10X: 目标区域中，覆盖深度不低于10X的碱基所占的比例</p>
+  <p class="tremark">(21) Fraction_of_target_covered_with_at_least_4X: 目标区域中，覆盖深度不低于4X的碱基所占的比例</p>
+
+{% elif WES_illu %}
+
+  <p class="tremark">注：</p>
+  <p class="tremark">(1) clean data双端总reads数目（read1和read2的总数）。下面的内容都是基于clean reads进行统计</p>
+  <p class="tremark">(2) 重复的reads数目（比例：重复的reads数/clean reads数）</p>
+  <p class="tremark">(3) 比对到参考基因组上的总reads数目（比例）</p>
+  <p class="tremark">(4) 比对到参考基因组且方向正确的reads数目（比例）</p>
+  <p class="tremark">(5) 双端reads都比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(6) 仅单端read比对到参考基因组上的reads数目（比例）</p>
+  <p class="tremark">(7) 一对reads分别比对到不同染色体上，该项统计了这样的reads总数</p>
+  <p class="tremark">(8) 一对reads分别比对到不同染色体上，且比对质量不低于5，该项统计了这样的reads总数</p>
+  <p class="tremark">(9) 目标区域的总长度（以碱基为单位）；目标区域是指我们所要捕获的外显子区域。</p>
+  <p class="tremark">(10) 目标附近区域的总长度（以碱基为单位）；目标附近区域是指目标区域上下游200bp的区域（又称flanking region）</p>
+  <p class="tremark">(11) 目标区域和flanking区域的总长</p>
+  <p class="tremark">(12) 能比对到参考基因组上的有效reads数目</p>
+  <p class="tremark">(13) 能比对到参考基因组上的有效数据量（以百万碱基为单位）</p>
+  <p class="tremark">(14) 比对到参考基因组中目标区域的数据量</p>
+  <p class="tremark">(15) 比对到参考基因组中flanking区域的数据量</p>
+  <p class="tremark">(16) 比对到参考基因组中目标区域和flanking区域的数据量</p>
+  <p class="tremark">(17) 比对到参考基因组中目标区域的数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(18) 比对到参考基因组中目标区域和flanking区域数据量占比对到参考基因组上总数据量的比例</p>
+  <p class="tremark">(19) 目标区域的平均<span class="span" title="测序深度是评价测序量的指标之一。测序深度与基因组覆盖度之间是一个正相关的关系，测序带来的错误率或假阳性结果会随着测序深度的提升而下降。重测序的个体，如果采用的是双末端或Mate-Pair方案，当测序深度在10~15X以上时，基因组覆盖度和测序错误率的控制均得以保证。">测序深度</span>（比对到目标区域的总数据量/目标区域的总长度）</p>
+  <p class="tremark">(20) flanking区域的平均测序深度（比对到flanking区域的总数据量/flanking区域的总长度）</p>
+  <p class="tremark">(21) 比对到参考基因组中目标区域的数据量中mismatch的数据量比例</p>
+  <p class="tremark">(22) 比对到参考基因组的数据量中mismatch的数据量比例</p>
+  <p class="tremark">(23) 目标区域中被reads覆盖的碱基数（以碱基为单位）</p>
+  <p class="tremark">(24) 目标区域的覆盖度，即目标区域中被reads覆盖的碱基比例（被覆盖的碱基长度占目标区域碱基总长的比例）</p>
+  <p class="tremark">(25) flanking区域中被reads覆盖的碱基数（以碱基为单位）</p>
+  <p class="tremark">(26) flanking区域的覆盖度，即flanking区域中被reads覆盖的碱基比例（被覆盖的碱基长度占flanking区域碱基总长的比例）</p>
+  <p class="tremark">(27) 目标区域中，覆盖深度不低于20X的碱基所占的比例</p>
+  <p class="tremark">(28) 目标区域中，覆盖深度不低于10X的碱基所占的比例</p>
+  <p class="tremark">(29) 目标区域中，覆盖深度不低于4X的碱基所占的比例</p>
+  <p class="tremark">(30) flanking区域中，覆盖深度不低于20X的碱基所占的比例</p>
+  <p class="tremark">(31) flanking区域中，覆盖深度不低于10X的碱基所占的比例</p>
+  <p class="tremark">(32) flanking区域中，覆盖深度不低于4X的碱基所占的比例</p>
+
+{% endif %}

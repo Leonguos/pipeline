@@ -1,0 +1,13 @@
+sheet: roh_anno
+
+纯合子区域即基因组上的纯合等位基因的区域。这个区间的产生是由于父母遗传至子代的等位基因来自于共同的祖先，
+即父母拥有同一祖先的等位基因，遗传给子代的便是纯合子。
+
+
+sheet: roh_anno_snp
+
+该文件中Priority列为优先级注释，从CHROM列到Repeat列为基因及区域注释信息, 
+从Genotype*列到Ori_ALT列为变异位点注释信息, 
+从1000g2015aug_eas列到NovoDb_WGS_SNP列为数据库频率注释,
+从SIFT列到gerp++gt2列为保守(有害)性注释, 
+从clinvar_20160302列到REACTOME_PATHWAY为基因功能和通路注释。

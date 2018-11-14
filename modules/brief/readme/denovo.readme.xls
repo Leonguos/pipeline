@@ -1,0 +1,8 @@
+诺禾致源通过以下方法筛选de novo SNP/InDel：
+    1)利用找de novo突变的查找软件, 例如 samtools;
+    2)利用家系中每个样本的变异筛选结果, 进行de novo位点筛查和过滤;
+    3）两种方法取交集。
+
+该文件第1列为优先级注释, 从CHROM列到Repeat列为基因及区域注释信息, 从1000g_Chinese列到NovoDb_WGS列为数据库频率注释,
+从dbscSNV_SCORE列到MCAP列为保守(有害)性注释, 从ClinVar列到REACTOME_PATHWAY为基因功能和通路注释;
+Expression_summary列到Subcellular_Location列为组织特异性表达注释。

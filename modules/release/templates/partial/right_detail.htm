@@ -1,0 +1,277 @@
+<div id="page">
+
+  <p class="head">
+    <a href="#home" title="返回首页">
+      <img class="logo" align="left" src="src/images/logo.png" />
+    </a>
+    <a name="RawData" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+    <hr />
+  </p>
+
+  <!-- RawData -->
+  <div id="data">
+
+    {% if raw_data %}
+    <div id="raw_data">
+      <h2>{{ raw_data }} RawData 文件夹及结果文件说明</h2>
+      <h3>1 结果文件说明</h3>
+      <p class="paragraph">RawData文件下包含每个样本(文库名)的原始数据结果文件：</p>
+      <table class="tremark">
+        <tr><td></td><td>1.后缀fq.gz文件</td><td>高通量测序的原始测序序列压缩文件</td></tr>
+        <tr><td></td><td>2.MD5.txt</td><td>fq.gz的MD5值，用于检查文件的完整性</td></tr>
+        <tr><td></td><td>文件名中1,2分别代表Paired-end两端序列文件</td></tr>
+      </table>
+      <h3>2 文件格式介绍</h3>
+      <p class="paragraph">高通量测序（如Illumina HiSeq XTen/4000/2500/MiSeq等测序平台）得到的原始图像数据文件经碱基识别(Base Calling)分析转化为原始测序序列（Sequenced Reads），我们称之为Raw Data或Raw Reads。</p>
+      <p class="paragraph">1.fq.gz为高通量测序的原始测序序列，结果以FASTQ文件格式存储。包含测序序列的序列信息和对应的测序质量信息。FASTQ文件中每个read由四行描述，其格式如下：</p>
+      <p class="seq">
+        @HWI-ST1276:71:C1162ACXX:1:1101:1208:2458 2:N:0:CGATGT<br />
+        CTGGCTCCGGAGGGGATGGAGGCGGCACTCCCGCCAAGGATGCGTTGGGAAACGACGTCGTTGCAGTCGAATGGCTCAAAACACACGGGCCCGGTGACCGG<br />
+        +<br />
+        BCBFFFFDHHHHHJJ?EAGIIIAHIJIIGHHHBEDCDDD;>>BD?BDAD<><?BDB@5<BBDCDDDCDDBDCCDDDCCDDD8?AAB9>B55>BB5904@BB
+      </p>
+      <p class="paragraph">其中第一行以“@”开头，随后为Illumina 测序标识符(Sequence Identifiers)和描述文字(选择性部分)；第二行是碱基序列；第三行以“+”开头，随后为Illumina 测序标识符(选择性部分)；第四行是对应序列的测序质量。该行中每个字符对应的ASCII值减去33，即为对应第二行碱基的测序质量值。</p>
+      <p class="paragraph">Illumina 测序标识符详细信息如下：</p>
+      <div id="tb">
+        <p class="center">
+          <table class="gy">
+            <tr><td>EAS139</td><td>The unique instrument name</td></tr>
+            <tr><td>136</td><td>Run ID</td></tr>
+            <tr><td>FC706VJ</td><td>Flowcell ID</td></tr>
+            <tr><td>2</td><td>Flowcell lane</td></tr>
+            <tr><td>2104</td><td>Tile number within the flowcell lane</td></tr>
+            <tr><td>15343</td><td>'x'-coordinate of the cluster within the tile</td></tr>
+            <tr><td>197393</td><td>'y'-coordinate of the cluster within the tile</td></tr>
+            <tr><td>1</td><td>Member of a pair, 1 or 2 (paired-end or mate-pair reads only)</td></tr>
+            <tr><td>Y</td><td>Y if the read fails filter (read is bad), N otherwise</td></tr>
+            <tr><td>18</td><td>0 when none of the control bits are on, otherwise it is an even number</td></tr>
+            <tr><td>ATCACG</td><td>Index sequence</td></tr>
+          </table>
+        </p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- QC -->
+    {% if clean_data %}
+    <div id='clean_data'>
+      <h2>{{ clean_data }} CleanData文件夹及结果文件说明</h2>
+      <a name="CleanData"></a>
+      <h3>1 结果文件说明</h3>
+      <p class="paragraph">CleanData文件下包含每个样本(文库名)的clean data数据结果文件：</p>
+      <table class="tremark">
+        <tr><td></td><td>1.后缀clean.fq.gz文件</td><td>经过 QC 处理后的clean data序列压缩文件</td></tr>
+        <tr><td></td><td>2.MD5.txt</td><td>clean.fq.gz的MD5值，用于检查文件的完整性</td></tr>
+        <tr><td></td><td>文件名中1,2分别代表Paired-end两端序列文件,clean.fq文件格式同RawData</td></tr>
+      </table>
+      <h3>2 测序数据过滤</h3>
+      <p class="paragraph">测序得到的原始序列，里面含有带接头、低质量reads，会为后续分析增加复杂度。为了保证信息分析质量，需要对Raw reads进行精细过滤，得到clean reads，后续分析都基于clean reads进行。</p>
+      <p class="paragraph">数据处理的步骤如下：</p>
+      <p class="tremark">（1）需要过滤掉含有接头序列的reads；</p>
+      <p class="tremark">（2）当单端测序read中含有的 N(N表示无法确定碱基信息)的含量超过该条read长度比例的10%时，需要去除此对paired reads;</p>
+      <p class="tremark">（3）当单端测序read中含有低质量（低于5）碱基数超过该条read长度比例的50%时，需要去除此对paired reads。</p>
+    </div>
+    {% endif %}
+
+    <!-- Mapping -->
+    {% if bam_data %}
+    <div id="bam_data">
+      <h2>{{ bam_data }} BamData文件夹及结果文件说明 </h2>
+      <h3>1 结果文件说明</h3>
+      <p class="paragraph">BamData文件下包含每个样本(样本名)的比对结果数据结果文件：</p>
+      <table class="tremark">
+        <tr><td></td><td>1.后缀bam文件</td><td class="tremark">	比对结果文件,bam文件是sam文件的压缩格式，解读请参考附件<a href='./Mapping/SAMv1.pdf' target='_blank'>SAMv1.pdf</a></td></tr>
+        <tr><td></td><td>2.后缀.bam.bai文件</td><td class="tremark">	对bam文件构建索引，用于对bam文件的快速处理，该文件是由命令samtools index *.bam得到</td></tr>
+      </table>
+      <h3>2 比对过程介绍</h3>
+      <p class="paragraph">
+        有效测序数据通过BWA(version 0.7.8-r455)比对到人类参考基因组
+        <a href="ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/2.8/b37/" target=_blank><span class="span" title="我们采用的参考基因组下载自GATK">GRCh37</span></a>，
+        得到 BAM格式的最初的比对结果。在最初的比对结果（BAM文件）的基础上做如下处理：
+      </p>
+      <p class="tremark"> (1) 用SAMtools(Li H et al.)对比对结果进行排序；</p>
+      <p class="tremark"> (2) 用Sambamba标记重复reads（mark duplicate reads）。</p>
+      <p class="paragraph">经过以上处理，得到 BAM 格式的最终比对结果，后续变异检测基于这个比对结果。</p>
+      <p class="paragraph">
+        如果一个或一对 read(s) 在基因上可以有多个比对位置，BWA 的处理策略是从中选择一个最好的，如果有两个或以上最好的比对位置，则从中随机选择一个。
+        这种多重比对（multiple hit）的处理对 SNP、 INDEL 以及 CNV 等的检测有重要影响。通常检测 SNP 或 INDEL 的时候要使用高质量的比对（alignment），即比对质量值大于 0 或更高。
+      </p>
+    </div>
+    {% endif %}
+  </div> <!-- data end -->
+
+
+  {% if primary_result %}
+  <div id="primary_result">
+    <h2>{{ primary_result }} PrimaryAnalysis/SampleVariation文件夹及结果文件说明 </h2>
+
+    <!-- SNP/INDEL -->
+    {% if snpindel_result %}
+      <h3 id="snpindel_result">1. SNP/INDEL文件夹及结果文件说明</h3>
+      <h4>1.1 分析说明</h4>
+      <p class="paragraph">比对得到的bam文件经过{{ software.mutation }} calling，得到SNP/INDEL信息，再经过ANNOVAR注释，得到最终的Variation结果</p>
+      <h4>1.2 结果文件说明</h4>
+      <p class="paragraph">每个样本SNP/INDEL文件夹下包含两个文件：</p>
+      <table class="tremark">
+        <tr><td></td><td>1.*.vcf.gz</td><td class="tremark">VCF文件, VCF (Variant Call Format)是储存Variation结果的文件格式 该文件的#列为文件的详细解读信息</td></tr>
+        <tr><td></td><td>2.*.annovar.*_multianno.xls.gz</td><td class="tremark">SNP/INDEL的注释结果文件（xls格式）的压缩文件，解压后得到的文件可以用excel或EditPlus（文件较大时）打开,该文件是在VCF的基础上，用ANNOVAR注释，并增加OMIM、GO、KEGG、PID、BIOCARTA、REACTOME等数据库功能注释信息，最后，进行压缩。</td></tr>
+      </table>
+      <h4>1.3 注释文件表头说明（*.annovar.*_multianno.xls.gz文件）</h4>
+      <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏注释信息</button></p>
+      <div style='display:none;'>
+        {% include "partial/anno_snpindel.htm" %}
+      </div>
+    {% endif %}
+
+    <!-- SV -->
+    {% if sv_result %}
+      <h3 id="sv_result">2　SV文件夹及结果文件说明 </h3>
+      <h4>2.1 分析说明</h4>
+      <p class="paragraph">结构变异（Structural variation，SV）指的是基因组上大片段序列结构变异。采用{{ software.sv }}软件来检测SV</p>
+      <h4>2.2 结果文件说明：</h4>
+
+      <table class="tremark">
+        <tr><td></td><td>1.*.gff</td><td> SV的结果文件，GFF（General Feature Format）格式；</td></tr>
+        <tr><td></td><td>2.*_multianno.xls</td><td class="tremark">SV的注释结果文件，xls格式，可以用xls或EditPlus（文件较大时）打开；存放 *.geneInfo.xls SV所在基因的注释信息，xls格式</td></tr>
+        <tr><td></td><td>3.*geneInfo.xls</td><td class="tremark"> SV的基因通路注释结果文件，xls格式，可以用xls或EditPlus（文件较大时）打开</td></tr>
+      </table>
+
+      <h4>2.3 结果文件表头说明</h4>
+      <h5>2.3.1 gff文件</h5>
+      <p class="tremark" style="text-indent:1.5em">(1) 染色体编号</p>
+      <p class="tremark" style="text-indent:1.5em">(2) SV检测的软件</p>
+      <p class="tremark" style="text-indent:1.5em">(3) SV的类型，如Deletion（DEL）、Insertion(INS)、Translocation(CTX,ITX)、Inversion(INV)</p>
+      <p class="tremark" style="text-indent:1.5em">(4) SV的起始位置</p>
+      <p class="tremark" style="text-indent:1.5em">(5) SV的终止位置（对于Translocation、breakpoint，SV的起始位置和终止位置相同）</p>
+      <p class="tremark" style="text-indent:1.5em">(6) SV的分值：均为“.”</p>
+      <p class="tremark" style="text-indent:1.5em">(7) SV所在的链：均为“.”，表示链信息未知</p>
+      <p class="tremark" style="text-indent:1.5em">(8) 开放阅读框信息：只有当第三列的值为exon时，该列才有值；否则该列为“.”</p>
+      <p class="tremark" style="text-indent:1.5em">(9) SV的信息：‘:’分隔的每一项与*_multianno.xls注释文件中“结构变异信息”部分的的解释一样</p>
+      <h5>2.3.2 注释文件表头说明（*_multianno.xls）</h5>
+
+      <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏注释信息</button></p>
+      <div style='display:none;'>
+        {% include "partial/anno_sv_cnv.htm" %}
+      </div>
+    {% endif %}
+
+    <!-- CNV -->
+    {% if cnv_result %}
+      <h3 id="cnv_result">3 CNV 文件夹及结果文件说明</h3>
+      <h4>3.1 分析说明</h4>
+      <p class="paragraph">
+        拷贝数变异（copy number variation，CNV）指的是基因组上大片段序列拷贝数的增加或者减少，可分为deletion和duplication两种类型。CNV在基因组中有广泛的分布，我们采用{{ software.cnv }}软件来检测CNV。
+      </p>
+      
+      <h4>3.2 结果文件说明</h4>
+      <p class="paragraph">分析结果存放于CNV文件夹中，CNV文件夹下包括4个文件：</p>
+      <table class="tremark">
+        <tr><td></td><td>1 *.gff</td><td class="tremark">CNV的结果文件，GFF（General Feature Format）格式</td></tr>
+        <tr><td></td><td>2 *_multianno.xls</td><td class="tremark">CNV的注释结果文件，xls格式，可以用xls或EditPlus（文件较大时）打开</td></tr>
+        <tr><td></td><td>3 *.geneInfo.xls </td><td class="tremark"> CNV的基因通路注释结果文件，xls格式，可以用xls或EditPlus（文件较大时）打开</td></tr>
+      </table>
+      
+      <h4>3.3 结果文件表头介绍</h4>
+      <h5>3.3.1. gff文件</h5>
+      <p class="tremark" style="text-indent:1.5em">(1) 染色体编号</p>
+      <p class="tremark" style="text-indent:1.5em">(2) CNV的检测软件</p>
+      <p class="tremark" style="text-indent:1.5em">(3) CNV的类型，如gain、loss</p>
+      <p class="tremark" style="text-indent:1.5em">(4) CNV的起始位置</p>
+      <p class="tremark" style="text-indent:1.5em">(5) CNV的终止位置（对于breakpoint，CNV的起始位置和终止位置相同）</p>
+      <p class="tremark" style="text-indent:1.5em">(6) CNV的分值：均为“.”，表示分值未知</p>
+      <p class="tremark" style="text-indent:1.5em">(7) CNV所在的链：均为“.”，表示链信息未知</p>
+      <p class="tremark" style="text-indent:1.5em">(8) frame信息：该列均为“.”，表示该区域不具有编码功能</p>
+      <p class="tremark" style="text-indent:1.5em">(9) CNV的信息：CopyNumber是拷贝数个数；Size是发生CNV的区域的大小；CNVID是CNV的编号；CNVType是CNV的类型，取值为loss（拷贝数减少）、gain（拷贝数增加）、breakpoint（CNV的断点）</p>
+      
+      <h5>3.3.2.注释结果文件表头说明（*_multianno.xls） </h5>
+      
+      <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏注释信息</button></p>
+      
+      <div style='display:none;'>
+        {% include "partial/anno_sv_cnv.htm" %}
+      </div>
+    {% endif %}
+
+    <!-- Circos -->
+    {% if circos_result %}
+      <h3 id="circos_result">4 Circos图介绍</h3>
+
+      <p class="premark">（1）最外圈（第一圈）是染色体信息，数字为染色体号，对应的染色体长度和核型。</p>
+      <p class="premark">（2）次外环-第2环，测序覆盖度图（蓝色），每 0.5Mbp 为一个单位，计算其平均覆盖度</p>
+      <p class="premark">（3）第3环，黑色圆点表示 INDEL 的密度，高低表示密度大小，以每 1Mbp为一个单位。计算方式 ：1M bp 范围内的 INDEL 数目 /1 Mbp</p>
+      <p class="premark">（4）第4环，绿色圆点表示SNP的密度，高低表示大小，以每1Mbp为一个单位。计算方式 ：1M bp 范围内的 snp数目 /1 Mbp</p>
+      <p class="premark">（5）以每1Mbp为一个单位，计算其内的纯合 SNP（橙色）和杂合SNP（灰色）的比例</p>
+      <p class="premark">（6）第6环，CNV分析结果，红色为CNV扩增，绿色为CNV缺失</p>
+      <p class="premark">（7）SV分析结果，由于结果较多, 只显示外显子和剪切位点区域上的SV 数据，其中染色体间易位CTX（橙色 ）、插入INS （绿色）、删除DEL（灰色 ）、染色体间易位ITX（粉红色）和倒位 INV（蓝色 ）</p>
+
+    {% endif %}
+      
+  </div>
+  {% endif %}
+  
+
+  <!-- FilterAnalysis -->
+  {% if filter_analysis %}
+  <h2 id="filter_analysis">{{ filter_analysis }} PrimaryAnalysis/FilterAnalysis 文件夹及结果文件说明</h2>
+
+    <!-- FilterDB -->
+    {% if filterdb or filter_acmg %}
+      <h3 id="filter_filterdb">1 FilterDB</h3>
+      <h4>1.1 分析说明</h4>
+      <p class="paragraph">将多个样本的SNP和INDEL的检测结果分别合并，得到SNP和INDEL各自的VCF文件。在此基础上，筛选出候选突变位点。</p>
+      <h4>1.2 结果文件说明</h4>
+
+      <p class="tremark"><b>FilterDB/SNP(INDEL) 文件夹说明</b></p>
+      <table class="tremark">
+        <tr></td></td><td><b> snp(indel).merged.freq.xls</b></td><td class="tremark">样品检测到的SNP（INDEL）突变位点经去除在千人基因组数据（1000g_all）、ESP6500数据库（esp6500si_all）、gnomAD数据（gnomAD_ALL和gnomAD_EAS）这四个频率数据库中至少有一个频率高于1%的突变的过滤结果文件</a></td></tr>
+        <tr></td></td><td><b> snp(indel).merged.freq.func.xls</b></td><td class="tremark">样品检测到的SNP（INDEL）突变位点经上述结果以及保留处于编码区（exonic）或剪接位点区（splicing，上下10bp）的变异的过滤结果文件</td></tr>
+        <tr></td></td><td><b> snp(indel).merged.freq.func.syn.xls</b></td><td class="tremark">样品检测到的SNP（INDEL）突变位点经上述结果以及去除不位于高度保守区且未被软件预测为会影响剪接的同义SNP突变（以grep++分值>2的位点为高度保守区；若dbscSNV的两个预测分值至少有一个大于0.6认为突变影响剪接）、去除处于Repeat区的小片段（<10bp）非移码INDEL突变的过滤结果文件</td></tr>
+        <tr></td></td><td><b> snp(indel).merged.freq.func.syn.deleterious.xls</b></td><td class="tremark">样品检测到的SNP（INDEL）突变位点经上述结果和保留符合以下条件之一的突变：a) 突变被预测为有害；或 b)突变被预测为影响剪接。a) 有害性预测：依据SIFT，Polyphen，MutationTaster，CADD这4个软件的打分预测情况进行变异位点筛选，要求这4个软件中，有分值的软件中至少有一半支持该位点可能有害，该位点被保留；b) 影响剪接的预测保留与外显子区距离不大于 2bp（±1~2bp）的剪接位点区突变；保留被dbscSNV预测为会影响剪接（dbscSNV的两个预测分值至少有一个大于0.6）的突变的变异位点的过滤结果文件</td></tr>
+        <tr></td></td><td><b> snp(indel).merged.filter.stat.xls</b></td><td class="tremark">样品检测到的SNP（INDEL）突变位点经过每一步过滤后剩余位点情况的统计文件</td></tr>
+      </table>
+
+      <h4>1.3 注释文件snp(indel).merged.freq.func.syn.deleterious.xls表头说明</h4>
+      <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏注释信息</button></p>
+      <div style='display:none;'>
+        {% include "partial/anno_filterdb.htm" %}
+      </div>
+    {% endif %}
+      
+    <!-- FilterSV_CNV -->
+    {% if filter_sv_cnv %}
+      <h3 id="filter_filter_sv_cnv">2 FilterSV(FilterCNV)</h3>
+      <h4>2.1 分析说明</h4>
+      <p class="paragraph">与单核苷酸变异（SNVs, single nucleotide variatants）类似，很多SV/CNV是生物基因组中正常的多态性，这种良性SV/CNV不会导致生物体发生病变。但是，还发现有些恶性SV/CNV和神经系统障碍、癌症等疾病相关。</p>
+      <p class="paragraph">为了从软件检测到的SV/CNV结果中进一步过滤掉良性SV/CNV，以及保留恶性SV/CNV。利用多种SV/CNV库对结果进行相应标记。</p>
+      <h4>2.2 结果文件说明</h4>
+      <p class="tremark"><b>FilterSV(FilterCNV) 文件夹说明</b></p>
+      <table class="tremark">
+        <tr><td></td><td><b> *.StringentLib.InclusiveLib.DGV.GoldStandard.July2015.DGV.CNVD.hg19_multianno.priority.xls</b></td><td class="tremark">对检测到的SV/CNV进行变异注释结果文件</a></td></tr>
+        <tr><td></td><td><b> *.LikelyDeleterious.SV(CNV).xls</b></td><td class="tremark">去除了在良性数据库有记录的变异结果文件</td></tr>
+      </table>
+      
+      {% if filter_sv %}
+        <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏FilterSV注释信息</button></p>
+        <div style='display:none;'>
+          {% include "partial/anno_filter_sv.htm" %}
+        </div>
+      {% endif %}
+      
+      {% if filter_cnv %}
+        <p class="tremark"><button type="button" class="anno_info">点击显示/隐藏FilterCNV注释信息</button></p>
+        <div style='display:none;'>
+          {% include "partial/anno_filter_cnv.htm" %}
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  <!-- FilterAnalysis End  -->
+
+  <!-- Advance  -->
+  {% if report_type == 'advance' %}
+    {% include 'partial/right_detail_advance.htm' %}
+  {% endif %}
+  <!-- Advance End  -->
+  
+
+</div>

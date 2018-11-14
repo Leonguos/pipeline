@@ -1,0 +1,5 @@
+ACMG开发的变异分类系统并推荐使用特定的标准术语:
+该系统将变异分为pathogenic(致病的)、likely pathogenic(可能致病的)、uncertain significance(致病性不明确的)、likely benign(可能良性的)、benign(良性的)来描述孟德尔疾病致病基因中发现的突变。
+ACMG的变异分类系统中共有28个证据类别，根据28个证据的组合形式进行变异位点的有害性分类。
+该文件第1列ACMG为按照ACMG的证据标准，变异位点进行生物信息学分析后，变异位点能满足的证据类别。第2例Heredity为变异位点的遗传模式，如果没有家系样本且遗传模式未知则没有该列。
+Priority列为优先级注释，从CHROM列到Repeat列为基因及区域注释信息,Genotype*列到Ori_ALT列为变异位点注释信息,从clinvar_20160302列到NovoDb_WGS_SNP为数据库频率注释，从SIFT列到gerp++gt2列为保守（有害性）注释，INFO列到shared_het列为变异位点信息注释,OMIM列到REACTOME_PATHWAY列为基因功能及通路注释。

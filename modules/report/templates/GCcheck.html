@@ -1,0 +1,500 @@
+
+{% extends "base.html" %}
+
+{% block src %}
+  <link href="../../../src/css/buttons.css" rel="stylesheet" />
+  <link href="../../../src/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+  <link href="../../../src/css/bootstrap-switch.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="../../../src/css/base_new.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="../../../src/images/favicon.ico" media="screen" />
+  <link rel="stylesheet" href="../../../src/css/style.css" />
+  <link href="../../../src/css/flexslider.css" type="text/css" rel="stylesheet">
+  <link href="../../../src/css/material-scrollTop.css" type="text/css" rel="stylesheet">
+  <link href="../../../src/css/jquery.dataTables.css" type="text/css" rel="stylesheet">
+  <link href="../../../src/css/jquery.dataTables.css" type="text/css" rel="stylesheet">
+  <script type='text/javascript' src='../../../src/js/jquery-1.8.3.min.js'></script>
+  <script type='text/javascript' src='../../../src/js/jquery.dataTables.js'></script>
+  <script src="../../../src/js/bootstrap.min.js"></script>
+  <script src="../../../src/js/bootstrap-select.min.js"></script>
+  <script src="../../../src/js/bootstrap-switch.js"></script>
+  <script src="../../../src/js/network.js"></script>
+  <script src="../../../src/js/echarts.min.js"></script>
+  <script src="../../../src/js/test.js"></script>
+{% endblock src %}
+
+{% block script %}
+<script type="text/javascript" charset="utf-8">
+  $(window).load(function () {
+    $('#qu0').DataTable();
+    $('#quaa').DataTable({
+      "footerCallback": function (row, data, start, end, display) {
+        var api = this.api(),
+        data;
+        // Remove the formatting to get integer data for summation
+        // Total over all pages
+        total = api
+        .column(3)
+        .data()
+        .reduce(function (a, b) {
+          return (Number(a) + Number(b)).toFixed(2);
+        }, 0);
+        
+        // Total over this page
+        pageTotal = api
+        .column(3, {
+          page: 'current'
+        })
+        .data()
+        .reduce(function (a, b) {
+          return (Number(a) + Number(b)).toFixed(2);
+        }, 0);
+        
+        // Update footer
+        $(api.column(3).footer()).html(
+          pageTotal + 'G' + ' ( ' + total + 'G' + ' total)'
+          );
+        }
+      });
+      $('#qub').DataTable();
+      
+  });
+</script>
+{% endblock script %}
+
+
+{% block body %}
+
+  <div style="height:80px;text-align:center">
+    {% if rep_qc %}
+    <h1> {{title}}项目质控报告 </h1>
+    {% endif%} {% if rep_mapping %}
+    <h1> {{title}}项目质控与覆盖度报告 </h1>
+    {% endif%} {% if rep_primary %}
+    <h1> {{title}}项目基本分析结题报告 </h1>
+    {% endif%} {% if rep_advance %}
+    <h1> {{title}}项目高级分析结题报告 </h1>
+    {% endif %}
+  </div>
+
+  {% if samp_info %}
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="样品信息" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+    <h2>一、样品信息</h2>
+    <p class="center">
+      <p class="name_fig">表1　样本信息</p>
+      <div id="tb">
+        <table class="gy" id="qu0">
+          <thead>
+            <tr>
+              <th>ReportID</th>
+              <th>FamilyID</th>
+              <th>SampleID</th>
+              <th>Sex</th>
+              <th>Normal/Patient</th>
+          </thead>
+          <tbody>
+            {% for each in table_sam_info %}
+            <tr>{% for x in each %}
+              <td>{{x|safe}}</td>{% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </p>
+  </div>
+  {% endif %}
+
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="测序数据质量评估" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+    <h3>2　测序数据质量评估</h3>
+    <a name="测序数据过滤"></a>
+
+    <h4>2.1　测序数据过滤</h4>
+
+    <div class="form-group" style="width:50%;margin:auto">
+      <form id="form1" name="form1" method="post" action="">
+        <label>请选择样本
+          <select name="qmna" id="qmname" class="form-control input-lg">
+        </label>
+        {% for each in table_qc %} {% for x in each %}
+        <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+        {% endfor %} {% endfor %}
+        </select>
+      </form>
+    </div>
+    <div id="QMh" style="width:70%;height:400px;margin-left:10%;float:left;"></div>
+    <div id="QM2" style="width:10%;float:left;height:400px;">
+      <div>
+        <button type="button" style="margin-top:100px" id="pqm" class="button button-giant  button-border button-circle">
+          <i class="icon-circle-arrow-up"></i>
+        </button>
+      </div>
+      <button type="button" id="nqm" style="margin-top:25px" class="button button-giant  button-border button-circle">
+        <i class="icon-circle-arrow-down"></i>
+      </button>
+    </div>
+
+
+    <p class="name_fig" style="clear:both">图2.1　原始数据过滤结果</p>
+    <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：
+      <br />
+      <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) Adapter related：因有接头而过滤掉的reads对数及其占总raw reads对数的比例。
+        <br />
+        <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Containing N：因单端测序read中N含量超过10%而过滤掉的reads对数及其占总raw reads对数的比例。</p>
+        <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3) Low quality：因单端测序read中低质量（低于5）碱基比例超过read长度的50%而过滤掉的reads对数及其占总raw
+          reads对数的比例。</p>
+        <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4) Clean reads：最终得到的clean reads对数及其占总raw reads对数的比例。</p>
+
+        <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：过滤去除的Reads是成对的。</p>
+  </div>
+
+
+
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="测序数据质量评估" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+    <a name="测序错误率分布检查"></a>
+    <h4>2.2　测序错误率分布检查</h4>
+    <p class="paragraph">每个碱基的测序Phred值(Phred score, Q
+      <sub>phred</sub>)是由测序错误率通过公式一转化得到的，而测序错误率是在碱基识别(Base Calling)过程中通过一种判别发生错误概率的模型计算得到的。质量值和错误率对应关系如下表所显示：</p>
+    <p class="center">
+      <p class="name_fig">Illumina Casava 1.8版本碱基识别与Phred分值之间的简明对应关系</p>
+      <div id="tb">
+        <table class="gy">
+          <tr>
+            <th>Phred分值</th>
+            <th>不正确的碱基识别</th>
+            <th>碱基正确识别率</th>
+            <th>Q-sorce</th>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>1/10</td>
+            <td>90%</td>
+            <td>Q10</td>
+          <tr>
+          <tr>
+            <td>20</td>
+            <td>1/100</td>
+            <td>99%</td>
+            <td>Q20</td>
+            <tr>
+          <tr>
+            <td>30</td>
+            <td>1/1000</td>
+            <td>99.9%</td>
+            <td>Q30</td>
+          <tr>
+          <tr>
+            <td>40</td>
+            <td>1/10000</td>
+            <td>99.99%</td>
+            <td>Q40</td>
+          <tr>
+        </table>
+    </p>
+    </div>
+    <p class="paragraph">测序错误率与碱基质量有关，受测序仪本身、测序试剂、样品等多个因素共同影响。对于Illumina高通量测序平台，测序错误率分布具有两个特点：</p>
+    <p class="paragraph">(1)测序错误率会随着测序的进行而升高，这是由于测序过程中荧光标记的不完全切割等因素会引起荧光信号衰减，因而导致错误率的升高。</p>
+    <p class="paragraph">(2)每个read前几个碱基的位置也会有较高的测序错误率，这是由于边合成边测序过程初始，测序仪荧光感光元件对焦速度较慢，获取的荧光图像质量较低，导致碱基识别错误率较高。</p>
+
+    <p class="paragraph">测序错误率分布检查用于检测在测序长度范围内，有无异常的碱基位置存在高错误率，例如如果中间位置的碱基测序错误率显著高于其他位置，则可能存在异常碱基。一般情况下，每个碱基位置的测序错误率都应该低于1%。</p>
+
+    <div class="form-group" style="width:50%;margin:auto">
+      <form id="form1" name="form1" method="post" action="">
+        <label>请选择样本
+          <select name="ermna" id="ermname" class="form-control input-lg">
+        </label>
+        {% for each in table_qc %} {% for x in each %}
+        <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+        {% endfor %} {% endfor %}
+        </select>
+      </form>
+    </div>
+    <div id="ERm" style="margin:auto;height:33vw;width:50%;margin-left:25%;float:left"></div>
+    <div id="erm2" style="width:25%;float:left;height:33vw;text-align:center">
+
+      <div>
+        <button type="button" style="margin-top:10vw" id="perm" class="button button-giant  button-border button-circle">
+          <i class="icon-circle-arrow-up"></i>
+        </button>
+      </div>
+      <button type="button" style="margin-top:5vw" id="nerm" class="button button-giant  button-border button-circle">
+        <i class="icon-circle-arrow-down"></i>
+      </button>
+    </div>
+
+
+    <p class="name_fig" style="clear:both">图2.2　测序错误率分布图</p>
+    <p class="premark" align="center">横坐标为reads上的碱基位置，图中展示了read1和read2的测序错误率分布情况。纵坐标为所有reads在该位置上的错误率平均值</p>
+
+
+  </div>
+
+
+
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="GC含量分布检查" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+    <h4>2.3　GC含量分布检查</h4>
+    <p class="paragraph">GC含量分布检查用于检测有无AT、GC 分离现象，理论上G和C碱基及A和T碱基含量每个测序循环上应分别相等，且整个测序过程稳定不变，呈水平线。由于DNA模板扩增偏差及前几个碱基测序质量值较低等原因，常会导致每个read前几个碱基有较大波动，属于正常情况。</p>
+
+
+    <div class="form-group" style="width:50%;margin:auto">
+      <form id="form1" name="form1" method="post" action="">
+        <label for="gczna">请选择样本
+          <select name="gczna" id="gczname" class="form-control input-lg">
+        </label>
+        {% for each in table_qc %} {% for x in each %}
+        <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+        {% endfor %} {% endfor %}
+        </select>
+      </form>
+    </div>
+    <div id="GCz" style="margin:auto;height:33vw;width:50%;margin-left:25%;float:left"></div>
+    <div id="gcz2" style="width:25%;float:left;height:33vw;text-align:center">
+      <div>
+        <button type="button" style="margin-top:10vw;" id="pgcz" class="button button-giant  button-border button-circle">
+          <i class="icon-circle-arrow-up"></i>
+        </button>
+      </div>
+      <button type="button" style="margin-top:5vw;" id="ngcz" class="button button-giant  button-border button-circle">
+        <i class="icon-circle-arrow-down"></i>
+      </button>
+    </div>
+
+    <p class="name_fig" style="clear:both">图2.3　GC含量分布图</p>
+    <p class="premark" align="center">横坐标为reads上的碱基位置，纵坐标为所有reads中，该位置上A、T、C、G四种碱基及未知碱基N所占的比例；不同颜色代表不同的碱基类型</p>
+  </div>
+
+
+
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="测序数据质量分布" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+
+    <h4>2.4　测序数据的平均质量值分布</h4>
+
+    <p class="paragraph">测序数据的质量主要分布在Q30（≥80%）以上，这样才能保证后续分析的正常进行。根据测序技术的特点，测序片段末端的碱基质量一般会比前端的低。</p>
+
+    <p class="center">
+      <div class="form-group" style="width:50%;margin:auto">
+        <form id="form1" name="form1" method="post" action="">
+          <label for="erzna">请选择样本
+            <select name="erzna" id="erzname" class="form-control input-lg">
+          </label>
+          {% for each in table_qc %} {% for x in each %}
+          <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+          {% endfor %} {% endfor %}
+          </select>
+        </form>
+      </div>
+      <div id="ERz" style="margin:auto;height:33vw;width:50%;margin-left:25%;float:left"></div>
+      <div id="erz2" style="width:25%;float:left;height:33vw;text-align:center">
+        <div>
+          <button type="button" style="margin-top:10vw" id="perz" class="button button-giant  button-border button-circle">
+            <i class="icon-circle-arrow-up"></i>
+          </button>
+        </div>
+        <button type="button" style="margin-top:5vw" id="nerz" class="button button-giant  button-border button-circle">
+          <i class="icon-circle-arrow-down"></i>
+        </button>
+      </div>
+
+
+      <p class="name_fig" style="clear:both">图2.4　数据的平均质量值分布</p>
+
+      <p class="premark" align="center">横坐标为reads上的碱基位置，纵坐标为所有reads在该位置上的测序质量值（Phred分值）的平均值</p>
+    </p>
+  </div>
+  <p class="name_fig">表2.5　数据产出质量情况一览表</p>
+  <div id="tb">
+    <table class="gy" id="quaa">
+      <thead>
+        <tr>
+          <th>Sample name</th>
+          <th>Novo ID</th>
+          <th>Raw reads</th>
+          <th>Raw data(G)</th>
+          <th>Raw depth(x)</th>
+          <th>Effective(%)</th>
+          <th>Error(%)</th>
+          <th>Q20(%)</th>
+          <th>Q30(%)</th>
+          <th>GC(%)</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align:right">Total:</td>
+          <td></td>
+        </tr>
+      </tfoot>
+      <tbody>
+        {% for x in table_qcb %}
+
+        <tr>
+          <td>{{x.0}}</td>
+          <td>{{x.1}}</td>
+          <td>{{x.2}}</td>
+          <td>{{x.3}}</td>
+          <td>{{x.4}}</td>
+          <td>{{x.5}}</td>
+          <td>{{x.6}}</td>
+          <td>{{x.7}}</td>
+          <td>{{x.8}}</td>
+          <td>{{x.9}}</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="tremark">
+    <button type="button" onclick="Onload('qua')">点击显示/隐藏完整表格</button>
+  </p>
+  <div id="tb">
+    <table class="gy" id='qua' style="display:none">
+      <thead>
+        <tr>
+          <th>Sample name</th>
+          <th>Novo ID</th>
+          <th>Lane</th>
+          <th>Raw reads</th>
+          <th>Raw data(G)</th>
+          <th>Raw depth(x)</th>
+          <th>Effective(%)</th>
+          <th>Error(%)</th>
+          <th>Q20(%)</th>
+          <th>Q30(%)</th>
+          <th>GC(%)</th>
+      </thead>
+      <tbody>
+        {% for each in table_qc %} {% for x in each %} {% if loop.first %}
+        <tr>
+          <td>{{x.0}}</td>
+          <td>{{x.1}}</td>
+          <td>{{x.2}}</td>
+          <td>{{x.3}}</td>
+          <td rowspan={{each|length}}>{{x.4}}</td>
+          <td rowspan={{each|length}}>{{x.5}}</td>
+          <td>{{x.6}}</td>
+          <td>{{x.7}}</td>
+          <td>{{x.8}}</td>
+          <td>{{x.9}}</td>
+          <td>{{x.10}}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td>{{x.0}}</td>
+          <td>{{x.1}}</td>
+          <td>{{x.2}}</td>
+          <td>{{x.3}}</td>
+          <td>{{x.4}}</td>
+          <td>{{x.5}}</td>
+          <td>{{x.6}}</td>
+          <td>{{x.7}}</td>
+          <td>{{x.8}}</td>
+        </tr>
+        {% endif %} {% endfor %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if dep_res %}
+  <div id="page">
+    <p class="head">
+      <a href="#home" title="返回首页">
+        <img class="logo" align="left" src="../../../src/images/logo.png" />
+      </a>
+      <a name="覆盖度统计结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+      <hr />
+    </p>
+    <p class="center">
+      点击图例可以显示/隐藏样本信息
+      <div style="width:95%;margin:auto">
+        <div id="etll" style="width:100%;height:{{divlen}}px"></div>
+        <div id="eta" class="middle" style="width:50%;float:left;height:500px;"></div>
+        <div id="etb" class="middle" style="width:50%;float:left;height:500px;"></div>
+      </div>
+      <p class="name_fig" style="clear:both">图3.1.1　测序深度</p>
+      <p class="premark">左图为不同测序深度的碱基比例，横坐标表示测序深度，纵坐标表示测序深度为x的碱基在所有碱基中的比例；图像一般在平均深度周围成泊松分布；右图为不同深度上的累积碱基比例，横坐标表示测序深度，纵坐标代表测序深度超过x的碱基在所有碱基中的比例，比如测序深度为0对应了碱基比例100%，表示有100%的碱基其测序深度大于0。</p>
+      <p class="center">
+        点击图例可以显示/隐藏样本信息
+        <div id="etlu" style="width:95%;height:{{divlen}}px;margin:auto"></div>
+        <div id="etu" class="middle" style="width:80%;height:600px;margin-left:auto;margin-right: auto;"></div>
+        <p class="name_fig" style="clear:both">图3.1.2　每条染色体的覆盖深度（左侧坐标）和覆盖率（右侧坐标）</p>
+
+        <p class="premark">横坐标表示染色体编号，左侧纵坐标表示平均覆盖深度，右侧纵坐标表示覆盖率。{% if not WGS%} 对每条染色体计算覆盖深度时，计算公式为：每条染色体的测序数据量/每条染色体上外显子区域的总长度。计算覆盖率时，公式为：每条染色体被覆盖的总长度/每条染色体上外显子区域的总长度。{%
+          else %} 对每条染色体计算覆盖深度时，计算公式为：每条染色体的测序数据量/每条染色体的总长度。计算覆盖率时，公式为：每条染色体被覆盖的总长度/每条染色体的总长度。{% endif %}</p>
+
+        <h4>3.2　覆盖度统计结果</h4>
+        <p class="center">
+          <p class="name_fig">表3.2　比对率和覆盖度统计</p>
+          <div id="tb">
+            <table class="gy" id="qub">
+              {% for each in table_dept %}
+              {% set counter = loop.index %}
+              {% if loop.first %}
+              <thead>
+                <tr>{% for x in each %}
+                  <th>{{x|safe}}</th>{% endfor %}</tr>
+              </thead>
+              <tbody>
+                {% else %} {% if each.0 in gaoliang %}
+                <tr>{% for x in each %} {% if loop.first %}
+                  <td bgcolor="#C2D69B">{{x|safe}}
+                    <sup>{{ counter }}</sup>
+                  </td>
+                  {% else %}
+                  <td bgcolor="#C2D69B">{{x|safe}}</td>
+                  {% endif %} {% endfor %}</tr>
+                {% else %}
+                <tr>{% for x in each %} {% if loop.first %}
+                  <td>{{x|safe}}
+                    <sup>{{ counter }}</sup>
+                  </td>
+                  {% else %}
+                  <td>{{x|safe}}</td>
+                  {% endif %} {% endfor %}</tr>
+                {% endif %} {% endif %} {% endfor %}
+              </tbody>
+
+            </table>
+          </div>
+        </p>
+        
+        {% include "partial/mapping_stat.html" %}
+
+
+  </div>
+  {% endif %}
+
+{% endblock body %}

@@ -1,0 +1,4563 @@
+{% extends "base.html" %}
+
+{% block style %}
+  <style>
+    .countt {
+      counter-reset: slideNum;
+    }
+    .countt tr:before {
+      counter-increment: slideNum;
+      content: counter(slideNum)".";
+    }
+  </style>
+{% endblock style %}
+
+{% block script %}
+  <script>
+    $(document).ready(function () {
+
+      // 初始化materialScrollTop
+      $('body').materialScrollTop();
+
+      $('.flexslider').flexslider({
+        animation: "slide",
+        slideshow: false,
+        controlNav: false
+      });
+
+
+      $('#leftNavigation .step').click(function (event) {
+        $(this).children('ul').slideToggle();
+      });
+
+      // 显示隐藏按钮切换
+      $('.hide_or_show').click(function (e) {
+        $(this).parent().next().fadeToggle();
+      });
+
+    });
+
+    function displaySubMenu(li) {
+      var subMenu = li.getElementsByTagName("ul")[0];
+      subMenu.style.display = "block";
+    }
+
+    function hideSubMenu(li) {
+      var subMenu = li.getElementsByTagName("ul")[0];
+      subMenu.style.display = "none";
+    }
+  </script>
+{% endblock script %}
+
+{% block body %}
+
+  <button class="material-scrolltop" type="button"></button>
+
+<!-- --------------------------------------------------------------- Menu bar----------------------------------------------------------------------- -->
+  <div id="contentLeft" class="linear" style="overflow-y:auto">
+    <img style="margin-top:10px;margin-left:5%;width:90%" src="src/images/logo1.png" />
+  <ul id="leftNavigation" class="nav">
+{% if samp_info %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#项目背景">项目背景</a>
+<ul>
+
+{% if rep_advance %}
+{% if typem %}
+<li><a href="#单基因病">单基因病基因组研究</a></li>
+{% endif %}
+{% if typec %}
+<li><a href="#复杂疾病">复杂疾病基因组研究</a></li>
+{% endif %}
+<li><a href="#样本信息">样本信息</a></li>
+</ul>
+</li>
+{% else %}
+<li><a href="#样本信息">样本信息</a></li></ul></li>
+{% endif %}
+{% endif %}
+
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#实验流程">实验流程</a>
+<ul>
+<li><a href="#样品检测"><i class="icon-angle-right"></i> 样品检测</a></li>
+{% if not WGS %}
+<li><a href="#建库捕获"><i class="icon-angle-right"></i> 建库捕获</a></li>
+{% endif %}
+{% if WGS %}
+<li><a href="#建库捕获"><i class="icon-angle-right"></i> 文库构建</a></li>
+{% endif %}
+<li><a href="#库检"><i class="icon-angle-right"></i> 库检</a></li>
+<li><a href="#上机测序"><i class="icon-angle-right"></i> 上机测序</a></li>
+</ul>
+</li>
+{% if analy_flow %}
+<li><a href="#生物信息分析流程">生物信息分析流程</a></li>
+{% endif %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#数据质量控制">数据质量控制</a>
+<ul>
+<li><a href="#原始序列数据"><i class="icon-angle-right"></i> 原始序列数据</a></li>
+<li><a href="#测序数据质量评估"><i class="icon-angle-right"></i> 测序数据质量评估</a></li>
+<li><a href="#测序数据过滤"><i class="icon-angle-right"></i> 测序数据过滤</a></li>
+<li><a href="#测序错误率分布检查"><i class="icon-angle-right"></i> 测序错误率分布检查</a></li>
+{% if WGS%}
+<li><a href="#GC含量分布检查"><i class="icon-angle-right"></i> GC含量分布检查</a></li>
+{% endif %}
+<li><a href="#测序数据质量分布"><i class="icon-angle-right"></i> 测序数据质量分布</a></li>
+<li><a href="#测序数据质量情况汇总"><i class="icon-angle-right"></i> 测序数据质量情况汇总</a></li>
+{% if dep_res %}
+<li><a href="#参考序列比对分析"><i class="icon-angle-right"></i> 测序深度、覆盖度分布</a></li>
+<li><a href="#覆盖度统计结果"><i class="icon-angle-right"></i> 覆盖度统计结果</a></li>
+{% endif %}
+</ul>
+</li>
+{% if muts_res %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#变异检测结果">变异检测结果</a>
+<ul>
+{% if snp_indel_res %}
+<li><a href="#变异检测结果"><i class="icon-angle-right"></i> SNP检测结果</a></li>
+<li><a href="#InDel检测结果"><i class="icon-angle-right"></i> InDel检测结果</a></li>
+{% endif %}
+{% if sv_res %}
+<li><a href="#SV检测结果"><i class="icon-angle-right"></i> SV检测结果</a></li>
+{% endif %}
+{% if cnv_res %}
+<li><a href="#CNV检测结果"><i class="icon-angle-right"></i> CNV检测结果</a></li>
+{% if not WES_cnv_CoNIFER %}
+<li><a href="#Circos图"><i class="icon-angle-right"></i> Circos图</a></li>
+{% endif %}
+{% endif %}
+</ul>
+</li>
+{% endif %}
+{% if rep_advance %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#高级分析结果">高级分析结果</a>
+<ul>
+{% if filter_res %}
+<li><a href="#突变位点筛选结果"><i class="icon-angle-right"></i> 突变位点筛选</a></li>
+{% endif %}
+
+{% if DamLevel %}
+<li><a href="#有害性"><i class="icon-angle-right"></i> 突变位点有害性分级</a></li>
+{% endif %}
+
+{% if Noncoding %}
+<li><a href="#非编码"><i class="icon-angle-right"></i> 非编码区筛选结果</a></li></li>
+{% endif %}
+
+{% if FilterSV or FilterCNV %}
+<li><a href="#结构变异过滤"><i class="icon-angle-right"></i> 结构变异有害性分析</a></li></li>
+{% endif %}
+
+{% if ModelR or ModelD %}
+<li><a href="#显隐性模式筛选"><i class="icon-angle-right"></i> 显隐性模式筛选</a></li>
+{% endif %}
+
+{% if ShareCompare %}
+<li><a href="#共有基因"><i class="icon-angle-right"></i> 共有突变基因筛选</a></li></li>
+{% endif %}
+
+
+{% if denovo_res %}
+<li><a href="#新生突变"><i class="icon-angle-right"></i> 新生突变筛选</a></li>
+{% endif %}
+{% if linkage_res %}
+<li><a href="#连锁分析"><i class="icon-angle-right"></i> 连锁分析</a></li>
+{% endif %}
+{% if roh_res %}
+<li><a href="#ROH分析"><i class="icon-angle-right"></i> ROH分析</a></li>
+{% endif %}
+{% if Funcenrichement %}
+<li><a href="#Funcenrichement"><i class="icon-angle-right"></i> 候选基因功能富集</a></li>
+{% endif %}
+
+{% if Pathway %}
+<li><a href="#通路"><i class="icon-angle-right"></i> 候选基因富集分析</a></li></li>
+{% endif %}
+
+{% if ppinter %}
+<li><a href="#蛋白互作"><i class="icon-angle-right"></i> 蛋白功能互作分析</a></li>
+{% endif%}
+
+{% if asso_site %}
+<li><a href="#关联分析"><i class="icon-angle-right"></i> 关联分析</a></li>
+{% endif%}
+
+{% if GeneAS %}
+<li><a href="#Burden分析"><i class="icon-angle-right"></i> Burden分析</a></li>
+{% endif%}
+
+{% if net_work %}
+<li><a href="#疾病-基因网络图"><i class="icon-angle-right"></i> 基因-疾病表型关联性分析</a></li>
+{% endif%}
+
+</ul>
+</li>
+{% endif %}
+
+{% if rep_person %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#个性化分析结果">个性化分析结果</a>
+<ul>
+{% if asso %}
+<li><a href="#关联分析"><i class="icon-angle-right"></i> 关联分析</a></li>
+{% endif %}
+{% if drug %}
+<li><a href="#药物基因组"><i class="icon-angle-right"></i> 药物基因组学</a></li>
+{% endif %}
+</ul></li>
+{% endif %}
+
+{% if disease_report_table %}
+<li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)"><a href="#病种分析结果">病种分析结果</a>
+  <ul>
+    <li><a href="#病种分析结果解读"><i class="icon-angle-right">病种分析结果解读</i></a></li>
+  </ul>
+</li>
+{% endif %}
+
+
+
+
+{% if rep_primary or rep_advance %}
+<li><a href="#References">参考文献</a></li>
+<li><a href="#附录">附录</a>
+</li>
+
+{% endif %}
+</ul>
+  </div>
+  <div id="contentRight">
+  <div style="text-align:center" >
+  {% if rep_qc %}
+    <h1> 诺禾致源疾病基因组质控报告 </h1>
+{% endif%}
+{% if rep_mapping %}
+    <h1> 诺禾致源疾病基因组质控与覆盖度报告 </h1>
+{% endif%}
+{% if rep_primary %}
+  <h1>诺禾致源疾病基因组基本分析结题报告 </h1>
+{% endif%}
+{% if rep_advance %}
+  <h1>诺禾致源疾病基因组高级分析结题报告 </h1>
+{% endif %}
+<br><div style="text-align:left;font-size:16px;line-height:1">
+<p>项目编号：{{hetongnum}}</p>
+<p>项目名称：{{hetongname}}</p>
+<p>报告编号：{{reportnum}}</p>
+<p>报告日期：{{datet}}</p>
+</div>
+</div>
+<!----------------------------------------------------------menu over--------------------------------------------------------------------------------->
+
+
+
+
+<!--------------------------------------------------------- 目录 ------------------------------------------------------------------------------------>
+
+
+{% if samp_info %}
+	<div id="page">
+	{% if typem or typec %}
+		<a name="项目背景" ></a>
+		<hr />
+
+		<h2>一、项目背景</h2>
+
+		{% if typem %}
+			<a name='单基因病'></a>
+			<h3>1　单基因病基因组研究</h3>
+			<p class="paragraph">单基因遗传病是指由单个基因或单对基因突变导致的疾病，其遵循孟德尔遗传规律，受环境影响较小， 单基因遗传病可以分为五种类型：常染色体显性遗传病（如短指症）、常染色体隐性遗传病（如白化病等）、伴 X 显性遗传病（如抗维生素 D 缺乏病等）、伴 X隐性遗传病（如色盲等）、伴 Y 遗传病（如耳廓长毛症等）。这些疾病已经对人类健康构成了较大的威胁。高通量测序为单基因病基因组学研究提供了广阔的空间，为找出致病基因和探究疾病发生发展机制提供重要依据。</p>
+		{% else %}
+			<a name='复杂疾病'></a>
+			<h3>1　复杂疾病基因组研究</h3>
+			<p class="paragraph">复杂疾病涉及因素众多，如多个基因、一个基因的多个突变、环境作用以及未知的随机因素。它的遗传模式复杂， 每个基因对表型的影响有限，单独不足以致病， 而是多种因素共同作用的结果。复杂疾病在普通人群中发病率较高(一般不少于 1%)，如精神分裂症、肥胖、糖尿病、 高血压等。</p>
+		{% endif %}
+
+		<a name='样本信息'></a>
+		<h3>2　样本信息</h3>
+	{% else %}
+		<a name="样本信息" ></a>
+		<hr />
+		{% if not disease_report_table %}
+			<h2>一、样本信息</h2>
+				<p class="center">
+				<p class="name_fig">表1.1　样本信息</p>
+				<div id="tb">
+				<table class="gy" id="qu0">
+				<thead><tr><th>ReportID</th><th>FamilyID</th><th>SampleID</th><th>Sex</th><th>Normal/Patient</th></thead>
+				<tbody>
+					{% for each in table_sam_info %}
+						<tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+					{% endfor %}
+				</tbody>
+				</table>
+				</div>
+				</p>
+				</div>
+		{% else %}
+			<h2>一、项目背景</h2>
+				<h3>1、样本信息</h3>
+					<p class="center">
+					<p class="name_fig">表1.1　样本信息</p>
+					<div id="tb">
+					<table class="gy" id="qu0">
+					<thead><tr><th>ReportID</th><th>FamilyID</th><th>SampleID</th><th>Sex</th><th>Normal/Patient</th></thead>
+					<tbody>
+						{% for each in table_sam_info %}
+							<tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+						{% endfor %}
+					</tbody>
+					</table>
+					</div>
+					</p>
+				<h3>2、疾病背景</h3>
+					<p class="center">
+					<!-- -------------------------------------病种模板识别，由doid匹配路径下整理的模板------------------------------ -->
+						{% include doid_bg_html %}
+					</p>
+				</div>
+		{% endif %}
+	{% endif %}
+{% endif %}
+
+
+<!-- -------------------------------------------------建库测序流程--------------------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="实验流程" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if samp_info %}
+<h2>二、实验流程</h2>
+{% else %}
+<h2>一、实验流程</h2>
+{% endif %}
+<a name="样品检测"></a>
+<h3>1　DNA样品检测</h3>
+<p class="paragraph">诺禾致源对DNA样品的检测主要包括2种方法：</p>
+<p class="paragraph">(1) 琼脂糖凝胶电泳分析DNA降解程度以及是否有RNA、蛋白质污染。</p>
+<p class="paragraph">(2) Qubit 3.0对DNA浓度进行精确定量。其中含量在{% if WGS %}0.5{% endif %}{% if TS %}0.5{% endif %}{% if WES_ag %}0.6{% endif %}{% if WES_illu %}0.6{% endif %}ug 以上的 DNA 样品被用来建库。</p>
+
+
+<a name="建库捕获"></a>
+{% if not WGS %}
+<h3>2　建库捕获</h3>
+
+{% if TS %}<!--修改WES-tar to TS-->
+<p class="paragraph">诺禾致源采用Agilent的液相芯片捕获系统，对人的特定目标区域DNA进行高效富集，然后在Illumina平台上进行高通量、高深度测序。建库和捕获实验采用Agilent SureSelectXT Custom试剂盒，严格使用说明书推荐的试剂和耗材，并参照最新的经过优化的实验流程进行操作。</p>
+<p class="paragraph">实验基本流程：将基因组DNA经Covaris破碎仪随机打断成长度为180-280bp的片段，经末端修复和加A尾后在片段两端分别连接上接头制备DNA文库。带有特异index的文库pooling后与多达500,000个生物素标记的探针进行液相杂交，再使用带链霉素的磁珠将n个基因的n个外显子捕获下来，经PCR扩增后进行文库质检，合格即可进行测序 (图2.2.1)。</p>
+<p class="center">
+<!--<img class="small" src="src/images/agilent experiment pipeline.png" />-->
+<img  class="middle" src="src/images/agilent_experiment_pipeline.jpg" /></p>
+{% endif %}
+
+{% if WES_ag %}
+{% if v5 %}
+<p class="paragraph">诺禾致源采用Agilent的液相芯片捕获系统，对人的全外显子区域DNA进行高效富集，然后在Illumina平台上进行高通量、高深度测序。建库和捕获实验采用Agilent SureSelect Human All Exon V5试剂盒，严格使用说明书推荐的试剂和耗材，并参照最新的经过优化的实验流程进行操作。</p>
+{% endif %}
+{% if v6 %}
+<p class="paragraph">诺禾致源采用Agilent的液相芯片捕获系统，对人的全外显子区域DNA进行高效富集，然后在Illumina平台上进行高通量、高深度测序。建库和捕获实验采用Agilent SureSelect Human All Exon V6试剂盒，严格使用说明书推荐的试剂和耗材，并参照最新的经过优化的实验流程进行操作。</p>
+{% endif %}
+<p class="paragraph">实验基本流程：将基因组DNA经Covaris破碎仪随机打断成长度为180-280bp的片段，经末端修复和加A尾后在片段两端分别连接上接头制备DNA文库。带有特异index的文库pooling后与生物素标记的探针进行液相杂交，再使用带链霉素的磁珠将基因上的外显子捕获下来，经PCR扩增后进行文库质检，合格即可进行测序 (图2.2.1)。</p>
+
+<p class="center">
+<!--<img class="small" src="src/images/agilent experiment pipeline.png" />-->
+<img  class="middle" src="src/images/agilent_experiment_pipeline.jpg" />
+</p>
+{% endif %}
+
+{% if WES_illu %}
+<p class="paragraph">诺禾致源采用Illumina TruSeqTM人外显子液相靶向序列富集系统进行高覆盖率的外显子区域捕获，然后在Illumina平台上进行高通量、高深度测序。建库和捕获实验分别采用TruSeq DNA Sample Preparetion 和Exome Enrichment 试剂盒，严格使用说明书推荐的试剂和耗材、并参照最新的经过优化的实验流程进行操作。</p>
+<p class="paragraph">实验基本流程：将基因组DNA经Covaris破碎仪随机打断成长度为180-280bp的片段，末端修复和加A尾后在片段两端分别连接上接头制备DNA文库。带有特异index的文库pooling后与多达340,427个生物素标记的探针进行液相杂交，再使用带链霉素的磁珠将20,794个基因的201,121个外显子捕获下来，经PCR扩增后进行文库质检，合格即可进行测序(图2.2.1)。</p>
+<p class="center">
+<!--<img class="small" src="src/images/Illumina experiment pipeline.png" />-->
+<img class="middle" src="src/images/illumina_experiment_pipeline.png" />
+</p>
+{% endif %}
+
+<!--{% if WGS %}
+<p class="paragraph">检验合格的DNA样品通过Covaris破碎仪随机打断成长度为350bp的片段。采用TruSeq Library Construction Kit 进行建库，严格使用说明书推荐的试剂和耗材。DNA片段经末端修复、加ployA尾、加测序接头、纯化、PCR扩增等步骤完成整个文库制备。构建好的文库通过illumina HiSeq XTen进行测序(图2.2.1)。</p>
+<p class="center">
+<img src="src/images/wgs_experiment_pipeline.png" /></p>
+{% endif %}-->
+
+
+<p class="name_fig">图2.2.1　建库流程</p>
+{% endif %}
+
+{% if WGS %}
+<h3>2　文库构建</h3>
+<p class="paragraph">将基因组 DNA 经 Covaris 破碎仪随机打断成长度为 350 bp 左右的片段，经末端修复和加 A 尾后，再在片段两端分别连接接头，制备 DNA 文库(图2.2.1)。</p>
+<p class="center">
+<!--<img class="small" src="src/images/Illumina experiment pipeline.png" />-->
+<img class="middle" src="src/images/library.png" />
+</p>
+<p class="name_fig">图2.2.1　文库构建流程</p>
+<p class='tremark'>注：接头（adapter），即图2.2.1中的P5、P7，接头用于测序仪进行桥式PCR的过程；Index，标签序列，用来区分不同的样品；Rd1 SP/Rd2 SP，测序引物。</p>
+{% endif %}
+
+<a name="库检"></a>
+<h3>3　库检</h3>
+<p class="paragraph">文库构建完成后，先使用Qubit 2.0进行初步定量，随后使用NGS3K/Caliper对文库的insert size进行检测，insert size符合预期后，使用qPCR方法对文库的有效浓度(3 nM)进行准确定量，以保证文库质量。</p>
+<a name="上机测序"></a>
+<h3>4　上机测序</h3>
+
+
+<p class="paragraph">库检合格，根据文库的有效浓度及数据产出需求运用Illumina平台进行测序。</p>
+<p class="tremark">注： PE150，Pair end 150 bp。意指高通量双端测序，每端各测 150 bp。在构建的小片段文库中， insertDNA，即插入片段是高通量测序中直接测序的单位。而双端测序是将每条插入片段的两端进行测序的方法，由于插入片段的长度分布已知，双端测序时不仅可以知道片段两端的序列，也能知道这两段序列之间的长度，从而便于后续比对。</p>
+
+
+</div>
+
+
+
+
+{% if analy_flow %}
+<!-- ---------------------------------------------------------生物信息分析流程--------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="生物信息分析流程" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if samp_info %}
+<h2>三、生物信息分析流程</h2>
+{% else %}
+<h2>二、生物信息分析流程</h2>
+{% endif %}
+
+
+
+
+<p class="paragraph">获得原始测序序列(Sequenced Reads)后，在有参考序列或参考基因组（<a href="ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/2.8/b37/"  target=_blank><span class="span" title="我们采用的参考基因组下载自GATK">GRCh37</span></a>/hg19）的情况下，进行信息分析流程，大致包括以下三个部分：</p>
+<p class="paragraph">1)	测序数据质量评估：主要对测序错误率、数据量和比对率等进行统计，评估建库测序是否达到了标准，符合标准则进行后续分析，否则需重新建库或加测。</p>
+<p class="paragraph">2)	变异检测：将高质量的序列比对到人参考基因组上，检测样本中的变异信息，并对检出的变异进行统计和注释。</p>
+<p class="paragraph">3)	变异筛选及与疾病相关性的预测：对变异检测的结果，通过基于变异有害性、样本情况和基于基因功能和表型的三种分析策略，筛选出与疾病相关的有害变异位点或基因。</p>
+<p class="center">
+
+{% if WGS %}
+{% if dep_res %}
+  {% if muts_res %}
+  <img class="small" src="src/images/disease_wgs.png" />
+  {% else %}
+  <!--<img class="pipe" src="src/images/mapping.png" />-->
+  <img class="middle1" src="src/images/mapping.png" />
+  {% endif %}
+<!--<img class="pipe" src="src/images/wgs_analysis_pipeline.png" />-->
+{% else %}<!--只建库测序的WGS-->
+<img class="middle1" src="src/images/QC.png" />
+{% endif %}
+
+{% else %}<!--not WGS-->
+{% if dep_res %}
+  {% if muts_res %}
+  <img class="middle1" src="src/images/disease_wes.png" />
+  {% else %}
+  <!--<img class="pipe" src="src/images/mapping.png" />-->
+  <img class="middle1" src="src/images/mapping.png" />
+  {% endif %}
+{% else %}<!--只建库测序的WES-->
+<img class="middle1" src="src/images/QC.png" />
+{% endif %}
+
+{% endif %}
+</p>
+</div>
+{% endif %}
+
+
+<!-- ---------------------------------------------------------------- 原始序列数据 ----------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="数据质量控制" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if samp_info %}
+<h2>四、数据质量控制</h2>
+{% else %}
+<h2>三、数据质量控制</h2>
+{% endif %}
+<a name="原始序列数据"></a>
+<h3>1　原始序列数据</h3>
+<p class="paragraph">高通量测序(如Illumina测序平台)测序得到的原始图像数据文件经碱基识别(Base Calling)分析转化为原始测序序列(Sequenced Reads)，我们称之为Raw Data或Raw Reads，结果以FASTQ(简称为fq)文件格式存储，其中包含测序序列<span class="span" title="reads，是一个测序反应能测得的碱基序列。它的长度和测序策略有关，比如Illumina的PE150测序，就是对一条DNA序列测序，得到两端序列，每端得到的就是一个长度为150 bp的read。">(reads)</span>的序列信息及其对应的测序质量信息。</p>
+<p class="paragraph">FASTQ格式文件中每个read由四行描述，如下：</p>
+<p class="seq">
+@EAS139:136:FC706VJ:2:2104:15343:197393 1:Y:18:ATCACG         <br />
+GCTCTTTGCCCTTCTCGTCGAAAATTGTCTCCTCATTCGAAACTTCTCTGT           <br />
++                                                             <br />
+@@CFFFDEHHHHFIJJJ@FHGIIIEHIIJBHHHIJJEGIIJJIGHIGHCCF           </p>
+<p class="paragraph">其中第一行以“@”开头，随后为Illumina 测序标识符(Sequence Identifiers)和描述文字(选择性部分)；第二行是碱基序列；第三行以“+”开头，随后为Illumina 测序标识符(选择性部分)；第四行是对应序列的测序质量。</p>
+<p class="paragraph">Illumina 测序标识符详细信息如下：</p>
+<div id="tb">
+<p class="center">
+<table frame=hsides class='gy' style='border-collapse:collapse;width:80%;margin:auto;text-align:center'>
+<tr><td>EAS139</td><td>The unique instrument name</td></tr>
+<tr><td>136</td><td>Run ID</td></tr>
+<tr><td>FC706VJ</td><td>Flowcell ID</td></tr>
+<tr><td>2</td><td>Flowcell lane</td></tr>
+<tr><td>2104</td><td>Tile number within the flowcell lane</td></tr>
+<tr><td>15343</td><td>'x'-coordinate of the cluster within the tile</td></tr>
+<tr><td>197393</td><td>'y'-coordinate of the cluster within the tile</td></tr>
+<tr><td>1</td><td>Member of a pair, 1 or 2 (paired-end or mate-pair reads only)</td></tr>
+<tr><td>Y</td><td>Y if the read fails filter (read is bad), N otherwise</td></tr>
+<tr><td>18</td><td>0 when none of the control bits are on, otherwise it is an even number</td></tr>
+<tr><td>ATCACG</td><td>Index sequence</td></tr>
+</table>
+</p>
+</div>
+<p class="paragraph">第四行中每个字符对应的ASCII值减去33，即为对应第二行碱基的测序质量值。如果测序错误率用e表示，Illumina测序平台的碱基质量值用Q<sub>phred</sub>表示，则有下列关系：</p>
+<p class="center">公式一：　Q<sub>phred</sub>　=　-10log<sub>10</sub>(e)</p>
+<p class="paragraph" align="center">此公式可说明，质量值越大测序错误率越低，准确性越高。</p>
+
+<!--<p class="paragraph">Illumina Casava 1.8版本测序错误率与测序质量值简明对应关系如下：</p>
+<div id="tb">
+<p class="center">
+<table class="gy">
+<tr><th>测序错误率</th><th>测序质量值</th><th>对应字符</th></tr>
+<tr><td>5%</td><td>13</td><td>.</td></tr>
+<tr><td>1%</td><td>20</td><td>5</td></tr>
+<tr><td>0.1%</td><td>30</td><td>?</td></tr>
+<tr><td>0.01%</td><td>40</td><td>I</td></tr>
+</table></p>
+</div>-->
+
+</div>
+
+
+
+
+<!-- -------------------------------------------------------- 测序数据质量评估 ------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="测序数据质量评估" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>2　测序数据质量评估</h3>
+<a name="测序数据过滤"></a>
+
+<h4>2.1　测序数据过滤</h4>
+<p class="paragraph">测序得到的原始测序序列，里面含有带接头的、低质量的reads。为了保证信息分析质量，需要对raw reads进行精细过滤，得到clean reads，后续分析都基于clean reads进行。</p>
+<p class="paragraph">数据处理的步骤如下：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 去除带接头(adapter)的reads对；<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) 当单端测序read中N（N表示无法确定碱基信息）的比例大于10%时，需要去除此对reads；<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3) 当单端测序read中含有的低质量(低于5)碱基数超过该条read长度比例的 50% 时，需要去除此对reads。</p>
+<p class="paragraph">DNA-Seq 的接头(Adapter, Oligonucleotide sequences for TruSeq<sup>TM</sup> DNA Sample Prep Kits) 信息：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5’ Adapter：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5’-AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT-3’<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3’ Adapter：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5’-GATCGGAAGAGCACACGTCTGAACTCCAGTCAC<u>(6位index)</u>ATCTCGTATGCCGTCTTCTGCTTG-3’</p>
+
+<!--加原始数据过滤结果图,路径在src_pictures_1.Class-->
+
+
+<div class="form-group" style="width:50%;margin:auto">
+  <form id="form1" name="form1" method="post" action="">
+  <label>请选择样本
+  <select name="qmna" id="qmname" class="form-control input-lg"></label>
+{% for each in table_qc %}
+  {% for x in each %}
+      <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+  {% endfor %}
+{% endfor %}
+  </select>
+  </form>
+</div>
+<div id="QMh" ></div>
+<div id="QM2" class="hide_in_pdf" style="width:10%;float:left;height:400px;">
+<div><button type="button" style="margin-top:100px" id="pqm" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-up"></i>
+</button></div>
+<button type="button" id="nqm" style="margin-top:25px" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-down"></i>
+</button>
+</div>
+
+
+<p class="name_fig" style="clear:both">图4.2.1.1　原始数据过滤结果</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：<br />
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) Adapter related：因有接头而过滤掉的reads对数及其占总raw reads对数的比例。<br />
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) Containing N：因单端测序read中N含量超过10%而过滤掉的reads对数及其占总raw reads对数的比例。</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3) Low quality：因单端测序read中低质量（低于5）碱基比例超过read长度的50%而过滤掉的reads对数及其占总raw reads对数的比例。</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4) Clean reads：最终得到的clean reads对数及其占总raw reads对数的比例。</p>
+
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：过滤去除的Reads是成对的。</p>
+</div>
+
+
+
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="测序数据质量评估" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<a name="测序错误率分布检查"></a>
+<h4>2.2　测序错误率分布检查</h4>
+<p class="paragraph">每个碱基的测序Phred值(Phred score, Q<sub>phred</sub>)是由测序错误率通过公式一转化得到的，而测序错误率是在碱基识别(Base Calling)过程中通过一种判别发生错误概率的模型计算得到的。质量值和错误率对应关系如下表所显示：</p>
+<p class="center">
+<p class="name_fig">表4.2.2.1　Illumina Casava 1.8版本碱基识别与Phred分值之间的简明对应关系</p>
+<div id="tb">
+<table class="gy">
+<tr><th>Phred分值</th><th>不正确的碱基识别</th><th>碱基正确识别率</th><th>Q-sorce</th></tr>
+<tr><td>10</td><td>1/10</td><td>90%</td><td>Q10</td><tr>
+<tr><td>20</td><td>1/100</td><td>99%</td><td>Q20</td><tr>
+<tr><td>30</td><td>1/1000</td><td>99.9%</td><td>Q30</td><tr>
+<tr><td>40</td><td>1/10000</td><td>99.99%</td><td>Q40</td><tr>
+</table>
+</p></div>
+<p class="paragraph">测序错误率与碱基质量有关，受测序仪本身、测序试剂、样品等多个因素共同影响。对于Illumina高通量测序平台，测序错误率分布具有两个特点：</p>
+<!--<span class="span" title="即Next Generation Sequencing,第二代测序技术的核心思想是边合成边测序">NGS</span>技术-->
+<p class="paragraph">(1)测序错误率会随着测序的进行而升高，这是由于测序过程中荧光标记的不完全切割等因素会引起荧光信号衰减，因而导致错误率的升高。</p>
+<p class="paragraph">(2)每个read前几个碱基的位置也会有较高的测序错误率，这是由于边合成边测序过程初始，测序仪荧光感光元件对焦速度较慢，获取的荧光图像质量较低，导致碱基识别错误率较高。</p>
+
+<p class="paragraph">测序错误率分布检查用于检测在测序长度范围内，有无异常的碱基位置存在高错误率，例如如果中间位置的碱基测序错误率显著高于其他位置，则可能存在异常碱基。一般情况下，每个碱基位置的测序错误率都应该低于1%。</p>
+
+<div class="form-group" style="width:50%;margin:auto">
+  <form id="form1" name="form1" method="post" action="">
+  <label>请选择样本
+  <select name="ermna" id="ermname" class="form-control input-lg"></label>
+{% for each in table_qc %}
+  {% for x in each %}
+      <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+  {% endfor %}
+{% endfor %}
+  </select>
+  </form>
+</div>
+<div id="ERm" ></div>
+<div id="erm2"  class="hide_in_pdf" style="width:25%;float:left;height:33vw;text-align:center">
+
+<div><button type="button" style="margin-top:10vw" id="perm" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-up"></i></button></div>
+<button type="button" style="margin-top:5vw" id="nerm" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-down"></i></button></div>
+
+
+<p class="name_fig" style="clear:both">图4.2.2.1　测序错误率分布图</p>
+<p class="premark" align="center">横坐标为reads上的碱基位置，图中展示了read1和read2的测序错误率分布情况。纵坐标为所有reads在该位置上的错误率平均值</p>
+
+
+</div>
+
+
+{% if WGS %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="GC含量分布检查" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h4>2.3　GC含量分布检查</h4>
+<p class="paragraph">GC含量分布检查用于检测有无AT、GC 分离现象，理论上G和C碱基及A和T碱基含量每个测序循环上应分别相等，且整个测序过程稳定不变，呈水平线。由于DNA模板扩增偏差及前几个碱基测序质量值较低等原因，常会导致每个read前几个碱基有较大波动，属于正常情况。</p>
+
+
+<div class="form-group" style="width:50%;margin:auto">
+  <form id="form1" name="form1" method="post" action="">
+  <label for="gczna">请选择样本
+  <select name="gczna" id="gczname" class="form-control input-lg"></label>
+{% for each in table_qc %}
+  {% for x in each %}
+      <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+  {% endfor %}
+{% endfor %}
+  </select>
+  </form>
+</div>
+<div id="{{NGC}}"></div>
+<div id="gcz2"  class="hide_in_pdf" style="width:25%;float:left;height:33vw;text-align:center">
+<div>
+<button type="button" style="margin-top:10vw;" id="pgcz" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-up"></i></button></div>
+<button type="button" style="margin-top:5vw;" id="ngcz" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-down"></i></button></div>
+
+<p class="name_fig" style="clear:both">图4.2.3.1　GC含量分布图</p>
+<p class="premark" align="center">横坐标为reads上的碱基位置，纵坐标为所有reads中，该位置上A、T、C、G四种碱基及未知碱基N所占的比例；不同颜色代表不同的碱基类型</p>
+</div>
+{% endif %}
+
+
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="测序数据质量分布" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if not WGS %}
+<h4>2.3　测序数据的平均质量值分布</h4>
+{% else %}
+<h4>2.4　测序数据的平均质量值分布</h4>
+{% endif %}
+<p class="paragraph">测序数据的质量主要分布在Q30（≥80%）以上，这样才能保证后续分析的正常进行。根据测序技术的特点，测序片段末端的碱基质量一般会比前端的低。</p>
+
+<p class="center">
+<div class="form-group" style="width:50%;margin:auto">
+  <form id="form1" name="form1" method="post" action="">
+  <label for="erzna">请选择样本
+  <select name="erzna" id="erzname" class="form-control input-lg"></label>
+{% for each in table_qc %}
+  {% for x in each %}
+      <option>{{x.0}}_{{x.1}}_{{x.2}}</option>
+  {% endfor %}
+{% endfor %}
+  </select>
+  </form>
+</div>
+<div id="ERz"></div>
+<div id="erz2" class="hide_in_pdf" style="width:25%;float:left;height:33vw;text-align:center">
+<div><button type="button" style="margin-top:10vw" id="perz" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-up"></i></button></div>
+<button type="button" style="margin-top:5vw" id="nerz" class="button button-giant  button-border button-circle">
+<i class="icon-circle-arrow-down"></i></button></div>
+
+{% if not WGS %}
+<p class="name_fig" style="clear:both">图4.2.3.1　数据的平均质量值分布</p>
+{% else %}
+<p class="name_fig" style="clear:both">图4.2.4.1　数据的平均质量值分布</p>
+{% endif %}
+<p class="premark" align="center">横坐标为reads上的碱基位置，纵坐标为所有reads在该位置上的测序质量值（Phred分值）的平均值</p>
+</p>
+</div>
+
+
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="测序数据质量情况汇总" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if not WGS %}
+<h4>2.4　测序数据质量情况汇总</h4>
+{% else %}
+<h4>2.5　测序数据质量情况汇总</h4>
+{% endif %}
+{% if WGS %}
+<P class="paragraph">根据Illumina的测序特点，使用双端测序的数据，我们要求Q30平均比例在80%以上，平均Error rate在0.1%以下。
+{% endif %}
+
+{% if WES_ag %}
+  {% if WES_xten %}
+    <P class="paragraph">根据Illumina的测序特点，使用双端测序的数据，我们要求Q20平均比例在90%以上，Q30平均比例在80%以上，平均Error rate在0.1%以下。
+  {% else %}
+    <P class="paragraph">根据Illumina的测序特点，使用双端测序的数据，我们要求Q20平均比例在90%以上，Q30平均比例在85%以上，平均Error rate在0.1%以下。
+  {% endif %}
+{% endif %}
+
+{% if WES_illu %}
+  {% if WES_xten %}
+    <P class="paragraph">根据Illumina的测序特点，使用双端测序的数据，我们要求Q20平均比例在90%以上，Q30平均比例在80%以上，平均Error rate在0.1%以下。
+  {% else %}
+    <P class="paragraph">根据Illumina的测序特点，使用双端测序的数据，我们要求Q20平均比例在90%以上，Q30平均比例在85%以上，平均Error rate在0.1%以下。
+  {% endif %}
+{% endif %}
+
+
+{% if not WGS %}
+<p class="name_fig">表4.2.4.1　数据产出质量情况一览表</p>
+{% else %}
+<p class="name_fig">表4.2.5.1　数据产出质量情况一览表</p>
+{% endif %}
+
+<div id="tb">
+<table class="gy" id="qua">
+<thead><tr><th>ReportID</th><th>Sample name</th><th>Novo ID</th><th>Raw reads</th><th>Raw data(G)</th><th>Raw depth(x)</th><th>Effective(%)</th><th>Error(%)</th><th>Q20(%)</th><th>Q30(%)</th><th>GC(%)</th></tr></thead>
+<tbody>
+{% for x in table_qcb %}
+<tr>
+<td>{{x.10}}</td><td>{{x.0}}</td><td>{{x.1}}</td><td>{{x.2}}</td><td>{{x.3}}</td><td>{{x.4}}</td><td>{{x.5}}</td><td>{{x.6}}</td><td>{{x.7}}</td><td>{{x.8}}</td><td>{{x.9}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</p>
+
+{% include "partial/qc_stat.html" %}
+
+</div>
+
+<!-- ------------------------------------------------------------- 测序深度、覆盖度统计 ------------------------------------------------------------ -->
+{% if dep_res %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="参考序列比对分析" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>3　测序深度、覆盖度统计</h3>
+{% if sentieon %}
+<p class="paragraph">有效测序数据通过 <a href="https://www.sentieon.com" target=_blank>Sentieon</a>比对到参考基因组（<a href="ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/2.8/b37/"  target=_blank><span class="span" title="我们采用的参考基因组下载自GATK">GRCh37</span></a>/hg19） ，得到<a href="http://samtools.github.io/hts-specs/SAMv1.pdf" target=blank>BAM格式</a>的最初的比对结果。然后，用<a href="https://www.sentieon.com" target=_blank>Sentieon</a>对比对结果进行排序和<span class="span" title="这一过程是把一个DNA片段在PCR扩增后的多个相同的片段进行标记。被标记的reads不会用于后续处理；如果重复reads用于后续处理，会导致在变异检测的结果出现过高估计。">标记重复reads</span>（mark duplicate reads）。最后，我们利用重复标记后的比对结果进行覆盖度、深度等的统计。通常，人类样本的测序reads能达到95%以上的比对率；当一个位点的碱基覆盖深度（read depth）达到10X以上时，该位点处检测出的SNP比较可信。</p>
+{% else %}
+<p class="paragraph">有效测序数据通过 <a href="http://sourceforge.net/projects/bio-bwa/"  target=_blank>BWA</a>(Li H <i>et al.</i>)比对到参考基因组（<a href="ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/2.8/b37/"  target=_blank><span class="span" title="我们采用的参考基因组下载自GATK">GRCh37</span></a>/hg19） ，得到<a href="http://samtools.github.io/hts-specs/SAMv1.pdf" target=blank>BAM格式</a>的最初的比对结果。然后，用<a href="http://samtools.sourceforge.net/"  target=_blank>SAMtools</a>(Li H <i>et al.</i>)对比对结果进行排序；再用<a href="https://github.com/biod/sambamba/"  target=_blank>Sambamba</a><span class="span" title="这一过程是把一个DNA片段在PCR扩增后的多个相同的片段进行标记。被标记的reads不会用于后续处理；如果重复reads用于后续处理，会导致在变异检测的结果出现过高估计。">标记重复reads</span>（mark duplicate reads）。最后，我们利用重复标记后的比对结果进行覆盖度、深度等的统计。通常，人类样本的测序reads能达到95%以上的比对率；当一个位点的碱基覆盖深度（read depth）达到10X以上时，该位点处检测出的SNP比较可信。</p>
+{% endif %}
+
+<h4>3.1　测序深度、覆盖度分布</h4>
+<!--3.1.2 TS没有，其它都有-->
+{% if TS %}
+<p class="center">
+点击图例可以显示/隐藏样本信息</p>
+<div id="et">
+<div id="etll" style="width:100%;height:{{divlen}}px"></div>
+<div id="eta" class="middle" style="width:50%;float:left;height:500px;" ></div>
+<div id="etb" class="middle" style="width:50%;float:left;height:500px;"></div>
+</div>
+<p class="name_fig" style="clear:both">图4.3.1.1　测序深度</p>
+<p class="premark">左图为不同测序深度的碱基比例，横坐标表示测序深度，纵坐标表示测序深度为x的碱基在所有碱基中的比例；图像一般在平均深度周围成泊松分布；右图为不同深度上的累积碱基比例，横坐标表示测序深度，纵坐标代表测序深度超过x的碱基在所有碱基中的比例，比如测序深度为0对应了碱基比例100%，表示有100%的碱基其测序深度大于0。</p>
+<p class="premark">&nbsp</p>
+{% else %}
+<p class="center">
+点击图例可以显示/隐藏样本信息</p>
+<div id="et">
+<div id="etll" style="width:100%;height:{{divlen}}px"></div>
+<div id="eta" class="middle" style="width:50%;float:left;height:500px;" ></div>
+<div id="etb" class="middle" style="width:50%;float:left;height:500px;"></div>
+</div>
+<p class="name_fig" style="clear:both">图4.3.1.1　测序深度</p>
+<p class="premark">左图为不同测序深度的碱基比例，横坐标表示测序深度，纵坐标表示测序深度为x的碱基在所有碱基中的比例；图像一般在平均深度周围成泊松分布；右图为不同深度上的累积碱基比例，横坐标表示测序深度，纵坐标代表测序深度超过x的碱基在所有碱基中的比例，比如测序深度为0对应了碱基比例100%，表示有100%的碱基其测序深度大于0。</p>
+<p class="center">
+点击图例可以显示/隐藏样本信息</p>
+<div id="etlu"></div>
+<div id="etu" class="middle"></div>
+<p class="name_fig" style="clear:both">图4.3.1.2　每条染色体的覆盖深度（左侧坐标）和覆盖率（右侧坐标）</p>
+
+<p class="premark">横坐标表示染色体编号，左侧纵坐标表示平均覆盖深度，右侧纵坐标表示覆盖率。{% if not WGS%} 对每条染色体计算覆盖深度时，计算公式为：每条染色体的测序数据量/每条染色体上外显子区域的总长度。计算覆盖率时，公式为：每条染色体被覆盖的总长度/每条染色体上外显子区域的总长度。{% else %} 对每条染色体计算覆盖深度时，计算公式为：每条染色体的测序数据量/每条染色体的总长度。计算覆盖率时，公式为：每条染色体被覆盖的总长度/每条染色体的总长度。{% endif %}</p>
+{% endif %}
+</div>
+
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="覆盖度统计结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h4>3.2　覆盖度统计结果</h4>
+<p class="center">
+<p class="name_fig">表4.3.2.1　比对率和覆盖度统计</p>
+<div id="tb">
+<table class="gy" id="qub">
+ {% for each in table_depth %}
+  {% set counter = loop.index %}
+  {% if loop.first %}
+    <thead>
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+    </thead>
+  {% else %}
+    <tbody>
+      {% if each.0 in gaoliang %}
+        <tr>
+          {% for x in each %}
+            {% if loop.first %}<td bgcolor="#C2D69B">{{x|safe}}<sup>{{ counter }}</sup></td>
+            {% else %}<td bgcolor="#C2D69B">{{x|safe}}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% else %}
+          <tr>{% for x in each %}
+            {% if loop.first %}<td>{{x|safe}}<sup>{{ counter }}</sup></td>
+            {% else %}<td>{{x|safe}}</td>
+            {% endif %}
+          {% endfor %}</tr>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</p>
+
+{% include "partial/mapping_stat.html" %}
+
+{% endif %}
+
+</div>
+
+
+
+<!-- --------------------------------------------------------- snp/indel结果 ----------------------------------------------------------------------- -->
+{% if muts_res %}
+{% if snp_indel_res %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="变异检测结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+
+{% if samp_info %}
+<h2>五、变异检测结果</h2>
+{% else %}
+<h2>四、变异检测结果</h2>
+{% endif %}
+<div id="page">
+  
+  <h3>1　SNP检测结果</h3>
+  
+  
+  <a name="SNV统计结果"></a>
+  
+  <h4>1.1　SNV统计结果</h4>
+  <p class="paragraph">通常，一个人全基因组内会有约 3.6~4.4 M 个 SNP，绝大数（大于 95%）的高频（群体中等位基因频率大于 5%）的 SNP 在<span class="span" title="dbSNP(The Single Nucleotide Polymorphism Database)，虽然名称是SNP的数据库，但事实上，这个数据库包含了许多种类的变异：（1）SNP，（2）InDel，（3）微卫星标记或短串联重复，（4）多核苷酸多样性，（5）杂合序列，（6）命名变异。dbSNP中的变异全部是中性的多样性，或者是已知对应表型的多样性，以及没有变异的区域。"> <a href="http://www.ncbi.nlm.nih.gov/SNP/"  target=_blank>dbSNP</a></span>(Sherry S T <i>et al.</i>)中有记录，高频的SNP一般都不是致病的主要突变位点。</p>
+  <!--
+  <p class="paragraph">我们在最初的比对结果（BAM文件）的基础上，用GATK(DePristo M A <i>et al.</i>)进行<span class="span" title="这一过程是把疑似InDel的上下游reads做多序列比对，提高局部区域的比对准确性，从而提高检测的准确性。">局部重比对</span>（local realignment）和<span class="span" title="由于不同碱基测序错误的概率不一致，按照这一概率估计的碱基质量值估计也不一致，所以需要根据不同的碱基对质量值进行重新校正。">碱基质量值重校正</span>（base quality recalibration），得到 BAM 格式的最终比对结果。</p>
+  -->
+  {% if samtools %}
+  <p class="paragraph">在比对结果的基础上，我们利用<a href="http://samtools.sourceforge.net/" target=_blank>SAMtools</a>识别SNP位点，并采用国际惯用的过滤标准对SNP位点进行过滤。对得到的SNP结果统计如下：</p>
+  {% elif sentieon %}
+  <p class="paragraph">在比对结果的基础上，我们利用<a href="https://www.sentieon.com" target=_blank>Sentieon</a>识别SNP位点，并采用国际惯用的过滤标准对SNP位点进行过滤。对得到的SNP结果统计如下：</p>
+  {% else %}
+  <p class="paragraph">在比对结果的基础上，我们利用GATK识别SNP位点，并采用国际惯用的过滤标准对SNP位点进行过滤。对得到的SNP结果统计如下：</p>
+  {% endif %}
+  <div id="tb">
+  <p class="center">
+  <p class="name_fig">表5.1.1.1　基因组不同区域上SNV数目 </p>
+  <table class="gy" id="quc">
+  {% for each in table_func_snp %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+      <tbody>
+    {% else %}
+      <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+    {% endif %}
+  {% endfor %}
+  </tbody></table>
+  
+  </p>
+  </div>
+  
+  <p class="tremark">注：</p>
+  <p class="tremark">（1）Sample：样本名称</p>
+  <p class="tremark">（2）exonic：外显子区域</p>
+  <p class="tremark">（3）intronic：内含子区域</p>
+  <p class="tremark">（4）UTR3：3’UTR区域</p>
+  <p class="tremark">（5）UTR5：5’UTR区域</p>
+  <p class="tremark">（6）intergenic：基因间区域</p>
+  <p class="tremark">（7）ncRNA_exonic：非编码RNA外显子区域</p>
+  <p class="tremark">（8）ncRNA_intronic：非编码RNA内含子区域</p>
+  <p class="tremark">（9）upstream：转录起始位点上游1Kb区域</p>
+  <p class="tremark">（10）downstream：转录终止位点下游1Kb区域</p>
+  <p class="tremark">（11）splicing：splicing junction 10bp区域</p>
+  <p class="tremark">（12）ncRNA_splicing：非编码RNA的splicing junction 10bp区域</p>
+  <p class="premark">&nbsp</p>
+  <p class="center">
+</div>
+<div id="page"></div>
+  
+<p class="name_fig">表5.1.1.2　编码区上不同类型的SNV数目</p>
+<div id="tb">
+<table class="gy" id="qud">
+{% for each in table_exfunc_snp %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+<p class="tremark">注：</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）synonymous_SNV：同义突变，即，变异位点编码的氨基酸不发生变化</p>
+<p class="tremark">（3）missense_SNV：错义突变，即，变异位点编码的氨基酸发生变化，属于非同义突变</p>
+<p class="tremark">（4）stopgain：因一个碱基发生替换，导致该碱基所在的密码子变为终止密码子</p>
+<p class="tremark">（5）stoploss：因一个碱基发生替换，导致该碱基所在的终止密码子变为非终止密码子</p>
+<!--
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stopgain：属于非同义突变，由于插入、删除或连续碱基替换导致变异位点处产生一个新的终止密码子，即提前终止</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stoploss：属于非同义突变，由于插入、删除或连续碱基替换导致变异位点处原有的终止密码子丢失</p>
+-->
+<p class="tremark">（6）unknown：由于注释用的基因结构注释数据库的不完善导致的未知功能位点</p>
+<p class="tremark">&nbsp</p>
+
+<p class="center">
+
+<div class="form-group" style="width:50%;margin:auto;">
+<form id="form1" name="form1" method="post" action="">
+
+  <select name="snvp" id="snvpie" class="form-control input-lg" style="width:100%;text-align: center;">
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+
+
+  </select>
+  </form>
+</div>
+</br>
+<div id="SNv_exoni1" class="middle"></div>
+
+<div id="snv2" class="hide_in_pdf" style="z-index:2;position:absolute;margin-left:75%;width:5%;height:480px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:150px" id="psnvp" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="nsnvp" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>
+  </div>
+</div>
+
+<p class="name_fig" style="clear:both">图5.1.1.1　编码区上不同类型的SNV数目（左）和基因组不同区域上SNV数目（右）分布</p>
+<p class="premark">左图中，missense_SNV代表错义突变；stopgain代表导致产生新终止密码子的突变；stoploss代表导致终止密码子丢失的突变；synonymous_SNV代表同义突变；unknown代表由于注释用的基因结构注释数据库的不完善导致的未知功能突变位点。</p>
+<p class="premark">右图中，downstream代表转录终止位点下游1Kb区域内的SNV数目；exonic代表外显子区域内的SNV数目；intergenic代表基因间区域内的SNV数目；intronic代表内含子区域内的SNV数目；ncRNA_exonic代表非编码RNA外显子区域内的SNV数目；ncRNA_intronic代表非编码RNA内含子区域内的SNV数目；ncRNA_splicing代表非编码RNA的splicing junction 10bp区域内的SNV数目；ncRNA_UTR3代表非编码RNA 3’UTR区域内的SNV数目；ncRNA_UTR5代表非编码RNA 5’UTR区域内的SNV数目；splicing代表splicing junction 10bp区域内的SNV数目；upstream代表转录起始位点上游1Kb区域内的SNV数目；UTR3代表3’UTR区域内的SNV数目；UTR5代表5’UTR区域内的SNV数目。</p>
+<p class="premark">&nbsp</p>
+
+<div id="page">
+<p class="paragraph">转换/颠换的比值（Ts:Tv）可以反应SNP数据集的准确性，全基因组内的比值约在2.2左右。</p>
+<p class="center"></p>
+<p class="name_fig">表5.1.1.3　转换和颠换类型分布</p>
+<div id="tb">
+<table class="gy" id="que">
+{% for each in table_ts_tv %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+
+<p class="tremark">注:</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）novel_ts：新的（未被dbSNP注释）<span class="span" title="同型碱基置换，又称转换（Transition），即嘌呤（嘧啶）碱基突变为嘌呤（嘧啶）碱基。">转换</span>的数目</p>
+<p class="tremark">（3）novel_ts/tv：新的转换和颠换比值</p>
+<p class="tremark">（4）novel_tv：新的（未被dbSNP注释）<span class="span" title="异型碱基置换，又称颠换（Transversion），即嘌呤（嘧啶）碱基突变为嘧啶（嘌呤）碱基。">颠换</span>的数目</p>
+<p class="tremark">（5）ts：转换的总数</p>
+<p class="tremark">（6）ts/tv：转换和颠换的比值</p>
+<p class="tremark">（7）tv：颠换的总数</p>
+</div>
+
+
+
+<p class="center">
+<p class="name_fig">表5.1.1.4　SNV及基因型分布</p>
+<div id="tb">
+<table class="gy" id="quf">
+{% for each in table_trait_snp %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+
+<p class="tremark">注：</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）all：所有SNV数目</p>
+<p class="tremark">（3）genotype.Het：杂合基因型的SNV数目</p>
+<p class="tremark">（4）genotype.Hom：纯合基因型的SNV数目</p>
+<p class="tremark">（5）novel：未被dbSNP注释的新SNV</p>
+<p class="tremark">（6）novel_proportion：新SNV所占的比例</p>
+<p class="premark">&nbsp</p>
+
+<p class="center">
+
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="snvh" id="snvhun" class="form-control input-lg" style="width:100%;text-align: center;">
+
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+
+
+
+  </select>
+  </form>
+</div>
+<div id="SNv_type"></div>
+<div id="snv4" class="hide_in_pdf" style="z-index:2;position:absolute;margin-left:70%;width:5%;height:600px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:175px" id="psnvhun" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="nsnvhun" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>		
+  </div>
+</div>
+
+
+<p class="name_fig" style="clear:both">图5.1.1.2　基因组SNV特征</p>
+<p class="premark">左上饼图中，Hom代表纯合,即基因型为纯合的SNV数目（纯合SNV在所有SNV中的比例）；Het代表杂合，即基因型为杂合的SNV数目（杂合SNV在所有SNV中的比例）。</p>
+<p class="premark">左下饼图中，tv代表颠换的SNV数目（颠换的SNV在所有SNV中的比例）；ts代表转换的SNV数目（转换的SNV在所有SNV中的比例）。</p>
+<p class="premark">右上饼图中，novel代表未被dbSNP注释的SNV（检测到的所有SNV中，未被dbSNP注释的SNV所占的比例），in dbSNP代表dbSNP中有注释的SNV（检测到的所有SNV中，dbSNP中有注释的SNV所占的比例）。</p>
+<p class="premark">右下饼图中，novel tv代表未被dbSNP注释的颠换SNV数目（检测到的未被dbSNP注释的所有SNV中，颠换SNV所占的比例）；novel ts代表未被dbSNP注释的转换SNV数目（检测到的未被dbSNP注释的所有SNV中，转换SNV所占的比例）。</p>
+<p class="premark">&nbsp</p>
+</p>
+</div>
+
+
+<!-- <!-- <p class="paragraph">我们对每个样本进行了过滤筛选，结果如下所示：</p> -->
+{% if single_snp_filter %}
+<p class="name_fig">表5.1.1.5　单样本SNP位点筛选数目统计表</p>
+<div id="tb">
+<p class="center">
+<table class="gy">
+{% for each in table_single_snp_filter %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</p>
+</div>
+{% endif %}
+
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="SNV注释结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+
+<h4>1.2　SNV注释结果</h4>
+
+
+<p class="paragraph">利用<a href="http://www.openbioinformatics.org/annovar/"  target=_blank>ANNOVAR</a>(Wang K <i>et al.</i>)软件对SNP进行注释，其中包括<a href="http://www.ncbi.nlm.nih.gov/SNP/"  target=_blank>dbSNP数据库</a>、<span class="span" title="千人基因组计划（1000 Genome Project），是一个国际科研合作项目，旨在建立至今为止最详细的遗传变异目录。利用最新的技术，对来自不同种族的至少一千名匿名志愿者进行全基因组测序。这一计划聚集了来自多个国家的科研团体，包括中国，意大利，日本，肯尼亚，尼日利亚，秘鲁，英国，美国等。最后的人类基因组图谱可供公众免费获取。"><a href="http://www.1000genomes.org" target=_blank>千人基因组计划</a></span>和其他已有的数据库的注释信息，注释内容涵盖变异的位置信息，类型，保守型预测等。具体的注释内容展示如表5.1.2.1。</p>
+
+
+
+<p class="center">
+
+<p class="name_fig">表5.1.2.1　SNP注释结果展示（只显示前5行）</p>
+
+<div id="tb">
+
+<table class="gy">
+
+{% for each in table_anno %}
+
+    {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+
+
+  {% include "partial/anno1_snp_indel.html" %}
+
+
+</div>
+</div>
+
+
+
+<div id="page">
+
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+
+
+
+<a name="InDel检测结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+
+
+<hr />
+
+
+
+</p>
+<h3>2　InDel检测结果</h3>
+
+<a name="InDel统计结果"></a>
+
+<h4>2.1　InDel统计结果</h4>
+<p class="paragraph">{% if WGS %}通常，一个人全基因组内会有约 600K 的 InDel（insertion and deletion，依据文献<50bp的插入缺失为small indel）。{% endif %}</p>
+<p class="paragraph">编码区或剪接位点处发生的插入缺失都可能会改变蛋白的翻译。移码变异，其插入或缺失的碱基串的长度为3的非整数倍，因此可能导致整个读框的改变；移码变异与非移码变异相比较，前者对基因功能的影响更大，同时受到更大的筛选压力。{% if not TS%}InDel 长度分布正好表明了这点（见图5.2.1.1）。{% endif %}</p>
+{% if samtools %}
+<p class="paragraph">在比对结果的基础上，我们利用<a href="http://samtools.sourceforge.net/"  target=_blank>SAMtools</a>识别InDel，并采用国际惯用的过滤标准对InDel结果进行过滤。对得到的InDel结果统计如下：</p>
+{% elif sentieon %}
+<p class="paragraph">在比对结果的基础上，我们利用<a href="https://www.sentieon.com"  target=_blank>Sentieon</a>识别InDel，并采用国际惯用的过滤标准对InDel结果进行过滤。对得到的InDel结果统计如下：</p>
+{% else %}
+<p class="paragraph">在比对结果的基础上，我们利用<a href="https://www.broadinstitute.org/gatk/" target=_blank>GATK</a>识别InDel，并采用国际惯用的过滤标准对InDel结果进行过滤。对得到的InDel结果统计如下：</p>
+{% endif %}
+</p>
+{% if not TS %}
+<p class="center">
+
+
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="inde" id="indell" class="form-control input-lg" style="width:100%;text-align: center;">
+
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+
+
+
+  </select>
+  </form>
+</div>
+<div id="INdellen"></div>
+<div id="indell2" class="hide_in_pdf" style="width:20%;float:left;height:40vw;text-align:center">
+  <div>
+    <button type="button" style="margin-top:11vw" id="pidl" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:5vw" id="nidl" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>		
+  </div>
+</div>
+
+
+<p class="name_fig" style="clear:both">图5.2.1.1　InDel长度分布</p>
+<p class="premark">横坐标代表InDel的长度（+为插入，-为缺失），纵坐标代表长度为x的InDel在所有InDel中的比例。nCDS代表非编码区域，CDS代表编码区域。在CDS区中，如果InDel长度为非3的整数倍，可能导致整个读框的改变，此为移码变异；如果InDel长度为3的整数倍，CDS的读框不会发生移码，此为非移码变异。图中可反映出：CDS区中，移码变异与非移码变异相比较，前者受到的限制更大。</p>
+<p class="premark">&nbsp</p>
+</p>
+{% endif %}
+
+<p class="center">
+<p class="name_fig">表5.2.1.1　基因组不同区域上InDel数目</p>
+<div id="tb">
+<table class="gy" id="qug">
+{% for each in table_func_indel %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+
+<p class="tremark">注：</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）exonic：外显子区域</p>
+<p class="tremark">（3）intronic：内含子区域</p>
+<p class="tremark">（4）UTR3：3’UTR区域</p>
+<p class="tremark">（5）UTR5：5’UTR区域</p>
+<p class="tremark">（6）intergnic：基因间区域</p>
+<p class="tremark">（7）ncRNA_exonic：非编码RNA外显子区域</p>
+<p class="tremark">（8）ncRNA_intronic：非编码RNA内含子区域</p>
+<p class="tremark">（9）upstream：转录起始位点上游1Kb区域</p>
+<p class="tremark">（10）downstream：转录终止位点下游1Kb区域</p>
+<p class="tremark">（11）splicing：splicing junction 10bp区域</p>
+<p class="tremark">（12）ncRNA_splicing：非编码RNA的splicing junction 10bp区域</p>
+
+<div id="page"></div>
+<div id="tb">
+<p class="center">
+<p class="name_fig">表5.2.1.2　编码区上不同类型的InDel数目</p>
+<table class="gy" id="quh">
+{% for each in table_exfunc_indel %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+
+<p class="tremark">注：</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）frameshift deletion：移码缺失，即导致编码蛋白的读框发生改变的删除；该删除的长度不是3的整数倍</p>
+<p class="tremark">（3）frameshift insertion：移码插入，即导致编码蛋白的读框发生改变的插入；该插入的长度不是3的整数倍</p>
+<p class="tremark">（4）nonframeshift deletion：非移码缺失，即不改变编码蛋白的读框的删除；该删除的长度为3的整数倍</p>
+<p class="tremark">（5）nonframeshift insertion：非移码插入，即不改变编码蛋白的读框的插入；该插入的长度为3的整数倍</p>
+<p class="tremark">（6）stoploss：导致丢失终止密码子的InDel</p>
+<p class="tremark">（7）stopgain：导致获得终止密码子的InDel</p>
+<p class="tremark">（8）unknown：由于注释用的基因结构注释数据库的不完善导致的未知功能位点</p>
+<p class="premark">&nbsp</p>
+
+<p class="center">
+
+
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="indelp" id="indelpie" class="form-control input-lg" style="width:100%;text-align: center;">
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+  </select>
+  </form>
+</div>
+<div id="INdel_exoni1" class="middle"></div>
+<div id="indel4" class="hide_in_pdf" style="z-index:2;position:absolute;margin-left:75%;width:5%;height:480px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:150px" id="pindelp" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="nindelp" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>		
+  </div>
+</div>
+<p class="name_fig" style="clear:both">图5.2.1.2　编码区上不同类型的InDel数目（左）和基因组不同区域上InDel数目（右）分布</p>
+<p class="premark">左图中，frameshift deletion：移码缺失，即导致编码蛋白的读框发生改变的删除；该删除的长度不是3的整数倍。frameshift insertion：移码插入，即导致编码蛋白的读框发生改变的插入；该插入的长度不是3的整数倍。nonframeshift deletion：非移码缺失，即不改变编码蛋白的读框的删除；该删除的长度为3的整数倍。nonframeshift insertion：非移码插入，即不改变编码蛋白的读框的插入；该插入的长度为3的整数倍。stopgain：导致获得终止密码子的InDel。stoploss：导致丢失终止密码子的InDel。unknown代表由于注释用的基因结构注释数据库的不完善导致的未知功能位点。</p>
+<p class="premark">右图中，downstream代表转录终止位点下游1Kb区域内的InDel数目；exonic代表外显子区域内的InDel数目；intergenic代表基因间区域内的InDel数目；intronic代表内含子区域内的InDel数目；ncRNA_exonic代表非编码RNA外显子区域内的InDel数目；ncRNA_intronic代表非编码RNA内含子区域内的InDel数目；ncRNA_splicing代表非编码RNA的splicing junction 10bp区域内的InDel数目；ncRNA_UTR3代表非编码RNA 3’UTR区域内的InDel数目；ncRNA_UTR5代表非编码RNA 5’UTR区域内的InDel数目；splicing代表splicing junction 10bp区域内的InDel数目；upstream代表转录起始位点上游1Kb区域内的InDel数目；UTR3代表3’UTR区域内的InDel数目；UTR5代表5’UTR区域内的InDel数目。</p>
+<p class="premark">&nbsp</p>
+</p>
+
+<div id="page"></div>
+<p class="center">
+<p class="name_fig">表5.2.1.3　InDel及基因分型分布</p>
+<div id="tb">
+<table class="gy" id="qui">
+{% for each in table_trait_indel %}
+    {% if loop.first %}
+      <thead><tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr></thead>
+    <tbody>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</p>
+</div>
+
+<p class="tremark">注：</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）all：所有InDel数目</p>
+<p class="tremark">（3）genotype.Het：杂合基因型的InDel数目</p>
+<p class="tremark">（4）genotype.Hom：纯合基因型的InDel数目</p>
+<p class="tremark">（5）novel：未被dbSNP注释的新InDel</p>
+<p class="tremark">（6）novel_proportion：新InDel所占的比例</p>
+<p class="premark">&nbsp</p>
+
+<p class="center">
+
+
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="indelh" id="indelhun" class="form-control input-lg" style="width:100%;text-align: center;">
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+
+  </select>
+  </form>
+</div>
+<div id="INdel_type" ></div>
+<div id="indelhun2" class="hide_in_pdf" style="z-index:2;position:absolute;margin-left:70%;width:5%;height:480px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:150px" id="pinhun" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="ninhun" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>		
+  </div>
+</div>
+
+
+<p class="name_fig" style="clear:both">图5.2.1.3　基因组和外显子区InDel的特征</p>
+<p class="premark">左边饼状图中，Hom代表纯合，代表基因型为纯合的InDel数目；Het代表杂合，代表基因型为杂合的InDel数目。</p>
+<p class="premark">右边饼状图中，novel代表未被dbSNP注释的InDel，in dbSNP代表dbSNP中有注释的InDel。</p>
+<p class="premark">&nbsp</p>
+
+
+
+
+<div id="page">
+
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+
+
+
+<a name="InDel注释结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+
+
+<hr />
+
+
+
+</p>
+
+
+<h4>2.2　InDel注释结果</h4>
+
+<p class="paragraph">利用<a href="http://www.openbioinformatics.org/annovar/"  target=_blank>ANNOVAR</a>(Wang K <i>et al.</i>)软件对InDel位点进行注释，其中包括<a href="http://www.ncbi.nlm.nih.gov/SNP/"  target=_blank>dbSNP数据库</a>、<span class="span" title="千人基因组计划（1000 Genome Project），是一个国际科研合作项目，旨在建立至今为止最详细的遗传变异目录。利用最新的技术，对来自不同种族的至少一千名匿名志愿者进行全基因组测序。这一计划聚集了来自多个国家的科研团体，包括中国，意大利，日本，肯尼亚，尼日利亚，秘鲁，英国，美国等。最后的人类基因组图谱可供公众免费获取。"><a href="http://www.1000genomes.org" target=_blank>千人基因组计划</a></span>和其他已有的数据库的注释信息，注释内容涵盖变异的位置信息，类型，保守型预测等。具体的注释内容展示如表5.2.2.1。</p>
+
+
+
+<p class="center">
+
+<p class="name_fig">表5.2.2.1　INDEL注释结果展示（只显示前5行）</p>
+
+<div id="tb">
+
+<table class="gy">
+
+{% for each in table_anno_indel %}
+
+    {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</p>
+
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+
+  {% include "partial/anno1_snp_indel.html" %}	
+
+</div>
+</div>
+{% endif %}
+{% endif %}
+
+
+{% if sv_res %}
+<!-- ----------------------------------------------------------------- SV结果  ------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="SV检测结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if snp_indel_res %}
+<h3>3　SV检测结果</h3>
+<h4>3.1　SV统计结果</h4>
+{% else %}
+<h2>五、变异检测结果</h2>
+<h3>1　SV检测结果</h3>
+<h4>1.1　SV统计结果</h4>
+{% endif %}
+<p class="paragraph">SV是structural variation的缩写。结构变异指的是在基因组上一些大的结构性的变异，比如大片段丢失（deletion）、大片段插入（insertion）、大片段重复（duplication）、拷贝数变异（copy number variants）、倒位（inversion）、易位（translocation）。一般来说，结构变异涉及的序列长度在1kb到3Mb之间。结构变异普遍存在于人类基因组中，是个人差异和一些疾病易感性的来源。结构变异还可能导致融合基因的发生，一些癌症已经证实和结构变异导致的基因融合事件有关。</p>
+{% if breakdancer %}
+<p class="paragraph">我们采用<a href="http://breakdancer.sourceforge.net/"  target=_blank>BreakDancer</a>(Chen K <i>et al.</i>)对SV信息进行检测。</p>
+{% endif %}
+{% if crest %}
+<p class="paragraph">我们采用<a href="http://www.stjuderesearch.org/site/lab/zhang"  target=_blank>CREST</a>(Wang J <i>et al.</i>)对SV信息进行检测。</p>
+{% endif %}
+{% if BreaKmer %}
+<p class="paragraph">我们采用<a href="https://github.com/ccgd-profile/BreaKmer"  target=_blank>BreaKmer</a>(Abo R P <i>et al.</i>)对SV信息进行检测。</p>
+{% endif %}
+
+<p class="center">
+<p class="name_fig">表5.{% if snp_indel_res %}3{% else %}1{% endif %}.1.1　SV检测结果汇总</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_sv %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    {% for x in each %}
+      {% if loop.first %}
+        <tr>{% for y in x %}{% if loop.first %}<th rowspan={{each|length}}>{{y|safe}}</th>{% else %}<td>{{y|safe}}</td>{% endif %}{% endfor %}</tr>
+      {% else %}
+        <tr>{% for y in x %}<td >{{y|safe}}</td>{% endfor %}</tr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+</p>
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="svp" id="svpie" class="form-control input-lg" style="width:100%;text-align: center;">
+
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+{% endfor %}
+
+
+
+  </select>
+  </form>
+</div>
+
+
+<div id="SV_type"></div>
+<div id="sv4" class="hide_in_pdf" style="width:20%;float:left;height:480px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:200px" id="psv" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="nsv" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>		
+  </div>
+</div>
+<p class="name_fig">图5.{% if snp_indel_res %}3{% else %}1{% endif %}.1.1　基因组不同区域上SV数目分布图</p>
+
+
+<p class="paragraph">注：每一行表示不同区域中的不同类型(varType)SV的数目</p>
+<p class="tremark">（1）sample：样本名称</p>
+<p class="tremark">（2）varType：SV类型</p>
+<p class="tremark">（3）total：当前SV类型的总数</p>
+<p class="tremark">（4）cds：CDS区域</p>
+<p class="tremark">（5）splicing：splicing junction 10bp范围内</p>
+<p class="tremark">（6）utr5：5’UTR区域</p>
+<p class="tremark">（7）utr3：3’UTR区域</p>
+<p class="tremark">（8）intron：内含子区域</p>
+<p class="tremark">（9）upstream：转录起始位点上游1Kb区域</p>
+<p class="tremark">（10）downstream：转录终止位点下游1Kb区域</p>
+<p class="tremark">（11）ncRNA：非编码RNA区域</p>
+<p class="tremark">（12）intergenic：基因间区域</p>
+<p class="tremark">（13）unknown：由于注释用的基因结构注释数据库的不完善导致的未知功能位点</p>
+{% if crest %}
+<p class="tremark">（14）length：SV长度</p>
+{% endif %}
+
+
+<p class="premark">&nbsp</p>
+{% if snp_indel_res %}
+
+<h4>3.2　SV注释结果</h4>
+{% else %}
+
+<h4>1.2　SV注释结果</h4>
+{% endif %}
+<p class="center">
+<p class='paragraph'>利用ANNOVAR软件对结构变异进行注释，注释信息包括4个部分，分别为基因及区域注释，数据库注释，Encode注释，结构变异信息等。具体的注释内容展示如表5.{% if snp_indel_res %}3{% else %}1{% endif %}.2.1。</p>
+<p class="name_fig">表5.{% if snp_indel_res %}3{% else %}1{% endif %}.2.1　SV注释结果展示(只显示前5行)</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_sv_anno %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_sv.html" %}
+
+</div>
+</div>
+{% endif %}
+
+
+{% if cnv_res %}
+<!-- -------------------------------------------------------------- CNV结果 --------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="CNV检测结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if snp_indel_res %}
+
+{% if WGS %}
+<h3>4　CNV检测结果</h3>
+<h4>4.1　CNV统计结果</h4>
+{% endif %}
+{% if WES_cnv_CoNIFER %}
+<h3>3　CNV检测结果</h3>
+<h4>3.1　CNV统计结果</h4>
+{% endif %}
+
+{% else %}
+
+{% if WGS %}
+{% if sv_res %}
+<h3>2　CNV检测结果</h3>
+<h4>2.1　CNV统计结果</h4>
+{% else %}
+<h2>五、变异检测结果</h2>
+<h3>1　CNV检测结果</h3>
+<h4>1.1　CNV统计结果</h4>
+{% endif %}
+{% endif %}
+
+{% if WES_cnv_CoNIFER %}
+<h2>五、变异检测结果</h2>
+<h3>1　CNV检测结果</h3>
+<h4>1.1　CNV统计结果</h4>
+{% endif %}
+
+
+{% endif %}
+
+
+
+
+
+<p class="paragraph">CNV是copy number variation的缩写。拷贝数变异指的是基因组上大片段序列拷贝数的增加或者减少，可分为缺失（deletion）和重复(duplication)两种类型，是一种重要的分子机制。CNV能够导致孟德尔遗传病与罕见疾病, 同时与包括癌症在内的复杂疾病相关，因此对于染色体水平的缺失、扩增的研究已经成为疾病研究热点。</p>
+{% if freec %}
+<p class="paragraph">通常采用<a href="http://bioinfo-out.curie.fr/projects/freec/"  target=_blank>control-FREEC</a>(Boeva V <i>et al.</i>)软件来检测CNV，通过检测样本在一个参考基因组上reads的深度分布情况来检测CNV，适用于单样本及多样本。</p>
+{% endif %}
+{% if cnvnator %}
+<p class="paragraph">通常采用<a href="http://sv.gersteinlab.org/cnvnator/"  target=_blank>CNVnator</a>(Abyzov A <i>et al.</i>)软件来检测CNV，通过检测样本在一个参考基因组上reads的深度分布情况来检测CNV，适用于单样本及多样本。</p>
+{% endif %}
+{% if WES_cnv_CoNIFER %}
+<p class="paragraph">通常外显子测序中采用<a href="http://sv.gersteinlab.org/cnvnator/"  target=_blank> CoNIFER</a> (Krumm N <i>et al.</i>)软件来检测 CNV，通过检测样本在一个参考基因组上 reads 的深度分布情况来检测 CNV，适用于单样本及多样本。</p>
+{% endif %}
+
+{% if not WES_cnv_CoNIFER %}
+<p class="center">
+<p class="name_fig">表5.{% if WGS and not snp_indel_res and not sv_res%}1{% endif %}{% if WGS and not snp_indel_res and sv_res%}2{% endif %}{% if WGS and snp_indel_res %}4{% endif %}.1.1　CNV检测结果汇总</p>
+<div id="tb">
+<table class="gy">
+
+{% for each in table_cnv %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    {% for x in each %}
+      {% if loop.first %}
+        <tr>{% for y in x %}{% if loop.first %}<th rowspan="2">{{y|safe}}</th>{% else %}<td>{{y|safe}}</td>{% endif %}{% endfor %}</tr>
+      {% else %}
+        <tr>{% for y in x %}<td >{{y|safe}}</td>{% endfor %}</tr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+</p>
+<div class="form-group" style="width:50%;margin:auto;">
+  <form id="form1" name="form1" method="post" action="">
+
+  <select name="cnvp" id="cnvpie" class="form-control input-lg" style="width:100%;text-align: center;">
+
+  {% for x in table_sam_info %}
+    <option>{{x.2}}</option>
+    {% endfor %}
+
+
+
+  </select>
+  </form>
+</div>
+<div id="CNv_type"></div>
+<div id="cnv4" class="hide_in_pdf" style="width:20%;float:left;height:480px;text-align:center">
+  <div>
+    <button type="button" style="margin-top:200px" id="pcnv" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-up"></i>
+    </button>
+  </div>
+  <div>
+    <button type="button" style="margin-top:50px" id="ncnv" class="button button-giant  button-border button-circle">
+      <i class="icon-circle-arrow-down"></i>
+    </button>
+  </div>
+</div>
+<p class="name_fig">图5.{% if WGS and not snp_indel_res and not sv_res%}1{% endif %}{% if WGS and not snp_indel_res and sv_res%}2{% endif %}{% if WGS and snp_indel_res %}4{% endif %}.1.1　基因组不同区域上CNV数目分布图</p>
+{% endif %}
+
+{% if WES_cnv_CoNIFER %}
+<p class="center">
+<p class="name_fig">表5.{% if snp_indel_res %}3{% endif %}{% if not snp_indel_res %}1{% endif %}.1.1　CNV检测结果汇总</p>
+<div id="tb">
+  <table class="gy">
+  
+  {% for each in table_cnv %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+    {% else %}
+      {% for x in each %}
+        {% if loop.first %}
+          <tr>{% for y in x %}{% if loop.first %}<th rowspan="2">{{y|safe}}</th>{% else %}<td>{{y|safe}}</td>{% endif %}{% endfor %}</tr>
+        {% else %}
+          <tr>{% for y in x %}<td >{{y|safe}}</td>{% endfor %}</tr>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  </table>
+  </div>
+  </p>
+{% endif %}
+
+<p class="paragraph">注：&nbsp;每一行表示不同区域中的不同类型(varType)CNV的数目</p>
+<p class="tremark">（1）Sample：样本名称</p>
+<p class="tremark">（2）varType：CNV类型</p>
+<p class="tremark">（3）total：当前CNV类型的数目</p>
+<p class="tremark">（4）cds：CDS区域中CNV的数目</p>
+<p class="tremark">（5）splicing：splicing junction 10bp范围内CNV的数目</p>
+<p class="tremark">（6）utr5：5’UTR区域中CNV的数目</p>
+<p class="tremark">（7）utr3：3’UTR区域中CNV的数目</p>
+<p class="tremark">（8）intron：内含子区域中CNV的数目</p>
+<p class="tremark">（9）upstream：转录起始位点上游1Kb区域中CNV的数目</p>
+<p class="tremark">（10）downstream：转录终止位点下游1Kb区域中CNV的数目</p>
+<p class="tremark">（11）ncRNA：非编码RNA区域中CNV的数目</p>
+<p class="tremark">（12）intergenic：基因间区域中CNV的数目</p>
+<p class="tremark">（13）unknown：由于注释用的基因结构注释数据库的不完善导致的未知功能位点</p>
+<p class="premark">&nbsp</p>
+
+
+{% if not WES_cnv_CoNIFER %}
+<div id="slider4" class="flexslider" style="margin:auto;width:850px;height:550px">
+<ul class="slides">
+{% for each in fig_CNV %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto;width:800px;height:500px"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+<p class="name_fig">图5.{% if WGS and not snp_indel_res and not sv_res%}1{% endif %}{% if WGS and not snp_indel_res and sv_res%}2{% endif %}{% if WGS and snp_indel_res %}4{% endif %}.1.2　CNV检测结果展示图</p>
+<p class="premark">纵坐标为染色体编号，横坐标为染色体的长度。每个点代表CNV在染色体上的位置，绿色表示CNV类型为loss，橘黄色表示CNV类型为gain。</p>
+{% endif %}
+
+
+{% if WES_cnv_CoNIFER %}
+<div id="slider4" class="flexslider" style="margin:auto;width:850px;height:550px">
+<ul class="slides">
+{% for each in fig_CoNIFER %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto;width:800px;height:500px"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+<p class="name_fig">图5.{% if snp_indel_res %}3{% endif %}{% if not snp_indel_res %}1{% endif %}.1　CNV检测结果展示图</p>
+<p class="premark">纵坐标为染色体编号，横坐标为染色体的长度。每个点代表CNV在染色体上的位置，绿色表示CNV类型为del，橘黄色表示CNV类型为dup。</p>
+{% endif %}
+
+<p class="premark">&nbsp</p>
+</div>
+{% if snp_indel_res %}
+{% if WGS %}
+<h4>4.2　CNV注释结果</h4>
+{% endif %}
+{% if WES_cnv_CoNIFER %}
+<h4>3.2　CNV注释结果</h4>
+{% endif %}
+{% else %}
+{% if WGS %}
+{% if sv_res %}
+<h4>2.2　CNV注释结果</h4>
+{% else %}
+<h4>1.2　CNV注释结果</h4>
+{% endif %}
+{% endif %}
+{% if WES_cnv_CoNIFER %}
+<h4>1.2　CNV注释结果</h4>
+{% endif %}
+{% endif %}
+
+
+<p class="center">
+<p class='paragraph'>利用ANNOVAR软件对拷贝数变异进行注释，注释信息包括4个部分，分别为基因及区域注释，数据库注释，ENCODE注释，结构变异信息等。具体的注释内容展示如表{% if not WES_cnv_CoNIFER %}5.{% if WGS and not snp_indel_res and not sv_res%}1{% endif %}{% if WGS and not snp_indel_res and sv_res%}2{% endif %}{% if WGS and snp_indel_res %}4{% endif %}.2{% else %}5.{% if snp_indel_res %}3{% endif %}{% if not snp_indel_res %}1{% endif %}.2{% endif %}.1。</p>
+
+{% if not WES_cnv_CoNIFER %}
+<p class="name_fig">表5.{% if WGS and not snp_indel_res and not sv_res%}1{% endif %}{% if WGS and not snp_indel_res and sv_res%}2{% endif %}{% if WGS and snp_indel_res %}4{% endif %}.2.1　CNV注释结果展示（只显示前5行）</p>
+{% else %}
+<p class="name_fig">表5.{% if snp_indel_res %}3{% endif %}{% if not snp_indel_res %}1{% endif %}.2.1　CNV注释结果展示（只显示前5行）</p>
+{% endif %}
+<div id="tb">
+<table class="gy">
+{% for each in table_cnv_anno %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_cnv.html" %}
+</div><!--cnvres-->
+
+
+<!-- ------------------------------------------------------------------------circos图 ------------------------------------------------------------- -->
+{% if cnv_res and WGS %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="Circos图" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>{% if WGS and not snp_indel_res and not sv_res%}2{% endif %}{% if WGS and not snp_indel_res and sv_res%}3{% endif %}{% if WGS and snp_indel_res and not sv_res %}4{% endif %}{% if WGS and snp_indel_res and sv_res %}5{% endif %}　Circos图</h3>
+<p class="paragraph">基于全基因组数据分析结果，我们对基因组序列相关数据进行了Circos展示。</p>
+<p class="tremark">&nbsp</p>
+<p class="center">
+
+
+<div id="slider" class="flexslider" style="margin:auto;width:650px;height:650px">
+<ul class="slides">
+{% for each in fig_cnv_circos %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto;width:600px;height:600px"/>
+    <p class="flex-caption" style="text-align:center">{{each.2|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+
+
+<p class="name_fig" style="clear:both">图{% if WGS and not snp_indel_res and not sv_res%}2{% endif %}{% if WGS and not snp_indel_res and sv_res%}3{% endif %}{% if WGS and snp_indel_res and not sv_res %}4{% endif %}{% if WGS and snp_indel_res and sv_res %}5{% endif %}.1　Circos个性化展示图</p>
+<p class="premark">注：Novogene是有CNV分析的时候才会做Circos图。该Circos图由外到内，共5环</p>
+<p class="premark">（1）最外圈（第一圈）是染色体信息，数字为染色体号，对应的染色体长度和核型</p>
+<p class="premark">（2）次外环-第2环，测序覆盖度图（蓝色），每 0.5Mbp 为一个单位，计算其平均覆盖度</p>
+{% if muts_res %}
+<p class="premark">（3）第3环，黑色圆点表示 InDel 的密度，高低表示密度大小，以每 1Mbp为一个单位。计算方式 ：1M bp 范围内的 indel数目 /1 Mbp</p>
+<p class="premark">（4）第4环，绿色圆点表示SNP的密度，高低表示大小，以每1Mbp为一个单位。计算方式 ：1M bp 范围内的 snp数目 /1 Mbp</p>
+<p class="premark">（5）以每1Mbp为一个单位，计算其内的纯合 SNP（橙色）和杂合SNP（灰色）的比例</p>
+{% if freec %}
+<p class="premark">（6）第6环，Control-FREEC分析结果，红色为CNV扩增，绿色为CNV缺失</p>
+{% endif %}
+{% if cnvnator %}
+<p class="premark">（6）第6环，cnvnator分析结果，红色为CNV扩增，绿色为CNV缺失</p>
+{% endif %}
+{% if sv_res %}
+  {% if breakdancer %}
+  <p class="premark">（7）BreakDancer分析结果，由于结果较多 ，只显示外显子和剪切位点区域上的SV 数据，其中染色体间易位CTX（橙色 ）、插入INS （绿色）、删除DEL（灰色 ）、染色体内易位ITX（粉红色）和倒位 INV（蓝色 ）</p>
+  {% endif %}
+  {% if crest %}
+  <p class="premark">（7）CREST结果，由于结果较多 ，只显示外显子和剪切位点区域上的SV 数据，其中染色体间易位CTX（橙色 ）、插入INS （绿色）、删除DEL（灰色 ）、染色体内易位ITX（粉红色）和倒位 INV（蓝色 ）</p>
+    {% endif %}
+{% endif %}
+{% endif %}
+</p>
+</div>
+{% endif %}
+
+{% endif %}
+<!-- ------------------------------------------------------------  高级分析------------------------------------------------------------------------- -->
+
+
+
+
+{% if filter_res %}
+<!-- ---------------------------------------------------------------- 1 突变位点筛选  --------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="高级分析结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+<hr />
+</p>
+{% if samp_info %}
+<h2>六、高级分析结果</h2>
+{% else %}
+<h2>五、高级分析结果</h2>
+{% endif %}
+
+<p class="paragraph">
+  变异检测的结果是海量的，然而真正与研究疾病相关的突变却是有限的。为了从海量的变异检测结果中筛选出真正与所研究疾病相关的突变，
+  我们需要对变异检测结果进行进一步的分析与筛选。我们主要利用现有的数据库，软件等工具，结合样本信息，一步一步对变异结果进行筛选，
+  得到最终的候选致病突变。以SNP/InDel的筛选为例，这部分的主要流程图如下，具体每部分的筛选下面也将会进行详细的介绍。</p>
+<style id="css">
+
+g.type-TK > rect {
+  fill: #00ffd0;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Microsoft Yahei";
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+</style>
+
+<script>
+$(function() {var g = new dagreD3.graphlib.Graph()
+  .setGraph({})
+  .setDefaultEdgeLabel(function() { return {}; });
+
+// Here we"re setting nodeclass, which is used by our custom drawNodes function
+// below.
+{% if filter_res %}
+g.setNode(0,  { labelType: "html",label: "所有SNP/INDEL位点",       class: "type-TOP" });
+{% if filterDB %}
+g.setNode(1,  { labelType: "html",label: "<a href='#突变位点筛选结果'>常规过滤</a>",       class: "type-TOP" });
+g.setNode(2,  { labelType: "html",label: "基于频率的筛选",       class: "type-TOP" });
+g.setNode(3,  { labelType: "html",label: "基于功能区域的筛选",       class: "type-TOP" });
+g.setNode(4,  { labelType: "html",label: "对编码区突变的定性筛选",       class: "type-TOP" });
+g.setNode(5,  { labelType: "html",label: "基于有害性分值的筛选",       class: "type-TOP" });
+{%if Pathway %}
+g.setNode(22,  { labelType: "html",label: "<a href='#通路'>通路</a>",       class: "type-TOP" });
+g.setNode(24,  { labelType: "html",label: "GO通路",       class: "type-TOP" });
+g.setNode(25,  { labelType: "html",label: "KEGG通路",       class: "type-TOP" });
+{% endif %}
+g.setNode(26,  { labelType: "html",label: "<a href='#候选基因'>候选基因</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if DamLevel %}
+g.setNode(6,  { labelType: "html",label: "<a href='#有害性'>有害性分类</a>",       class: "type-TOP" });
+g.setNode(7,  { labelType: "html",label: "致病",       class: "type-TOP" });
+g.setNode(8,  { labelType: "html",label: "可能致病",       class: "type-TOP" });
+g.setNode(9,  { labelType: "html",label: "未知分类",       class: "type-TOP" });
+g.setNode(10,  { labelType: "html",label: "可能良性",       class: "type-TOP" });
+g.setNode(11,  { labelType: "html",label: "良性",       class: "type-TOP" });
+{% endif %}
+
+{% if Noncoding %}
+g.setNode(12,  { labelType: "html",label: "<a href='#非编码'>非编码区筛选</a>",       class: "type-TOP" });
+g.setNode(13,  { labelType: "html",label: "筛选频率",       class: "type-TOP" });
+g.setNode(14,  { labelType: "html",label: "筛选保守性和有害性",       class: "type-TOP" });
+{% endif %}
+
+{% if ModelD or ModelR or ModelC %}
+g.setNode(20,  { labelType: "html",label: "<a href='#显隐性模式筛选'>显隐性模式筛选</a>",       class: "type-TOP" });
+{% if ModelD %}
+g.setNode(15,  { labelType: "html",label: "<a href='#显性模式筛选'>显性模式筛选",       class: "type-TOP" });
+{% endif %}
+{% if ModelR %}
+g.setNode(16,  { labelType: "html",label: "<a href='#隐性模式筛选'>隐性模式筛选",       class: "type-TOP" });
+{% endif %}
+{% if ModelC %}
+g.setNode(17,  { labelType: "html",label: "<a href='#复合杂合筛选'>复合杂合筛选",       class: "type-TOP" });
+{% endif %}
+{% endif %}
+
+{% if denovo_res %}
+g.setNode(18,  { labelType: "html",label: "<a href='#新生突变'>新生突变</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if roh_res %}
+g.setNode(19,  { labelType: "html",label: "<a href='#ROH分析'>ROH分析</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if linkage_res %}
+g.setNode(21,  { labelType: "html",label: "<a href='#连锁分析'>连锁分析</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if net_work %}
+g.setNode(30,  { labelType: "html",label: "<a href='#phenolyzer'>phenolyzer</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if ShareCompare %}
+g.setNode(27,  { labelType: "html",label: "<a href='#共有基因'>共有基因筛选</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if ppinter %}
+g.setNode(23,  { labelType: "html",label: "<a href='#PPI'>PPI</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if asso_site %}
+g.setNode(28,  { labelType: "html",label: "<a href='#关联分析'>关联分析</a>",       class: "type-TOP" });
+{% endif %}
+
+{% if GeneAS %}
+g.setNode(29,  { labelType: "html",label: "<a href='#Burden分析'>Burden分析</a>",       class: "type-TOP" });
+{% endif %}
+
+
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  // Round the corners of the nodes
+  node.rx = node.ry = 5;
+});
+
+{% if filterDB %}
+g.setEdge(0, 1);
+g.setEdge(1, 2);
+g.setEdge(2, 3);
+g.setEdge(3, 4);
+g.setEdge(4, 5);
+{% endif %}
+
+{% if Noncoding %}
+g.setEdge(0, 12);
+g.setEdge(12, 13);
+g.setEdge(13, 14);
+{% endif %}
+
+
+{% if ShareCompare %}
+g.setEdge(5, 27);
+g.setEdge(27,26);
+{% endif %}
+
+{% if ModelD or ModelR or ModelC %}
+g.setEdge(5, 20);
+{% if ModelD %}
+g.setEdge(20, 15);
+{% endif %}
+{% if ModelR %}
+g.setEdge(20, 16);
+{% endif %}
+{% if ModelC %}
+g.setEdge(20, 17);
+{% endif %}
+{% endif %}
+
+{% if denovo_res %}
+g.setEdge(0, 18);
+g.setEdge(18, 26);
+{% endif %}
+
+{% if roh_res %}
+g.setEdge(0, 19);
+{% endif %}
+
+{% if linkage_res %}
+g.setEdge(0, 21);
+{% endif %}
+
+{% if DamLevel %}
+g.setEdge(0, 6);
+g.setEdge(6, 7);
+g.setEdge(6, 8);
+g.setEdge(6, 9);
+g.setEdge(6, 10);
+g.setEdge(6, 11);
+g.setEdge(7, 26);
+g.setEdge(8, 26);
+{% endif %}
+
+{% if Pathway %}
+g.setEdge(22, 24);
+g.setEdge(22, 25);
+{% endif %}
+
+{% if model_res %}
+{% if ModelD %}
+g.setEdge(15, 26);
+{% endif %}
+{% if ModelR %}
+g.setEdge(16, 26);
+{% endif %}
+{% if ModelC %}
+g.setEdge(17, 26);
+{% endif %}
+{% endif %}
+
+{% if filterDB and not model_res and not ShareCompare %}
+g.setEdge(5, 26);
+{% endif %}
+
+{% if Pathway %}
+g.setEdge(26,22);
+{% endif %}
+
+{% if net_work %}
+g.setEdge(26,30);
+{% endif %}
+
+{% if ppinter %}
+g.setEdge(26,23);
+{% endif %}
+
+{% if asso_site %}
+g.setEdge(26,28);
+{% endif %}
+
+{% if GeneAS %}
+g.setEdge(26,29);
+{% endif %}
+
+{% endif %}
+// Create the renderer
+var render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("#svg1"),
+    svgGroup = svg.append("g");
+
+// Run the renderer. This is what draws the final graph.
+render(d3.select("svg g"), g);
+
+// Center the graph
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+svg.attr("height", g.graph().height + 40);})
+</script>
+<svg id='svg1' width='100%' height='600'></svg>
+{% if filterDB %}
+<h3>1 基于变异有害性的筛选结果</h3>
+<a name="突变位点筛选结果"></a>
+<h3>1.1　突变位点筛选</h3>
+<p class="paragraph">对基本分析检测到的SNP/InDel信息进行突变位点筛选，具体的筛选过程如下：</p><br/>
+<p  class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、去除在千人基因组数据（1000g_all）、ESP6500数据库（esp6500si_all）、gnomAD数据（gnomAD_ALL和gnomAD_EAS）这四个频率数据库中至少有一个频率高于1%的突变。旨在去除个体间的多样性位点，得到可能致病的罕见（rare）突变</p>
+<p  class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、保留处于编码区（exonic）或剪接位点区（splicing，上下10bp）的变异</p>
+<p  class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、去除不位于高度保守区且未被软件预测为会影响剪接的同义SNP突变（以grep++分值>2的位点为高度保守区；若dbscSNV的两个预测分值至少有一个大于0.6认为突变影响剪接）；去除处于Repeat区的小片段（<10bp）非移码InDel突变</p>
+<p  class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4、保留符合以下条件之一的突变：a) 突变被预测为有害；或 b) 突变被预测为影响剪接。
+  a)	有害性预测：依据SIFT，Polyphen，MutationTaster，CADD这4个软件的打分情况进行变异位点筛选，要求这4个软件中的有分值的软件中至少有一半支持该位点可能有害，则该位点被保留；
+  b)	影响剪接的预测：保留与外显子区距离不大于 2bp（±1~2bp）的剪接位点区突变；保留被dbscSNV预测为会影响剪接（dbscSNV的两个预测分值至少有一个大于0.6）的突变。
+  （举例：一个位点的预测结果为'SIFT=.', 'Polyphen=.', 'MutationTaster=1.000,N', 'CADD=.', 'dbscSNV_score=0.5589,0.636', 4个有害性预测软件不支持该位点有害，但dbscSNV的分值中有一个高于0.6，即软件预测该突变会影响剪接，该位点也被保留）
+  </p>
+
+<p  class="tremark">经过以上四个步骤筛选得到的变异位点统计如表6.1.1.1所示：</p><br/>
+<p class="center">
+<p class="name_fig">表6.1.1.1　突变位点过滤统计</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_snp_filter %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div><!--fil-->
+</p>
+<p class="tremark">注：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）Total：筛选前总变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）Freq：千人基因组数据（1000g_all）、ESP6500数据（esp6500siv2_all）、gnomAD数据（ gnomAD_ALL和gnomAD_EAS），过滤这四个频率数据库中至少有一个频率高于1%的突变后剩余的变异位点数目</p>
+<!--<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dbsnpNonFlagged：过滤dbSNP库后剩余的变异位点数目，步骤1</p>-->
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）Func：使用上步结果筛选出exonic,splicing区位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）ExonicFunc：使用上步结果过滤非高度保守区且未被预测软件判为影响splicing的同义SNP突变；过滤Repeat区的小片段（<10bp）非移码InDel突变后剩余的变异位点数目</p>
+<!--<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sift：使用上步结果通过SIFT功能预测评估为影响蛋白功能的变异位点数目，步骤5</p>
+
+
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;polyphen：使用上步结果通过PolyPhen2功能预测评估为影响蛋白功能的变异位点数目，步骤6</p>-->
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（5）Deleterious：使用上步结果通过SIFT、Polyphen、MutationTaster、CADD这4个软件评估为可能影响蛋白功能；保留无预测分值的InDel突变；保留被dbscSNV 预测为影响splicing的SNP突变；保留与外显子区距离不大于2bp（±1~2bp）的splice site突变的变异位点数目</p>
+<p  class="tremark">经过以上五个步骤筛选得到的变异位点注释情况如表6.1.1.2所示（只显示前几行）：</p><br/>
+<p class="center">
+<p class="name_fig">表6.1.1.2　突变位点过库注释</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_merge_anno %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div><!--fil-->
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div id="yhfil" class="HideOrVisible">
+  {% include "partial/anno2_filter_snpindel.html" %}
+  <!--<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AD：该位点参考碱基和测序碱基的测序深度（格式REF, ALT）（Allelic depths）</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GQ：该位点的基因型质量值（Genotype Quality）</p>-->
+</div>
+
+{% endif %}
+    
+
+{% if DamLevel %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name='有害性' href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+<h3>1.2　突变位点有害性分类</h3>
+
+<p class="paragraph">2015 年美国医学遗传学和基因组学学会(ACMG) 开发了针对序列变异的解读的标准和指南，成为高通量测序后数据解读的金标准(Sue Richards et al,2015) 。 ACMG 开发的变异分类系统并推荐使用特定的标准术语，该系统将变异分为 pathogenic(致病的 ) 、 likelypathogenic(可能致病的) 、 uncertain significance(致病性不明确的) 、 likely benign(可能良性的) 、 benign(良性的) 来描述孟德尔疾病致病基因中发现的突变。 ACMG 的变异分类系统中共有 28 个证据类别，根据 28 个证据的组合形式进行变异位点的有害性分类，具体描述如图6.1.2.1 和表 6.1.2.1。</p>
+<p class="center">
+<img id="acmg" class="middle" src="src/images/ACMG.png" /></p>
+<p class="name_fig">图6.1.2.1　ACMG 证据分类</p>
+<p class="name_fig">表6.1.2.1　ACMG 分类与证据关系</p>
+<table style='text-align:center;width:90%;margin:auto' class='gy' rules=rows  border="1">
+<tr><td rowSpan='8' bgcolor='#C2D69B'>Pathogenic</td><td rowSpan='4'>PVS1+</td><td bgcolor='#C2D69B'>>=1 PS(PS1 -PS4) or</td></tr>
+<tr>		<td bgcolor='#C2D69B'>>=2 PM(PM1 -PM6) or</td></tr>
+<tr>		<td bgcolor='#C2D69B'>1PM(PM1 -PM6)+1PP(PP1 -PP5)or</td></tr>
+<tr>		<td bgcolor='#C2D69B'>>=2 PP(PP1 -PP5) or</td></tr>
+<tr>	<td colSpan='2'bgcolor='#C2D69B'>>=2 PS(PS1 -PS4) or</td></tr>
+<tr>	<td rowSpan='3'>1 PS(PS1 -PS4) +</td><td bgcolor='#C2D69B'>>=3 PM(PM1 -PM6) or</td></tr>
+<tr>		<td bgcolor='#C2D69B'>2 PM(PM1 -PM6) + >=2 PP or</td></tr>
+<tr>		<td bgcolor='#C2D69B'>1PM(PM1 -PM6) + >=4PP (PP1 -PP5)</td></tr>
+<tr><td rowSpan='5'>Likely pathogenic</td><td colSpan='2'>1 PVS + 1 PM(PM1 -PM6) or</td></tr>
+<tr>		<td colSpan='2' >1 PS(PS1 -PS4) + 1 -2 PM(PM1 -PM6) or</td></tr>
+<tr>		<td colSpan='2' >>=3 PM(PM1 -PM6) or</td></tr>
+<tr>		<td  colSpan='2' >2 PM(PM1 -PM6) + >=2PP(PP1 -PP5)or</td></tr>
+<tr>		<td colSpan='2' >1 PM(PM1 -PM6) + >=4PP(PP1 -PP5)</td></tr>
+<tr bgcolor='#C2D69B'><td rowSpan='2'>Benign</td><td  colSpan='2' >1 BA or</td></tr>
+<tr>		<td  colSpan='2' bgcolor='#C2D69B'>>=2 BS(BS1 -BS4) or</td></tr>
+<tr><td rowSpan='2'>Likely benign</td><td  colSpan='2' >1 BS(BS1 -BS4)+ 1 BP(BP1 -BP7) or</td></tr>
+<tr>		<td colSpan='2' >>=2 BP(BP1 -BP7)</td></tr>
+<tr bgcolor='#C2D69B'><td rowSpan='2'>Uncertain significance</td><td  colSpan='2' >不符合以上任何分类 or</td></tr>
+<tr>		<td  colSpan='2' bgcolor='#C2D69B'>致病与良性相互矛盾</td></tr>
+</table>
+
+<p class="tremark">注：表格中 28 个证据中根据不同的组合形式可以得到变异的有害性类别， 分类时不同行直接是“或”的关系， 不同列之间是“和” 的关系； 但有一些是仅靠生物信息尚不能确认的证据，这部分证据的具体说明见附录 D。</p>
+<p class='paragraph'>诺禾致源基于现有的信息分析方式，参考 ACMG 的证据对突变位点有害性进行分类，以{{familyid}}家系为例，按照生物信息分析结果得到的每个有害类别的变异位点数目统计如表 6.1.2.2 所示，每个变异位点的有害性分析注释如表 6.1.2.3。</p>
+
+<p class="center">
+<p class="name_fig">表6.1.2.2　有害性分类筛选结果</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_damlevel_filter %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div><!--dam-->
+</p>
+<p class="tremark">注：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）Total： 筛选前总变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）Pathogenic： 分类为致病性的变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）Likely Pathogenic： 分类为可能致病的变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）VUS： 分类为不确定性变异有害性的位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（5）Likely Begnin： 分类为可能良性的变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（6）Begnin： 分类为良性的变异位点数目</p>
+
+<p class="center">
+<p class="name_fig">表6.1.2.3　致病性变异位点有害性注释</p>
+<div id="tb">
+<table class="gy">
+{% for each in damlevel_anno %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div><!--dam-->
+</p>
+
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div id="yhdam" class="HideOrVisible">
+
+  {% include "partial/anno3_ACMG.html" %}
+
+</div><!--dam-->
+{% endif %}
+
+{% if Noncoding %}
+<div id='page'>
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name='非编码' href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+
+<h3>1.{{nonnum}}　非编码区筛选结果</h3>
+<p class="paragraph">非编码区在基因表达调控中发挥着重要作用，另外非编码区的变异也会引起许多疾病的发生。在之前的研究中发现，有相当数量的病人可能存在外显子以外的致病突变。非编码区突变与疾病的密切关系，对非编码区进行研究非常有必要。</p>
+<p class="paragraph">基于非编码区变异位点进行筛选，具体的筛选过程如下：</p><br/>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、Genomiser筛选与疾病相关的非编码区遗传变异，需提供疾病或表型；</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、表观基因组学注释：
+      （1）提供组织：从10大类组织（共45中细分组织）（1.Artery_Heart, 2.Brain, 3.Digestive_System, 4.Reproductive_System, 5.Endocrine_System, 6.Muscle, 7.Adipose, 8.Skin, 9.Spleen, 10.Lung）中选择1种，最多2种，注释相应组织GTEx和Roadmap数据库结果；
+    （2）不提供组织：GTEx数据库注释Artery_Aorta，Roadmap数据库仅注释Aorta（E065）；
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、过滤筛选：
+    （1）频率筛选：GnomAD_EAS频率≤0.01的位点；
+    （2）位点保守型筛选：GWAVA和CADD保守性分值筛选结果（GWAVA＞0.5，CADD≥10认为有害）。snp筛选策略：过滤掉CADD或GWAVA有分值，且不认为有害的位点；indel筛选：保留CADD分值>10的位点；
+    （3）GTEx数据库及表观数据库（Roadmap和Encode）过滤筛选（可选步骤）:
+    ①提供组织类型：筛选变异位点能够影响特定组织基因表达，且注释为DNA功能元件;
+    ②不提供组织：该步骤不执行;
+    4）利用家系遗传模式进行筛选（可选步骤，仅家系样本执行该步骤）。</p>
+
+<p  class="tremark">经过以上三个步骤筛选得到的变异位点统计如表6.1.{{nonnum}}.1所示：</p><br/>
+<p class="center">
+<p class="name_fig">表6.1.{{nonnum}}.1　非编码区突变位点过滤统计</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_snp_noncoding %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div><!--nc-->
+</p>
+<p class="tremark">注：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）Genomiser：通过Genomiser软件筛选与疾病或表型相关的非编码区变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）Conservation：利用软件CADD和GWAVA进行位点保守型筛选得到的变异位点数目</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）Epigenome：利用GTEx、Roadmap、Encode数据库筛选变异位点能够影响特定组织基因表达，且注释为DNA功能元件
+  </p>
+
+
+
+
+
+{% if Noncoding_anno %}
+<div class='page'>
+<p class="center">
+<p class="name_fig">表6.1.{{nonnum}}.2　非编码区变异筛选和注释结果（只截取前几行信息进行展示）</p>
+<div id="tb">
+
+<table class="gy">
+{% for each in Noncoding_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+{% endfor %}
+
+</table>
+</div><!--nc-->
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div id="nca" style='display:none;'>
+
+  {% include "partial/anno5_noncoding.html" %}
+</div><!--nc-->
+
+{% endif %}
+</div><!--nc-->
+{% endif %}
+
+{% if FilterSV %}
+<div class='page'>
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name='结构变异过滤' href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+<h3>1.{{fsvnum}}　结构变异SV/CNV有害性分析</h3>
+<p class="paragraph">与单核苷酸变异（SNVs, single nucleotide variatants）类似，很多SV/CNV在生物基因组中也存在多态性。有些良性的SV/CNV不会导致生物体发生病变，但是，有些恶性SV/CNV和神经系统障碍、癌症等疾病密切相关。</p>
+<p class="paragraph">为了从软件检测到的SV/CNV结果中进一步过滤掉良性SV/CNV，保留恶性SV/CNV，Novogene利用多种SV/CNV数据库对检测结果进行分类标记。分类标准如下：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、使用数据库DGV及其衍生系列StringentLib，InclusiveLib和DGV.GoldStandard.July2015对检测到的SV/CNV进行良性变异注释；</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、使用数据库CNVD对检测到的SV/CNV进行恶性变异注释；</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、根据注释情况将SV/CNV分为4类，H(high)：在恶性数据库（CNVD）中有记录，在良性数据库（DGV）中无记录；P(possibly deleterious)：在良性、恶性数据库中都无记录；M(medium)：在良性、恶性数据库中都有记录；L(low)：在良性数据库中有记录，在恶性数据库中无记录。若某变异能在两种不同的软件都能预测到则标为“*”，若某变异在"genomicSuperDups"或"Repeat"列中有标注则标为“-”。</p>
+
+
+{% if FilterSV_anno %}
+<p class="center">
+<p class="name_fig">表6.1.{{fsvnum}}{% if FilterCNV_anno %}.1{% endif %}　SV筛选和注释结果（只截取前几行信息进行展示）</p>
+<div id="tb">
+
+<table class="gy">
+{% for each in FilterSV_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+{% endfor %}
+
+</table>
+</div><!-- fsv-->
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_filter_sv.html" %}
+</div><!-- fsv-->
+{% endif %}
+{% endif %}
+{% if FilterSV and not FilterCNV %}
+</div><!-- fsv-->
+{% endif %}
+{% if FilterCNV %}
+
+{% if not FilterSV %}
+<div id='page'>
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name='结构变异过滤' href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+<hr />
+<h3>1.{{fsvnum}}　结构变异CNV有害性分析</h3>
+<p class="paragraph">与单核苷酸变异(SNVs, single nucleotide variatants)类似，很多 CNV 是生物基因组中正常的多态性，这种良性 CNV 不会导致生物体发生病变。但是，还发现有些恶性 CNV 和神经系统障碍、癌症等疾病相关。</p>
+<p class="paragraph">为了从软件检测到的 CNV 结果中进一步过滤掉良性 CNV，以及保留恶性 CNV。 诺禾致源利用多种 CNV 数据库对检测结果进行分类标记。分类标准如下：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1、 使用数据库 DGV 及其衍生系列 StringentLib， InclusiveLib 和 DGV.GoldStandard. July2015 对检测到的 CNV 进行良性变异注释；</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2、 使用数据库 CNVD 对检测到的 CNV 进行恶性变异注释；</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3、 根据注释情况将 CNV 分为 4 类， H(high)，恶有良无； P(possibly deleterious)，恶无良无；M(medium)，恶有良有； L(low)，恶无良有。若某变异能在两种不同的软件都能预测到则标为“*”，若某变异在"genomicSuperDups"或"Repeat"列中有标注则标为“-”。</p>
+{% endif %}
+{% if FilterCNV_anno %}
+<p class="center">
+<p class="name_fig">表6.1.{{fsvnum}}{% if FilterSV_anno %}.2{% else %}.1{% endif %}　CNV筛选和注释结果（只截取前几行信息进行展示）</p>
+<div id="tb">
+
+<table class="gy">
+{% for each in FilterCNV_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+{% endfor %}
+
+</table>
+</div><!--fcnv-->
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_filter_cnv.html" %}
+<p class="premark">&nbsp</p>
+</div><!--fcnv-->
+
+{% endif %}
+</div><!--fcnv-->
+{% endif %}
+
+{% endif %}
+
+
+
+{% if model_res %}
+<!----------------------------------------------------------------- 2 显隐性模式筛选  ---------------------------------------------------------------->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="显隐性模式筛选" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>2 　基于样本情况的筛选结果</h3>
+{% if ModelD or ModelR %}
+<h3>2.1　显隐性模式筛选</h3>
+<p class="paragraph"> 孟德尔遗传病根据遗传模式可分为显性遗传病和隐性遗传病。对于显性遗传疾病，致病变异来自父亲或者母亲，一般是杂合变异，应首先考虑候选基因上的杂合突变。对于隐性遗传疾病，其致病变异一般是来自父母双方的纯合或者复合杂合变异。复杂疾病是由易感基因、环境等多因素共同作用导致的疾病，对于该类疾病的显隐性遗传模式筛选，需要有家系支撑才可以比较准确的进行。复杂疾病会有多个微效基因相互影响导致个体患病，这种显隐性筛选是基于主效基因的寻找，在局部家系内类同于单基因病的筛选。</p>
+{% endif %}
+{% if ModelD %}
+<h4>2.1.1　显性遗传模式</h4>
+<p class="paragraph">在突变位点过滤的基础上，如果某一单基因病在家系中为显性模式遗传，则保留家系中患者常染色体为杂合突变（性染色体保留有突变的位点），且家系中正常人没有突变的位点作为候选位点。</p>
+<p class="paragraph">以{{familyid}}家系为例，我们在该家系中检测到了SNP对应的{{modelD_listsnp}}个候选基因和InDel对应的{{modelD_listindel}}个候选基因。筛选和注释结果如下表所示。</p>
+
+<p class="center">
+<p class="name_fig">表6.2.1.1.1　基因杂合变异筛选和注释结果（只截取前几行信息进行展示）</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_modelD_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+<p class="tremark">注：杂合变异的查找是通过对患病个体以及双亲的遗传信息进行比对，首先基因结构进行注释，然后过1000G、gnomAD等数据库进行基因频率筛选，使用SIFT和PolyPhen等>软件对非同义突变SNP的“功能重要性”打分，进行功能保守性预测，再变异位点信息注释以及功能和通路筛选。</p>
+<p class="tremark">&nbsp;&nbsp;</p>
+        
+  {% include "partial/anno2_filter_snpindel.html" %}
+
+</div>
+{% endif %}
+
+{% if ModelR %}
+{% if not ModelD %}
+<h4>2.1.1　隐性遗传模式</h4>
+{% else %}
+<h4>2.1.2　隐性遗传模式</h4>
+{% endif %}
+<p class="paragraph">隐性遗传致病，表现为父母表型正常，携带致病位点，子代继承了父母的致病纯合位点，出现患病个体（常染色体）。隐性遗传致病包括两种情况，基因纯合变异以及复合杂合变异。我们在进行隐性模式筛选的时候，也考虑到了X连锁的情况。隐性模式筛选是指如果单基因病在家系中为隐性模式遗传，则保留家系中患者为纯合突变，且家系中正常人为杂合突变，或者没有突变的位点作为候选位点。复合杂合模式筛选是指如果单基因病在家系中为隐性模式遗传，则保留患者和正常人都不为纯合突变的位点，且要求一个基因在患者中至少有两个杂合突变位点，且患者此基因上的突变位点分布不能与任何一个正常人（此基因）的突变位点分布一样，也不能是任何一个正常人（此基因）突变位点的子集。</p>
+<p class="paragraph">以{{familyid}}家系为例，我们在该家系中检测到了SNP对应的{{modelR_listsnp}}个候选基因和InDel对应的{{modelR_listindel}}个候选基因，以及复合杂合变异位点对应的{{modelC_listsnp}}个候选基因。{% if ModelR and not ModelD %}基因纯合变异筛选和注释结果如表6.2.1.1.1所示。{% endif %} {% if ModelR and ModelD %} 基因纯合变异筛选和注释结果如表6.2.1.2.1所示。{% endif %}{% if ModelC %}{% if ModelR and not ModelD %}基因纯合变异筛选和注释结果如表6.2.1.1.1所示，基因复合杂合变异筛选和注释结果如表6.2.1.1.2所示。{% endif %} {% if ModelR and ModelD %} 基因纯合变异筛选和注释结果如表6.2.1.2.1所示，基因复合杂合变异筛选和注释结果如表6.2.1.2.2所示。{% endif %}{% endif %}</p>
+
+<p class="center">
+{% if ModelR and not ModelD %}
+<p class="name_fig">表6.2.1.1.1　基因纯合变异筛选和注释结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if ModelR and ModelD %}
+<p class="name_fig">表6.2.1.2.1　基因纯合变异筛选和注释结果（只截取前几行信息进行展示）</p>
+{% endif %}
+<div id="tb">
+<table class="gy">
+{% for each in table_modelR_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+<p class="tremark">注：隐性纯合变异，指父母表型正常，携带了相同的隐性致病突变位点（常染色体）。</p>
+<p class="tremark">&nbsp;&nbsp;</p>
+  {% include "partial/anno2_filter_snpindel.html" %}
+</div>
+{% endif %}
+
+
+{% if ModelC %}
+<p class="center">
+{% if ModelR and not ModelD %}
+<p class="name_fig">表6.2.1.1.2　基因复合杂合变异(只截取前几行信息进行展示）</p>
+{% endif %}
+{% if ModelR and ModelD %}
+<p class="name_fig">表6.2.1.2.2　基因复合杂合变异(只截取前几行信息进行展示）</p>
+{% endif %}
+<div id="tb">
+<table class="gy">
+{% for each in table_modelC_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+<p class="tremark">注：复合杂合变异指患病子代双亲表型正常，来自亲本的两套遗传物质中的关键基因均发生突变，但是突变类型或者突变位点不同，子代继承了双方的两种情况患病。</p>
+<p class="tremark">&nbsp;&nbsp;</p>
+  {% include "partial/anno2_filter_snpindel.html" %}
+</div>
+{% endif %}
+
+
+
+{% endif %}
+{% if ShareCompare %}
+<a name='共有基因'></a>
+
+<h3>2.{{sharenum}}　共有突变基因筛选</h3>
+
+
+<p class="paragraph">对于散发样本，在过滤有害性位点的基础上（参见Advance/FilterDB 文件夹中的筛选结果和说明），筛选2个以上患者共有的突变基因（突变基因共有的样本数在最后一列给出）。共有基因筛选和注释结果如表6.2.{{sharenum}}.1所示：</p>
+
+
+<p class="center">
+
+<p class="name_fig">表6.2.{{sharenum}}.1　共有基因筛选和注释结果（只截取前几行信息进行展示）</p>
+
+<div id="tb">
+<table class="gy">
+{% for each in table_shareCompare %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+<p class="tremark">注：复合杂合变异指患病子代双亲表型正常，来自亲本的两套遗传物质中的关键基因均发生突变，但是突变类型或者突变位点不同，子代继承了双方的两种情况患病。</p>
+
+<p class="tremark">&nbsp;&nbsp;</p>
+  {% include "partial/anno6_filter_snpindelshare.html" %}
+</div>
+{% endif %}
+
+
+{% if denovo_res %}
+<!-- ----------------------------------------------------------------3 新生突变--------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="新生突变" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if model_res %}
+<h3>2.{{ denovonum }}　新生突变筛选</h3>
+{% endif %}
+{% if not model_res %}
+<h3>2.{{ denovonum }}　新生突变筛选</h3>
+{% endif %}
+
+<p class="paragraph">患者没有遗传病家族史，即患者的致病突变并非遗传双亲，而可能是发生了新生突变（<i>de novo</i> mutation）。新生突变的来源可能是在精卵细胞形成过程中发生了突变，也可能是形成受精卵后发生突变。研究新生突变，需选择一个家系内的“患者和正常双亲”作为单位进行外显子或全基因组水平上的测序。筛选患者有而父母均没有的变异。</p>
+<p class="paragraph">在全基因组范围内，平均每个新生儿包含60个新生SNV突变，且与受孕时父亲的年龄密切相关。父亲的年龄每增加1岁，后代平均增多约2个突变(Augustine K <i>et al.</i>2012)。其中10%的新生突变为有害突变，但大部分有害突变只造成轻微影响。此外，有研究表明新生CNV和SV变异亦与复杂疾病的发生密切相关，如自闭症、智力障碍、精神分裂症等。</p>
+
+<p class="paragraph">
+  对于“患者+双亲”的成三/成四家系，我们进行新生突变检测，目标是：寻找父母中没有，而孩子里面出现的突变。现在常用的<i>de novo</i> SNP/InDel筛选的方法大致分为两种:
+  1)基于找<i>de novo</i> 突变的软件，例如SAMtools；
+  2)基于家系中每个样本的变异结果进行<i>de novo</i> 位点筛查和过滤。我们对两种方法都进行了尝试。其中用到的位点过滤条件是基于多篇参考文献和测序深度选择的。(Zaidi S <i>et al.</i>2013，Sanders S J <i>et al.</i>2012)
+</p>
+
+<p class="paragraph">
+  {% if software.denovo | length == 1 %}
+    本项目中，我们使用<a>{{ software.denovo.0 }}</a>进行新生突变检测，然后再经过突变位点筛选得到最终的候选位点。
+  {% else %}
+    本项目中，我们使用{{ software.denovo | length }}款软件{{ software.denovo | join(", ") }}分别进行新生突变检测，再对结果取交集，最后再经过突变位点筛选得到最终的候选位点。
+  {% endif %}
+</p>
+
+<div id="denovo-stat">
+  <h4>2.{{denovonum}}.1　de novo 筛选结果统计</h4>
+  <p class="name_fig center">表6.2.{{denovonum}}.1.1 SNP位点数目统计表</p>
+  <div id="tb">
+    <table class="gy">
+      {% for each in table_denovo_intersect_snp_stat %}
+          {% if loop.first %}
+            <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+          {% else %}
+            <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+          {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <p class="name_fig center">表6.2.{{denovonum}}.1.2 INDEL位点数目统计表</p>
+  <div id="tb">
+    <table class="gy">
+      {% for each in table_denovo_intersect_indel_stat %}
+          {% if loop.first %}
+            <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+          {% else %}
+            <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+          {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <p class="tremark">注：</p>
+  <p class="tremark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）Total：筛选前总变异位点数目
+  </p>
+  <p class="tremark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    （2）Freq：千人基因组数据（1000g_all）、ESP6500数据（esp6500siv2_all）、gnomAD数据（ gnomAD_ALL和gnomAD_EAS），过滤这四个频率数据库中至少有一个频率高于1%的突变后剩余的变异位点数目
+  </p>
+  <p class="tremark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）Func：使用上步结果筛选出exonic,splicing区位点
+  </p>
+  <p class="tremark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    （4）ExonicFunc：使用上步结果过滤非高度保守区且未被预测软件判为影响splicing的同义SNP突变；
+    过滤Repeat区的小片段（小于10bp）非移码InDel突变后剩余的变异位点数目
+  </p>
+  <p class="tremark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    （5）Deleterious：使用上步结果通过SIFT、Polyphen、MutationTaster、CADD这4个软件评估为可能影响蛋白功能；
+    保留无预测分值的InDel突变；
+    保留被dbscSNV 预测为影响splicing的SNP突变；
+    保留与外显子区距离不大于2bp（±1~2bp）的splice site突变的变异位点数目
+  </p>
+</div>
+
+<div id="denovo-rate">
+  <h4>2.{{denovonum}}.2　新生突变速率</h4>
+
+  <p class="paragraph">
+    在大部分新生突变研究中，计算筛选出的候选致病新生突变速率（<i>de novo</i> mutation rate）可以有效的评估这些突变在患病群体中发生的偏好性，验证该疾病的发生与新生突变的发生密切相关。
+    SNP和INDEL新生突变速率统计结果如表6.2.{{denovonum}}.2.1 和6.2.{{denovonum}}.2.2 所示： 
+  </p>
+
+  <p class="name_fig center">表6.2.{{denovonum}}.2.1 SNP新生突变速率</p>
+
+  <div id="tb">
+    <table class="gy">
+    {% for each in table_denovo_rate_snp %}
+      {% if loop.first %}
+        <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+      {% else %}
+        <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+      {% endif %}
+    {% endfor %}
+    </table>
+  </div>
+
+    <p class="premark">&nbsp</p>
+    <p class="name_fig center">表6.2.{{denovonum}}.2.2 INDEL新生突变速率</p>
+
+  <div id="tb">
+    <table class="gy">
+    {% for each in table_denovo_rate_indel %}
+      {% if loop.first %}
+        <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+      {% else %}
+        <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+      {% endif %}
+    {% endfor %}
+    </table>
+  </div>
+
+  <p class="tremark">注：</p>
+  <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）Family_patient：患者家系编号和ID</p>
+  <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）<i>de novo</i> number：<i>de novo</i> 突变碱基数</p>
+  <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）Base：覆盖度4X以上的碱基数</p>
+  <p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）Mutation rate：新生突变速率，理论上应该用经过实验验证的<i>de novo</i>突变位点数计算，我们是用<i>de novo</i>检测软件检测到的<i>de novo</i>位点数进行计算</p>
+</div>
+
+<div id="denovo-result">
+
+  <h4>2.{{denovonum}}.3 新生突变注释</h4>
+  <p class="paragraph">
+    利用<a href="http://www.openbioinformatics.org/annovar/" target=_blank>ANNOVAR</a>(Wang K <i>et al.</i>)软件对新生突变位点进行注释，结果如下表所示：
+  </p>
+
+  <p class="name_fig center">表6.2.{{denovonum}}.3.1　SNP突变位点注释结果展示(只显示前5行)</p>
+
+  <div id="tb">
+    <table class="gy">
+      {% for each in table_denovo_intersect_snp_result %}
+        {% if loop.first %}
+          <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+        {% else %}
+          <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <p class="name_fig center">表6.2.{{denovonum}}.3.2　INDEL突变位点注释结果展示(只显示前5行)</p>
+
+  <div id="tb">
+    <table class="gy">
+      {% for each in table_denovo_intersect_indel_result %}
+        {% if loop.first %}
+          <tr>{% for x in each %}<th>{{ x | safe }}</th>{% endfor %}</tr>
+        {% else %}
+          <tr>{% for x in each %}<td>{{ x | safe }}</td>{% endfor %}</tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+  <div class="HideOrVisible">
+    {% include "partial/anno2_filter_snpindel.html" %}
+  </div>
+</div>
+
+
+
+
+
+
+{% if DenovoSV or DenovoCNV %}
+{% if DenovoSV and not DenovoCNV %}
+<h4> 2.{{denovonum}}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %} SV新生突变筛选</h4>
+<p class='paragraph'>在得到每个家系成员SV 突变信息的基础上（基本分析结果基础上），我们根据患者和父母的SV的差异来筛选患者的<i>de novo</i> SV，筛选流程如下：</p>
+<div style='text-align:center;width:50%;margin:auto'><img style='width:80%' src="src/images/denovosv.png" /></div>
+<p style='clear:both' class="name_fig">图{% if model_res%}6.2.{{denovonum}}{% endif %}{% if not model_res %}6.2.1{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %}.1　<i>de novo</i> SV筛选流程</p>
+<p class='paragraph'>以{{svid}}家系为例，筛选到该家系中的部分<i>de novo</i> SV结果如下：</p>
+{% endif %}
+{% if DenovoCNV and not DenovoSV %}
+<h4> {% if model_res%}2.{{denovonum}}{% endif %}{% if not model_res %}2.{{denovonum}}{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %} CNV新生突变筛选</h4>
+<p class='paragraph'>在得到每个家系成员CNV 突变信息的基础上（基本分析结果基础上），我们根据患者和父母的CNV的差异来筛选患者的<i>de novo</i> CNV，筛选流程如下：</p>
+<div style='text-align:center;width:50%;margin:auto'><img style='width:50%' src="src/images/denovocnv.png" /></div>
+<p style='clear:both' class="name_fig">图{% if model_res%}6.2.{{denovonum}}{% endif %}{% if not model_res %}6.2.1{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %}.1　<i>de novo</i> CNV筛选流程</p>
+<p class='paragraph'>以{{cnvid}}家系为例，筛选到该家系中的部分<i>de novo</i> CNV结果如下：</p>
+{% endif %}
+{% if DenovoSV and DenovoCNV %}
+<h4> {% if model_res%}2.{{denovonum}}{% endif %}{% if not model_res %}2.{{denovonum}}{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %} SV/CNV新生突变筛选</h4>
+<p class='paragraph'>在得到每个家系成员SV/CNV突变信息的基础上（基本分析结果基础上），我们根据患者和父母的SV/CNV的差异来筛选患者的<i>de novo</i> SV/CNV，筛选流程如下：</p>
+<div style='width:60%;float:left'><img width='80%' style="margin-left:15%" src="src/images/denovosv.png" /></div>
+<div style='width:40%;float:left'><img width='72%' src="src/images/denovocnv.png" /></div>
+<p style='clear:both' class="name_fig">图{% if model_res%}6.2.{{denovonum}}{% endif %}{% if not model_res %}6.2.1{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %}.1　<i>de novo</i> SV/CNV筛选流程</p>
+<p class='paragraph'>以{{svid}}家系为例，筛选到该家系中的部分<i>de novo</i> SV/CNV结果如下：</p>
+{% endif %}
+{% if DenovoSV%}
+
+<p class="name_fig">表{% if model_res%}6.2.{{denovonum}}{% endif %}{% if not model_res %}6.2.{{denovonum}}{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %}{% if DenovoCNV %}.1{% endif %} SV新生突变位点注释结果展示(只显示前5行)</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_denovosv %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_denovosv.html" %}
+</div>
+{% endif %}
+
+{% if DenovoCNV %}
+<p class="name_fig">表{% if model_res%}6.2.{{denovonum}}{% endif %}{% if not model_res %}6.2.{{denovonum}}{% endif %}{% if Denovos_samtools %}.6{% endif %}{% if not Denovos_samtools %}.1{% endif %}{% if DenovoSV %}.2{% endif %} CNV新生突变位点注释结果展示(只显示前5行)</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_denovocnv %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_denovocnv.html" %}
+<p class="premark">&nbsp</p>
+</div>
+{% endif %}
+{% endif %}
+</div>
+{% endif %}
+
+
+{% if linkage_res %}
+<!-- ---------------------------------------------------------------- 连锁分析--------------------------------------------------------------------- -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="连锁分析" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>2.{{linkagenum}}　连锁分析</h3>
+<p class="paragraph">连锁分析是指以两代或两代以上的家系为材料基础，观察标记位点与疾病致病基因位点在家系内是否共分离，并计算出遗传距离及连锁程度。目前最常用的方法是优势对数计分法（LOD），LOD值代表两位点连锁的概率与不呈连锁的概率比的对数值。对于单基因遗传病，LOD值大于3时肯定连锁，LOD值<-2时否定连锁，LOD值介于1与-2之间的则需要增加家系材料进一步分析或者优先验证这个候选区域内的变异位点。对于复杂疾病，LOD对应的阈值偏低。</p>
+<p class="paragraph">本连锁分析利用merlin工具和perl语言，结合家系中高通量测序数据和HapMap数据库中中国人群（CHB）的等位基因频率，使用已知的SNP作为连锁分析标记，得到连锁候选区域。{% if Linkage %}连锁分析结果如图6.2.{{linkagenum}}.1和表6.2.{{linkagenum}}.1所示：{% endif %}</p>
+
+{% if not Linkage %}
+<p class="paragraph">根据本项目现有家系资料未检测到连锁区域。 </p>{% endif %}
+
+<!-- ------------------------------------------------------------------------连锁分析图 ------------------------------------------------------------- -->
+{% if Linkage %}
+<div id="page">
+<p class="tremark">&nbsp</p>
+ <p class="center">
+<div id="slider2" class="flexslider" style="margin:auto;width:750px;height:550px">
+<ul class="slides">
+{% for each in fig_linkage %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto;width:700px;height:500px"/>
+    </li>
+{% endfor %}
+</ul>
+</div>
+<p class="name_fig">图6.2.{{linkagenum}}.1　连锁分析结果展示图</p>
+
+
+
+<p class="premark">注：X轴表示遗传距离，用厘摩(cM)表示。Y轴表示LOD值。</p>
+</div>
+
+<!-- ------------------------------------------------------------------连锁分析统计结果------------------------------------------------------------- -->
+
+<p class="center">
+<p class="name_fig">表6.2.{{linkagenum}}.1　连锁候选区域统计表（只截取前几行信息进行展示）</p>
+<div id="tb">
+<table class="gy">
+{% for each in table_linkage_stat %}
+    {% if loop.first %}
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+  {% else %}
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+  {% endif %}
+{% endfor %}
+</table>
+</div>
+<p class="tremark">注：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）NO：连锁候选区域</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）Chr：染色体编号</p>
+<!--<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dbsnpNonFlagged：过滤dbSNP库后剩余的变异位点数目，步骤1</p>-->
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（3）PosStart：候选区域在染色体上的起始坐标</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（4）PosEnd：候选区域在染色体上的终止坐标</p>
+<!--<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sift：使用上步结果通过SIFT功能预测评估为影响蛋白功能的变异位点数目，步骤5</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;polyphen：使用上步结果通过PolyPhen2功能预测评估为影响蛋白功能的变异位点数目，步骤6</p>-->
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（5）cM：候选区域大小，用厘摩（cM）表示</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（6）SNPs：候选区域内连锁标记SNP的数量</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（7）maxLOD：候选区域内最大的LOD值</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（8）maxSNP：候选区域内最大LOD值对应的连锁标记SNP编号，相同LOD值的SNP并列显示</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（9）minLOD：候选区域内最小的LOD值</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（10）minSNP： 候选区域内最小LOD值对应的连锁标记SNP编号，相同LOD值的SNP并列显示</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（11）GeneList：位于候选区域内的基因列表，后续分析需重点关注</p>
+</div>
+{% endif %}
+
+{% endif %}
+
+
+{% if roh_res %}
+<!-- <!-- ---------------------------------------------------------------- ROH分析--------------------------------------------------------------------- - -> -->
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="ROH分析" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<h3>2.{{rohnum}}　ROH分析</h3>
+
+<p class="paragraph">纯合子区域即基因组上的纯合等位基因的区域。这个区间的产生是由于父母遗传至子代的等位基因来自于共同的祖先，即父母拥有同一祖先的等位基因，遗传给子代的便是纯合子。纯合子定位分析一般用于近亲结婚引起的遗传病。ROH筛选和注释结果如下表所示：  </p>
+
+ <p class="center">
+
+<p class="name_fig">表6.2.{{rohnum}}.1　ROH筛选和注释结果（只截取前几行信息进行展示）</p>
+
+<div id="tb">
+<table class="gy">
+{% for each in table_roh_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+
+<p class="tremark">注：第一行为纯合子区间及其包括的基因，该行下面的为纯合子区间所包含的snp位点及注释。</p>
+<p class="tremark">&nbsp;&nbsp;</p>
+  {% include "partial/anno2_filter_snpindel.html" %}
+</div>
+{% endif %}
+
+
+
+<!--20171102BYlijianhua-->
+<!-- ---------------------------------------------------------------- Pathway --------------------------------------------------------------- -->
+{% if Pathway%}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="通路富集图" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+
+<hr />
+</p>
+<h3>3 基于候选基因及与疾病表型关系的筛选</h3>
+<a name='通路'></a>
+<h3>3.1	候选基因富集分析</h3>
+<p class="paragraph">在生物体内，不同基因通过相互协调行使其生物学功能，特别对于复杂疾病，有可能是多个基因的突变导致的表型差异，通过显著性富集分析确定突变基因参与的最主要生化代谢途径和信号转导途径。</p>
+
+<h4>3.1.1	GO功能富集</h4>
+<p class="paragraph">以下为您展示GO功能富集的结果。GO功能富集分析，会分别生成CC（细胞组件）、BP（生物学途径）、MF（分子功能）三种结果。</p>
+<p class="paragraph">如下图所示：横坐标表示富集在通路中的gene占总的富集基因的比例，纵坐标表示富集的GO term名称。圆点大小表示富集到该基因term的基因个数，颜色表示p-value。</p>
+<div id="slider3" class="flexslider" style="margin:auto;width:600px;">
+<ul class="slides">
+{% for each in fig_pathway_go %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+<p class="name_fig">图6.3.1.1.1　GO功能富集散点图</p>
+<div id="page"></div>
+<h4>3.1.2	KEGG通路富集</h4>
+<p class="paragraph">下图展示的是KEGG通路富集的散点图，横坐标表示富集在通路中的gene占总的富集基因的比例，纵坐标表示富集的KEGG通路名称。圆点大小表示富集到该通路的基因个数，颜色表示p-value。</p>
+<div id="slider4" class="flexslider" style="margin:auto;width:600px;">
+<ul class="slides">
+{% for each in fig_pathway_kegg %}
+  <li>
+      <img src={{each.0|safe}} style="margin:auto"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+<p class="name_fig">图6.3.1.2.1　KEGG通路富集散点图</p>
+{% if Pathway_kegg %}
+<div class="hide_in_pdf">
+  <p class="paragraph">下图为您展示了一个KEGG通路富集的详细信息，更多kegg通路富集情况请关注后续释放结果。</p>	
+</div>
+<div  class="hide_in_pdf" style="margin-left:15%"><embed style="margin:auto;" src="src/pictures/Pathway/{{svgke}}" type="image/svg+xml"/></div>
+</div>
+<div class="hide_in_pdf">	
+  <p class='name_fig'>图6.3.1.2.2　KEGG通路富集详细信息</p>
+  <p class='premark'>PATHWAY图以通路编号命名，以’hsa’开头（hsa为人类物种名Homo sapiens的缩写），如’hsa00010.svg’。</p>
+  <p class='premark'>PATHWAY图以Orthology（同源基因）为单位进行基因在通路中的位置和互作情况的展示,故以一类酶的EC编号（如1.1.1.2）、或同源基因名称(如ITGA)来标记（少数情况也会使用单个基因名称(如ITGA1)来表示）。</p>
+  <p class='premark'>其中绿色背景为人类基因。鼠标悬停在基因框上可见此位置对应的全部基因的通用简称（Gene Symbol）和Entrez ID。点击基因框可链接至KEGG官网相应页面。</p>
+  <p class='premark'>相应候选基因用红色框标记，以方便理解基因在通路中位置和上下游情况。</p>
+</div>
+{% endif %}
+{% endif %}
+<!---------20171102--------->
+
+
+
+
+
+
+<!-- ----------------------------------------------------------- Functional_enrichment  ------------------------------------------------------- -->
+{% if Funcenrichement %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="Funcenrichement" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if Pathway %}
+<h3>3.2　候选基因功能富集</h3>
+{% else %}
+<h3>3.1　候选基因功能富集</h3>
+{% endif %}
+
+
+<p class="paragraph">筛选得到的候选基因使用<a href="https://toppgene.cchmc.org/"  target=_blank>ToppGene Suite-ToppFun</a>（Chen J et al.2009-1）进行Gene Ontology，Phenotype，Domain，Pathway，Disease（Chen J et al. 2009-2）等方面的基因富集。富集分析采用p-value的多重检验校正值q-value来控制FDR（False Discovery Rate）。富集显著性阈值为至少一个q-value小于0.05。 候选基因功能富集和注释结果如下表所示： </p>
+
+ <p class="center">
+{% if Pathway %}
+<p class="name_fig">表6.3.2.1　候选基因功能富集和注释结果（只截取前几行信息进行展示）</p>
+{% else %}
+<p class="name_fig">表6.3.1.1　候选基因功能富集和注释结果（只截取前几行信息进行展示）</p>
+{% endif %}
+
+<div id="tb">
+<table class="gy">
+{% for each in table_func_enrichement %}
+    {% if loop.first %}
+
+         <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+    {% else %}
+
+        <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+    {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div style='display:none;'>
+
+<p class="tremark"><b>（1）Category:</b> Category:功能富集类别，包括以下类别：</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;GO: Molecular Function GO分子功能</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;GO: Biological Process GO生物学过程能</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;GO: Cellular Component GO细胞成分</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Human Phenotype 人类表型数据</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Mouse Phenotype 小鼠表型数据</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Domain 蛋白Domian</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Pathway 代谢通路</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Pubmed  Pubmed数据库</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Interaction 蛋白相互作用</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Cytoband 染色体条带</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Transcription Factor Binding Site 转录因子结合位点</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Gene Family 基因家族</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Coexpression 共表达基因</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;MicroRNA microRNA</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Drug 靶向药物</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Disease 疾病注释</p>
+<p class="tremark"><b>（2）ID:</b> 对应的功能类ID</p>
+<p class="tremark"><b>（3）Name:</b>功能类名称	</p>
+<p class="tremark"><b>（4）Source:</b> 各功能类来源数据库</p>
+<p class="tremark"><b>（5）p-value:</b>富集统计显著性，小于0.05表示该功能类显著富集</p>
+<p class="tremark"><b>（6）q-value Bonferroni:</b>Bonferroni方法矫正后的p值</p>
+<p class="tremark"><b>（7）q-value FDR B&H:</b>B&H方法矫正后的p值</p>
+<p class="tremark"><b>（8）q-value FDR B&Y:</b>B&Y方法矫正后的p值</p>
+<p class="tremark"><b>（9）Hit Count in Query List:</b>该功能类在本项目中富集到的基因数目</p>
+<p class="tremark"><b>（10）Hit Count in Genome:</b>该功能类在全基因组中富集的基因数目</p>
+<p class="tremark"><b>（11）Hit in Query List:</b>该功能类在本项目中富集到的基因名</p>
+</div>
+{% endif %}
+
+<!------------------------------------------------------------- Genemania protein-protein interaction  -------------------------------------------------------->
+{% if ppinter %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="蛋白互作" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if Pathway and Funcenrichement %}
+<h3>3.3　蛋白功能互作分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement %}
+<h3>3.2　蛋白功能互作分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement %}
+<h3>3.2　蛋白功能互作分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement %}
+<h3>3.1　蛋白功能互作分析</h3>
+{% endif %}
+
+
+
+<p class="paragraph">使用genemania在线软件<a href="http://genemania.org/"  target=_blank>GeneMania</a>（Warde-Farley D et al.2010-7）对候选基因进行蛋白功能互作网络分析,包括protein-protein, protein-DNA-genetic interactions, pathways, reactions,gene-protein expression data, protein domains-phenotypic screening profiles。 蛋白互作分析结果如下表所示： </p>
+
+ <p class="center">
+{% if Pathway and Funcenrichement %}
+<p class="name_fig">表6.3.3.1　蛋白功能互作分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement %}
+<p class="name_fig">表6.3.2.1　蛋白功能互作分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement %}
+<p class="name_fig">表6.3.2.1　蛋白功能互作分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement %}
+<p class="name_fig">表6.3.1.1　蛋白功能互作分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+
+<div id="tb">
+<table class="gy">
+{% for each in table_ppi_inter %}
+    {% if loop.first %}
+
+         <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+    {% else %}
+
+        <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+    {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div class="HideOrVisible">
+{% include "partial/anno_PPI.html" %}
+</div>
+{% endif %}
+
+<!------------------------------------------------------------- Asso_site-------------------------------------------------------->
+
+{% if asso_site %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="关联分析" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+{% if Pathway and Funcenrichement and ppinter%}
+<h3>3.4　关联分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter%}
+<h3>3.3　关联分析</h3>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter%}
+<h3>3.3　关联分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter %}
+<h3>3.3　关联分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter %}
+<h3>3.2　关联分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter %}
+<h3>3.2　关联分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter %}
+<h3>3.2　关联分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter %}
+<h3>3.1　关联分析</h3>
+{% endif %}
+
+<p class='paragraph'>关联分析是通过检测疾病状态与基因变异的相关性，从而寻找特定疾病或性状的易感基因或基因区域的研究方法。通常是在具有不同表型两组个体，一般为患病者和正常对照者中，基于遗传位点或基因、单体型的频率分布差异，间接反映该遗传位点或基因可能与疾病或性状存在关联性。关联分析的方法，为人们打开了一扇通往研究复杂疾病的大门，将患者与对照组在全基因组范围内检测出的SNP位点或突变基因进行统计学比较，避免了低频有害策略需要预先假设致病基因所可能产生的研究者偏见，不预设结果，通过全基因组范围的对比找出在统计学上真正阳性的变异位点。</p>
+<p class='paragraph'>目前，已经有多篇顶级研究利用全基因组或全外显子组的关联分析策略研究复杂疾病，发现冠心病(ESP, 2014)、银屑病(Tang et al. 2014)、心肌梗死(Do et al. 2014)、肌萎缩侧索硬化(Cirulli et al. 2015)等疾病的关联基因，充分证明了全基因组及全外显子组关联分析研究思路的可行性及优越性。</p>
+<p class="center"><img style='width:40%' class="middle" src="src/images/association.png" /></p>
+{% if Pathway and Funcenrichement and ppinter%}
+<p class='name_fig'>图6.3.4.1 关联分析流程图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.1　关联分析流程图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.3.1　关联分析流程图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.1　关联分析流程图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.1　关联分析流程图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.2.1　关联分析流程图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.1　关联分析流程图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.1.1　关联分析流程图</p>
+{% endif %}
+
+ <p class="center">
+{% if Pathway and Funcenrichement and ppinter %}
+<p class="name_fig">表6.3.4.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">表6.3.3.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">表6.3.3.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter %}
+<p class="name_fig">表6.3.3.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">表6.3.2.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">表6.3.2.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">表6.3.2.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">表6.3.1.1　关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+
+<!-- 关联分析表格 -->
+<div id="tb">
+<table class="gy">
+{% for each in table_asso %}
+    {% if loop.first %}
+        <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+    {% else %}
+
+        <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+    {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+<div id="hyh13" style='display:none;'>
+  {% include "partial/anno4_assosite.html" %}
+
+</div>
+{% endif %}
+
+<!-- 关联分析图 -->
+
+{% if asso_site %}
+<div id="page">
+<p class="tremark">&nbsp</p>
+ <p class="center">
+<div id="slider2" class="flexslider" style="margin:auto;width:600px">
+<ul class="slides">
+{% for each in fig_asso_QQ %}
+  <li>
+    
+    <img src={{each.0|safe}} style="margin:auto"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+{% if Pathway and Funcenrichement and ppinter %}
+<p class='name_fig'>图6.3.4.2　关联分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.2　关联分析Q-Q图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.3.2　关联分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.2　关联分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.2　关联分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.2.2　关联分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.2　关联分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.1.2　关联分析Q-Q图</p>
+{% endif %}
+<p class="premark">注：表示实际P值和无关联零假设期望P值的分布，用于检测群体分层和个体亲缘关系对关联分析的影响，如果观测到的P值与期望P值仅在分布最右端出现，表明性状并非由群体分层造成</p>
+</div>
+
+<div id="page">
+<p class="tremark">&nbsp</p>
+ <p class="center">
+<div id="slider2" class="flexslider" style="margin:auto;width:750px">
+<ul class="slides">
+{% for each in fig_asso_Manhattan %}
+  <li>
+    <img src={{each.0|safe}} style="margin:auto"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+  </li>
+{% endfor %}
+</ul>
+</div>
+{% if Pathway and Funcenrichement and ppinter %}
+<p class='name_fig'>图6.3.4.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.3.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.3.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter %}
+<p class="name_fig">图6.3.2.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.2.3　关联分析曼哈顿图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter %}
+<p class="name_fig">图6.3.1.3　关联分析曼哈顿图</p>
+{% endif %}
+<p class="premark">注：遗传标记效应值(即经统计检验的全基因组P值)按染色体上物理位置的排序图，横坐标为基因组坐标，纵坐标为-log10P，P值越小关联性越强，表现为纵坐标越大</p>
+</div>
+{% endif %}
+
+<!-------------------------------------------------------------GeneAs-------------------------------------------------->
+{% if GeneAS %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="Burden分析" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+
+<div style="width:100%; margin:0 auto; padding:0;">
+{% if Pathway and Funcenrichement and ppinter and asso_site %}
+<h3>3.5	Burden分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site %}
+<h3>3.4	Burden分析</h3>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site %}
+<h3>3.4	Burden分析</h3>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site %}
+<h3>3.4	Burden分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site %}
+<h3>3.4	Burden分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site %}
+<h3>3.3	Burden分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site %}
+<h3>3.2	Burden分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site %}
+<h3>3.2	Burden分析</h3>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site %}
+<h3>3.2	Burden分析</h3>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<h3>3.2	Burden分析</h3>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<h3>3.1	Burden分析</h3>
+{% endif %}
+
+<p class='paragraph'>Burden分析，是基于基因的关联分析方法中的一种，与基于位点的关联分析（GWAS），起到相辅相成，互相补充的作用。简单的说就是比较两组表型差异的样本，在同一个区域/基因上，携带的罕见变异的总数是否具有显著差异。</p>
+<p class='paragraph'>Burden分析的主要假设是罕见变异对表型有影响，并且一个区域/基因上的突变的影响方式都是一致的，比如都是有害的或者都是保护的。利用Fisher检验的Burden可以使用任意的Control数据来源，只要能统计得到基因上的变异位点数量，并不需要每个样本的genotype。这样就能在仅有Case的情况下，使用公开的数据库作为Control，进行基因/集合的罕见变异位点关联分析。</p>
+
+<p class="center">
+{% if Pathway and Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">表6.3.5.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">表6.3.4.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">表6.3.4.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">表6.3.4.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">表6.3.4.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">表6.3.3.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">表6.3.2.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">表6.3.2.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">表6.3.2.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">表6.3.2.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">表6.3.1.1　Burden分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+
+<div id="tb">
+<table class="gy">
+{% for each in table_GeneAS_anno %}
+    {% if loop.first %}
+
+         <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+    {% else %}
+
+        <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+    {% endif %}
+
+{% endfor %}
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div id="pyh13" style='display:none;'> 
+<p class="tremark"><b>（1）Gene：</b> 基因名称</p>
+<p class="tremark"><b>（2）Alt_Case：</b> Case中此基因的突变的allele数量</p>
+<p class="tremark"><b>（3）Ref_Case：</b> Case中没有此基因的突变的allele数量</p>
+<p class="tremark"><b>（4）Alt_Control：</b> Control中此基因的突变的allele数量</p>
+<p class="tremark"><b>（5）Ref_Control：</b> Control中没有此基因的突变allele数量</p>
+<p class="tremark"><b>（6）Pvalue：</b> Fisher检验得到的P值</p>
+<p class="tremark"><b>（7）OR：</b> Fisehr检验得到的OR值</p>
+<p class="tremark"><b>（8）CI95：</b> OR值的95%置信区间</p>
+<p class="tremark"><b>（9）BONF：</b> Bonferroni校正后的P值</p>
+<p class="tremark"><b>（10）HOLM：</b> Bonferroni Step-down(Holm)矫正后的P值</p>
+<p class="tremark"><b>（11）FDR_BH：</b> FDR BH(Benjamini and Hochberg)矫正后的P值</p>
+<p class="tremark"><b>（12）FDR_BY：</b> FDR BY(Benjamini & Yekutieli)矫正后的P值</p>
+<p class="tremark"><b>（13）Gene：</b> 基因名称</p>
+<p class="tremark"><b>（14）Sample：</b> 含有此基因突变的样本名，逗号分割</p>
+</div>
+
+{% if GeneAS %}
+<div id="page">
+<p class="tremark">&nbsp</p>
+ <p class="center">
+<div id="slider2" class="flexslider" style="margin:auto;width:600px">
+<ul class="slides">
+{% for each in fig_GeneAS_QQ %}
+  <li>
+    
+    <img src={{each.0|safe}} style="margin:auto"/>
+    <p class="flex-caption" style="text-align:center">{{each.1|safe}}</p>
+    </li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">图6.3.5.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">图6.3.4.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">图6.3.4.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">图6.3.4.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">图6.3.4.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">图6.3.3.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site %}
+<p class="name_fig">图6.3.2.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site %}
+<p class="name_fig">图6.3.2.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">图6.3.2.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">图6.3.2.1　Burden分析Q-Q图</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site %}
+<p class="name_fig">图6.3.1.1　Burden分析Q-Q图</p>
+{% endif %}
+
+<p class="premark">注：横坐标表示期望的P值取负对数，纵坐标表示实际的P值取负对数，默认标记P值最小的前三个基因，偏离中间红线的基因表示P值显著的基因。</p>
+</div>
+
+{% endif %}
+
+<!-- phenolyzer -->
+{% if net_work %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+
+<a name="疾病-基因网络图" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+<div id="page"></div>
+<div style="width:100%; margin:0 auto; padding:0;">
+{% if Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+<h3>3.6	基因-疾病表型关联性分析</h3>
+<h4>3.6.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+<h3>3.5	基因-疾病表型关联性分析</h3>
+<h4>3.5.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+<h3>3.5	基因-疾病表型关联性分析</h3>
+<h4>3.5.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+<h3>3.5	基因-疾病表型关联性分析</h3>
+<h4>3.5.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+<h3>3.5	基因-疾病表型关联性分析</h3>
+<h4>3.5.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+<h3>3.5	基因-疾病表型关联性分析</h3>
+<h4>3.5.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and not GeneAS %}
+<h3>3.4	基因-疾病表型关联性分析</h3>
+<h4>3.4.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and not GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<h3>3.3	基因-疾病表型关联性分析</h3>
+<h4>3.3.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<h3>3.2	基因-疾病表型关联性分析</h3>
+<h4>3.2.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<h3>3.2	基因-疾病表型关联性分析</h3>
+<h4>3.2.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<h3>3.2	基因-疾病表型关联性分析</h3>
+<h4>3.2.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<h3>3.2	基因-疾病表型关联性分析</h3>
+<h4>3.2.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<h3>3.1	基因-疾病表型关联性分析</h3>
+<h4>3.1.1	DisGeNet数据库注释结果</h4>
+{% endif %}
+
+<div>
+{% if genelist %}
+<p style="font-size:16px;line-height:25px;">DisGeNet 数据库是一个专注基因-疾病关联以及突变位点-疾病关联的数据库，该数据库目前版本为 V5.0， 包含 561,119 条基因-疾病关联记录（GDAs）和 135,588 突变-疾病关联记录（VDAs）。使用该数据库中的关联数据，通过疾病获取相关基因以及变异信息，用于后续分析。</p>
+{% else %}
+<p style="font-size:16px;line-height:25px;">DisGeNet 数据库是一个专注基因-疾病关联以及突变位点-疾病关联的数据库，该数据库目前版本为 V5.0， 包含 561,119 条基因-疾病关联记录（GDAs）和 135,588 突变-疾病关联记录（VDAs）。使用该数据库中的关联数据，通过疾病获取相关基因以及变异信息，用于后续分析。</p>
+{% endif %}
+<!-------------20171102BYlijianhua---------------->
+{% if not disgetnet %}
+<p class="paragraph">根据本项目现有基因列表在DisGetNet未检测到相应信息。 </p>{% endif %}
+
+{% if disgetnet %}
+<p class="center">
+{% if Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.6.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.5.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.5.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.5.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.5.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.5.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.4.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.3.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+<p class="name_fig">表6.3.2.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+<p class="name_fig">表6.3.2.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.2.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.2.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+<p class="name_fig">表6.3.1.1.1　基因-疾病表型关联分析结果（只截取前几行信息进行展示）</p>
+{% endif %}
+
+
+
+<div id="tb">
+<table class="gy">
+{% for each in table_DisGeNet_anno %}
+    {% if loop.first %}
+
+         <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+    {% else %}
+
+        <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+    {% endif %}
+
+{% endfor %}
+</table>
+</div>
+</p>
+<p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+
+<div id="pyh14" style='display:none;'> 
+<p class="tremark"><b>（1）geneId：</b> Entrez Gene Identifier，来自NCBI</p>
+<p class="tremark"><b>（2）associationType：</b> 关联类型，包括Altered Expression，Biomarker，Chromosomal Rearrangement，Fusion Gene，Genetic Variation，Germline Causal Mutation，Germline Modifying Mutation，Modifying Mutation，PostTranslational Modification，Somatic Modifying Mutation，Susceptibility Mutation，Therapeutic</p>
+<p class="tremark"><b>（3）pmid：</b> PubMed Unique Identifier，是 PubMed 搜索引擎中收录的生命科学和医学等领域的文献编号</p>
+<p class="tremark"><b>（4）score：</b> DisGENET GDA Score（DisGENET score for the Gene Disease association），该打分取值范围为0-1，值越大表示相关性越高</p>
+<p class="tremark"><b>（5）originalSource：</b> 该基因-疾病关联原始报道来源，取值为 BEFREE，GAD，LHGDN，TD_human，HPO，UNIPROT，ORPHANET，CTD_mouse 及其组合</p>
+<p class="tremark"><b>（6）diseaseName：</b> 疾病名称，来自UMLS</p>
+<p class="tremark"><b>（7）diseaseType：</b> disease，phenotype 和 group 三种</p>
+<p class="tremark"><b>（8）geneSymbol：</b> Official Gene Symbol，来自 NCBI</p>
+</div>
+{% endif %}
+
+{% if Pathway and Funcenrichement and ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.6.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.5.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.5.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.5.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.5.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.5.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.4.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.3.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.2.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS and not pdf_report %}
+<h4>3.2.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS and not pdf_report %}
+<h4>3.2.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.2.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.2.2	Phenolyzer分析结果</h4>
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS and not pdf_report %}
+<h4>3.1.2	Phenolyzer分析结果</h4>
+{% endif %}
+
+<div class="hide_in_pdf" >
+  
+  <p style="font-size:16px;line-height:25px;">在疾病研究中，确定候选基因与疾病的关联性是十分重要的。依据用户提供的疾病/表型名称，通过精准算法，结合测序结果和多种数据库，对基因进行筛选排序，构建基因-疾病表型之间的关联图。</p>
+  
+  <div style="margin:auto;width:900px;height:75;border:0px solid #000000" id="network_control" class="panel panel-primary">
+    <div id="cy" style="width:100%;height:600px;margin:auto"></div>
+      <div style="margin:auto;width:15%;float:left;">
+      <select id="show_edges"  class="form-control" title="关联类型">
+        <option selected value="" disabled="true">关联类型</option>
+        <option value="all">all</option>
+        <option value="HPRD">Protein Interaction</option>
+        <option value="GeneFamily">In the same GeneFamily </option>
+        <option value="Biosystem">In the same Biosystem</option>
+        <option value="TranscriptionInteraction">Transcription Interaction</option>
+      </select>
+      </div>
+      <div  style="margin:auto;width:15%;float:left;">
+  <select id="adjust_layout"  class="form-control" title="排列方式">
+    <option selected value="" disabled="true">排列方式</option>
+    <option value="force">随机</option>
+    <option value="grid">矩阵</option>
+  
+  </select>
+  </div>
+  <div style="width:69%;float:right">
+  
+  重置图像
+  <button id="undo" class="button button-raised button-primary button-circle "><i class="icon-undo"></i></button>
+  &nbsp&nbsp疾病
+  <input id="disease_on" type="checkbox" style="margin:auto" checked />
+  &nbsp&nbsp基因
+  <input id="gene_on" type="checkbox" style="margin:auto"  checked />
+  <button type="button" style="float:right" class="button button-raised button-primary button-pill" id="save_photo">保存图片</button>
+  </div>	  </div>
+          <div style="height:20px;clear:both"></div>
+          <div style="width:100%;text-align:left; ">
+          <p class='tremark'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击图中的点可以显示与该点关联的疾病/基因，点击空白处还原</p>
+          <p class='tremark'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;粉色单词表示目标疾病/表型关键词，蓝色圆角矩形为根据关键词搜索到的相关疾病；</p>
+          <p class='tremark'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;绿色的点表示在已有报导或数据库中认为与相关疾病关联的基因;</p>
+          <p class='tremark'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;橙色的点表示依据多种关联，认为与绿色基因有关的基因；</p>
+  
+          </div>
+      </div>
+  </div>
+</div>
+
+{% if Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+{% if genelist %} 
+{% if pdf_report %}
+<h4>3.6.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.6.3	候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.6.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.5.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.5.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.5.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.5.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.5.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.5.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.5.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.5.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.5.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.5.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.5.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.5.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.5.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.5.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.5.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and ppinter and not asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.4.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.4.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.4.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.3.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.3.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.3.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.2.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.2.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.2.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.2.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.2.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.2.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.2.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.2.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.2.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.2.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.2.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.2.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if not Pathway and not Funcenrichement and not ppinter and not asso_site and not GeneAS %}
+{% if genelist %}
+{% if pdf_report %}
+<h4>3.1.2 候选基因疾病关联性排序</h4>
+{%else%}
+<h4>3.1.3 候选基因疾病关联性排序</h4>
+{% endif %}
+{% else %}
+<h4>3.1.3	基因疾病关联性排序</h4>
+{% endif %}
+{% endif %}
+{% if genelist %}
+<p class="paragraph">针对筛选出的候选基因，依据其与疾病的关联性强弱进行排序，如下：</p>
+{% else %}
+<p class="paragraph">依据基因与疾病的关联性强弱进行排序，如下：</p>
+{% endif %}
+<div id="BArplot"><div style="height:810px"></div></div>
+
+{% if genelist %}
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>注:</b>排名仅供参考。关联性得分以1为最大，依据内置的规则进行排序，基因过多则只显示前20。因排序只针对筛选出的候选基因，即便排名第一，也不能保证关联性一定很强。</p>
+{% else %}
+<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>注:</b>排名仅供参考。关联性得分以1为最大，依据内置的规则进行排序，基因过多则只显示前20。</p>
+{% endif %}
+</div>
+{% endif %}
+<!----------------------------------------------------------------------------------------------------------------------------------------->
+
+<!-----------------------------------------------------------------------个性化分析------------------------------------------------------------------>
+{% if rep_person %}
+<div id="page">
+<p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+<a name="个性化分析结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+<hr />
+</p>
+
+<h2>七、个性化分析结果</h2>
+
+{% if drug and not asso %}
+<a name='药物基因组'></a>
+<h3>1. 药物基因组学</h3>
+<p class='paragraph'>诺禾致源使用PharmGKB和Drugbank数据库对药物基因组项目进行注释和分析，目前药物基因组产品主要适用于药物效应多态性的遗传学机理研究。对于易感基因思路的项目，默认以10%以上case共有突变基因作为候选输入基因；对于关联分析思路的项目，默认以具有显著性差异的位点及基因作为候选输入基因，来执行药物基因组学分析；输入基因可依客户的需求进行个性化的调整。研究药物效应多态性与基因组多态性的关系，需客户提供项目所关注的药物名称，诺禾致源会给出如下表所示的信息。客户可根据此分析，查看项目样本的突变位点与所研究药物之间的关系。</p>
+<p class='name_fig'>表7.1.1　药物效应多态性的遗传学机理注释内容</p>
+<div id="tb">
+<table class="gy">
+{% for each in drug_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+<p class='tremark'>(1) Drug：客户项目关注的药物名称</p>
+<p class='tremark'>(2) GeneName：突变基因名称</p>
+<p class='tremark'>(3) CHROM：突变位点所处染色体编号</p>
+<p class='tremark'>(4) POS：突变位点在染色体上的位置</p>
+<p class='tremark'>(5) REF：参考基因组的碱基类型</p>
+<p class='tremark'>(6) ALT：样本基因组的碱基类型</p>
+<p class='tremark'>(7) Rs_Number：突变位点的rs编号</p>
+<p class='tremark'>(8) FORMAT：项目样本在该突变位点的基因型</p>
+<p class='tremark'>(9) Type：突变导致的对药物影响的类型，分为Efficacy/ADR/Toxity/Dosage，即影响药效/药物副反应/药物毒性/药物剂量</p>
+<p class='tremark'>(10) Level: 基于临床实验数据，药物指导疾病治疗的水平；1A到3，参考水平逐渐下降</p>
+<p class='tremark'>(11) Disease：药物能够治疗的疾病名称</p>
+<p class='tremark'>(12) Gene_Type_1：对应纯合突变用药指导</p>
+<p class='tremark'>(13) Gene_Type_2：对应杂合突变用药指导</p>
+<p class='tremark'>(14) Gene_Type_3：对应未突变的用药指导</p>
+
+{% else %}
+{% if drug and asso %}
+<a name='药物基因组'></a>
+<h3>1. 药物基因组学</h3>
+<p class='paragraph'>诺禾致源使用PharmGKB和Drugbank数据库对药物基因组项目进行注释和分析，目前药物基因组产品主要适用于药物效应多态性的遗传学机理研究。对于易感基因思路的项目，默认以10%以上case共有突变基因作为候选输入基因；对于关联分析思路的项目，默认以具有显著性差异的位点及基因作为候选输入基因，来执行药物基因组学分析；输入基因可依客户的需求进行个性化的调整。研究药物效应多态性与基因组多态性的关系，需客户提供项目所关注的药物名称，诺禾致源会给出如下表所示的信息。客户可根据此分析，查看项目样本的突变位点与所研究药物之间的关系。</p>
+<p class='name_fig'>表7.1.1　药物效应多态性的遗传学机理注释内容</p>
+<div id="tb">
+<table class="gy">
+{% for each in drug_anno %}
+  {% if loop.first %}
+
+      <tr>{% for x in each %}<th>{{x|safe}}</th>{% endfor %}</tr>
+
+  {% else %}
+
+    <tr>{% for x in each %}<td>{{x|safe}}</td>{% endfor %}</tr>
+
+  {% endif %}
+
+{% endfor %}
+
+</table>
+</div>
+<p class='tremark'>(1) Drug：客户项目关注的药物名称</p>
+<p class='tremark'>(2) GeneName：突变基因名称</p>
+<p class='tremark'>(3) CHROM：突变位点所处染色体编号</p>
+<p class='tremark'>(4) POS：突变位点在染色体上的位置</p>
+<p class='tremark'>(5) REF：参考基因组的碱基类型</p>
+<p class='tremark'>(6) ALT：样本基因组的碱基类型</p>
+<p class='tremark'>(7) Rs_Number：突变位点的rs编号</p>
+<p class='tremark'>(8) FORMAT：项目样本在该突变位点的基因型</p>
+<p class='tremark'>(9) Type：突变导致的对药物影响的类型，分为Efficacy/ADR/Toxity/Dosage，即影响药效/药物副反应/药物毒性/药物剂量</p>
+<p class='tremark'>(10) Level: 基于临床实验数据，药物指导疾病治疗的水平；1A到3，参考水平逐渐下降</p>
+<p class='tremark'>(11) Disease：药物能够治疗的疾病名称</p>
+<p class='tremark'>(12) OMB_Race: 临床数据提取自的人种</p>
+<p class='tremark'>(13) Race_Notes： 群体实验时，所测试的人群</p>
+<p class='tremark'>(14) Gene_Type_1：对应纯合突变用药指导</p>
+<p class='tremark'>(15) Gene_Type_2：对应杂合突变用药指导</p>
+<p class='tremark'>(16) Gene_Type_3：对应未突变的用药指导</p>
+
+{% endif %}
+{% endif %}
+</div>
+{% endif %}
+
+<!-----------------------------------------------------------------------个性化分析------------------------------------------------------------------>
+
+
+<div id="page">
+
+  {% if disease_report_table %}
+  <p class="head">
+    <a href="#home" title="返回首页">
+      <img class="logo" align="left" src="src/images/logo.png" />
+    </a>
+    <a name="病种分析结果" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+    <hr />
+  </p>
+
+  {% if samp_info %}
+  <h2>七、病种分析结果</h2>
+  {% else %}
+  <h2>六、病种分析结果</h2>
+  {% endif %}
+
+  <p class="paragraph">通过总结家系内各项分析，并与诺禾病种数据库进行已知致病基因进行比较后，得出针对性的病种分析结论，结果主要来自诺禾内部的病种针对性分析，仅供老师参考。
+  </p>
+
+  <h3>病种分析结果解读</h3>
+  <a name='病种分析结果解读'></a>
+ 
+	<p class="center">
+
+	{% if samp_info %}
+    <p class="name_fig">表7.1　病种分析结果解读</p>
+	{% else %}
+    <p class="name_fig">表6.1　病种分析结果解读</p>
+	{% endif %}
+		<div id="tb">
+			<table class="gy">
+				{% for row in disease_report_table %}
+				{% if loop.first %}
+				<tr>{% for i in row %}
+					<th>{{ i|safe }}</th>
+					{% endfor %}
+				</tr>
+				{%else%}
+				<tr>{% for i in row %}
+					<td>{{ i|safe }}</td>
+					{% endfor %}
+				</tr>
+				{% endif %}
+				{% endfor %}
+			</table>
+		</div>
+	</p>
+
+  <p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏注释信息</button></p>
+  <div class="HideOrVisible">
+    {% include "partial/anno_disease.html" %}
+  </div>
+
+  <h3>检测结论</h3>
+  <p class="paragraph">在此次基因检测中，根据已知报道，检测出{{ disease_report_gene | length }}个基因{{ disease_report_gene | join(', ') }}均与该病的发病有关，需要进一步明确其致病性。</p>
+
+  {% endif %}
+
+
+
+<!--  参考文献 -->
+{% if rep_primary or rep_advance %}
+  {% include "partial/references.html" %}
+{% endif %}
+
+
+<!--  附录部分 -->
+{% if rep_primary or rep_advance %}
+
+  <div id="page">
+      
+    <p class="head"><a href="#home" title = "返回首页"><img class="logo" align="left" src="src/images/logo.png" /></a>
+    <a name="附录" href="http://www.novogene.com/">北京诺禾致源科技股份有限公司</a>
+    <hr />
+    </p>
+
+    <!-- 附录A -->
+    <h2>附录A 软件列表</h2>
+    {% include "partial/appendix_A.html" %}
+
+
+    <!-- 附录B -->
+    <a name="附录B"></a>
+    <h2>附录B 测序结果验证方法简介</h2>
+    <p class="tremark"><button type="button" class="hide_or_show">点击显示/隐藏附录B</button></p>
+    <div class="HideOrVisible">
+      {% include "partial/appendix_B.html" %}
+    </div>
+
+  <!-- 附录C -->
+
+  {%if DamLevel %}
+    <h2>附录C 有害性分类说明</h2>
+    {% include 'partial/appendix_acmg.html' %}
+  {% endif %}
+
+  <!------------------------------------------------------------------- 附录D ------------------------------------------------------------------------->
+  {% if pdf_report_href %}
+    <a name="附录D"></a>
+    <hr />
+    <h2>附录D PDF版结题报告</h2>
+    <a href="{{ pdf_report_href }}" target=_blank>PDF版结题报告</a>
+  {% endif %}
+
+  <!------------------------------------------------------------------- 附录E ------------------------------------------------------------------------->
+  <a name="附录E"></a>
+  <hr />
+  <h2>附录E PDF版分析方法</h2>
+  {% if WES_ag %}
+    <a href="src/pictures/Other/英文WES方法.pdf" target=_blank>PDF版英文WES材料方法</a>
+    <br>
+    <a href="src/pictures/Other/中文WES方法.pdf" target=_blank>PDF版中文WES材料方法</a>
+  {% elif WGS %}
+    <a href="src/pictures/Other/英文WGS方法.pdf" target=_blank>PDF版英文WGS材料方法</a>
+    <br>
+    <a href="src/pictures/Other/中文WGS方法.pdf" target=_blank>PDF版中文WGS材料方法</a>
+  {% endif %}
+
+  </div>
+{% endif %}
+
+
+{% endblock body %}

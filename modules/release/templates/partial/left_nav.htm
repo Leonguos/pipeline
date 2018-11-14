@@ -1,0 +1,140 @@
+<div id="contentLeft" class="linear" style="overflow-y:auto">
+  <img style="margin-top:10px;margin-left:5%;width:90%" src="src/images/logo1.png" />
+  <ul id="leftNavigation" class="nav">
+
+    <li><a href="#dir_structure">目录结构说明</a></li>
+
+    <!-- Data -->
+    <li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)">
+    <a href="#data">Data 文件夹说明</a>
+    <ul>
+      {% if raw_data %}
+      <li><a href="#raw_data">RawData 文件夹</a></li>
+      {% endif %}
+      {% if clean_data %}
+      <li><a href="#clean_data">CleanData 文件夹</a></li>
+      {% endif %}
+      {% if bam_data %}
+      <li><a href="#bam_data">BamData 文件夹</a></li>
+      {% endif %}
+    </ul>
+    </li>
+    
+    <!-- Variation -->
+    {% if primary_result %}
+    <li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)">
+    <a href="#primary_result">SampleVariation 文件夹说明</a>
+    <ul>
+      {% if snpindel_result %}
+      <li><a href="#snpindel_result">SNP/INDEL 文件夹</a></li>
+      {% endif %}
+      {% if sv_result %}
+      <li><a href="#sv_result">SV 文件夹</a></li>
+      {% endif %}
+      {% if cnv_result %}
+      <li><a href="#cnv_result">CNV 文件夹</a></li>
+      {% endif %}
+      {% if circos_result %}
+      <li><a href="#circos_result">Circos 文件夹</a></li>
+      {% endif %}
+    </ul>
+    </li>
+    {% endif %}
+    
+    <!-- Filter -->
+    {% if filter_analysis %}
+    <li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)">
+    <a href="#filter_analysis">FilterAnalysis 文件夹说明</a>
+    <ul>
+      {% if filterdb %}
+      <li><a href="#filter_filterdb">FilterDB 文件夹</a></li>
+      {% endif %}
+      {% if filter_sv_cnv %}
+      <li><a href="#filter_filter_sv_cnv">FilterSV(FilterCNV) 文件夹</a></li>
+      {% endif %}
+    </ul>
+    </li>
+    {% endif %}
+    
+    <!-- Advance -->
+    {% if report_type == 'advance' %}
+    <li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)">
+    <a href="#final_result">FinalResult 文件夹说明</a>
+    <ul>
+      <!-- {% if candidate_gene %}
+      <li><a href="#candidate_gene">{{candidate_gene.counter}} {{ candidate_gene.name }}</a></li>
+      {% endif %} -->
+
+      {% if filterdb %}
+      <li><a href="#filterdb">{{ filterdb.counter }} {{ filterdb.name }}</a></li>
+      {% endif %}
+
+      {% if filter_acmg %}
+      <li><a href="#filter_acmg">{{ filter_acmg.counter }} {{ filter_acmg.name }}</a></li>
+      {% endif %}
+
+      {% if filter_sv_cnv %}
+        <li><a href="#filter_sv_cnv">{{ filter_sv_cnv.counter }} {{ filter_sv_cnv.name }}</a></li>
+      {% endif %}
+
+      {% if filter_noncoding %}
+      <li><a href="#filter_noncoding">{{ filter_noncoding.counter }} {{ filter_noncoding.name }}</a></li>
+      {% endif %}
+
+      {% if filter_model %}
+      <li><a href="#filter_model">{{ filter_model.counter }} {{ filter_model.name }}</a></li>
+      {% endif %}
+
+      {% if share_compare %}
+        <li><a href="#share_compare">{{ share_compare.counter }} {{ share_compare.name }}</a></li>
+      {% endif %}
+
+      {% if denovo %}
+        <li><a href="#denovo">{{ denovo.counter }} {{ denovo.name }}</a></li>
+      {% endif %}
+
+      {% if linkage %}
+        <li><a href="#linkage">{{ linkage.counter }} {{ linkage.name }}</a></li>
+      {% endif %}
+
+      {% if roh %}
+        <li><a href="#roh">{{ roh.counter }} {{ roh.name }}</a></li>
+      {% endif %}
+
+      {% if pathway %}
+        <li><a href="#pathway">{{ pathway.counter }} {{ pathway.name }} </a></li>
+      {% endif %}
+
+      {% if network %}
+        <li><a href="#network">{{ network.counter }} {{ network.name }}</a></li>
+      {% endif%}
+
+      {% if ppi %}
+        <li><a href="#ppi">{{ ppi.counter }} {{ ppi.name }}</a></li>
+      {% endif %}
+
+      {% if site_as %}
+        <li><a href="#site_as">{{ site_as.counter }} {{ site_as.name }}</a></li>
+      {% endif %}
+
+      {% if gene_as %}
+        <li><a href="#gene_as">{{ gene_as.counter }} {{ gene_as.name }}</a></li>
+      {% endif %}
+    </ul>
+    </li>
+    {% endif %}
+    
+    {% if report_type == 'primary' or report_type == 'advance' %}
+    <li onmouseover="displaySubMenu(this)" onmouseout="hideSubMenu(this)">
+      <a href="#appendix">附录</a>
+      <ul>
+        <li><a href="#appendix-software">软件列表</a></li>
+        {% if filter_acmg %}
+          <li><a href="#appendix-acmg">有害性分类说明</a></li>
+        {% endif %}
+      </ul>
+    </li>
+    {% endif %}
+
+  </ul> <!-- id="leftNavigation" -->
+</div>

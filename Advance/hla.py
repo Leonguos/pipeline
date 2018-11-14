@@ -1,0 +1,421 @@
+#!/usr/bin/env python
+# -*- coding=utf-8 -*-
+import utils
+
+
+class HLA(object):
+
+    def __init__(self, args, jobs, orders, sample_lists, sample_infos, config):
+
+        self.args = args
+        self.jobs = jobs
+        self.orders = orders
+        self.queues = args.get('queues')
+
+        self.sample_lists = sample_lists
+        self.sample_infos = sample_infos
+        self.ANALYSIS_POINTS = config.ANALYSIS_POINTS
+
+        if 1.2 in args['analy_array']:
+            self.rm_clean = 'true'
+        else:
+            self.rm_clean = 'false'
+
+        self.__dict__.update(args)
+        self.refgenome = args.get('ref')
+        self.__dict__.update(
+            dict(config.CONFIG.items('genome_' + self.refgenome)))
+        self.__dict__.update(dict(config.CONFIG.items('software')))
+
+    def start(self):
+
+        print '>  hla start ...'
+
+        for sampleid, items in self.sample_lists.iteritems():
+
+            sort_bams = []
+            lanes = items.get('lanes')
+            # print sampleid, lanes
+            for lane in lanes:
+                # print lane
+                sort_bam = '{sampleid}_{novoid}_{flowcell}_L{lane}.sort.bam'.format(
+                    sampleid=sampleid, **lane)
+                # patientid = lane['patientID']
+                if sort_bam not in sort_bams:
+                    sort_bams.append(sort_bam)
+
+                self.hla_bwa_mem(sampleid, lane)
+
+            self.hla_sambamba_merge(sampleid, sort_bams)
+            # self.hla_sambamba_markdup(sampleid)
+            self.hla_picard_markdup(sampleid)
+            self.hla_sort_by_name(sampleid)
+            self.hla_athlates_typing(sampleid)
+
+            self.hla_hlahd_typing(sampleid, lanes)
+
+    def hla_bwa_mem(self, sampleid, lane):
+
+        # print '>  hla bwa mem ...'
+        cmd = '''
+            set -eo pipefail
+            echo hla bwa mem and samtools sort for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+            fq1={analydir}/QC/{sampleid}/{sampleid}_{novoid}_{flowcell}_L{lane}_1.clean.fq
+            fq2={analydir}/QC/{sampleid}/{sampleid}_{novoid}_{flowcell}_L{lane}_2.clean.fq
+            if [ ! -f $fq1 ];then
+                fq1=$fq1.gz
+                fq2=$fq2.gz
+            fi
+
+            bwa mem \\
+                -t 6 -M \\
+                -R "@RG\\tID:{sampleid}_{novoid}_{flowcell}_L{lane}\\tSM:{sampleid}\\tLB:{sampleid}\\tPU:{novoid}_{flowcell}_L{lane}\\tPL:illumina\\tCN:novogene" \\
+                {athlates_db_dir}/ref/hla_nclean.fasta \\
+                $fq1 $fq2 |
+            samtools-1.6 view \\
+                -@ 5 -b -S -F 4 -t \\
+                {athlates_db_dir}/ref/hla_nclean.fasta.fai |
+            samtools-1.6 sort \\
+                -@ 3 -m 2G \\
+                -T {sampleid}_{novoid}_{flowcell}_L{lane}.tmp \\
+                -o {sampleid}_{novoid}_{flowcell}_L{lane}.sort.bam
+
+            echo hla bwa mem and samtools sort for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            sampleid=sampleid, **dict(lane, **self.__dict__))
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_bwa_mem_{sampleid}_{novoid}_{flowcell}_L{lane}.sh'.format(
+            sampleid=sampleid, **dict(lane, **self.__dict__))
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_bwa_mem'
+        job_name = 'hla_bwa_mem_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(
+            sampleid=sampleid, **lane)
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+        # add order
+        before_jobs = ['qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane)]
+        after_jobs = ['hla_sambamba_merge_{sampleid}'.format(sampleid=sampleid, **lane)]
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+    def hla_sambamba_merge(self, sampleid, sort_bams):
+
+        # print '  sambamba merge...'
+        # write shell
+        if len(sort_bams) == 1:
+            cmd = '''
+                set -eo pipefail
+                echo rename sortbam for {sampleid} start: `date "+%F %T"`
+
+                cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+                mv {sort_bam} {sampleid}.sort.bam
+
+                samtools-1.6 index -@ 4 {sampleid}.sort.bam
+
+                echo rename sortbam for {sampleid} done: `date "+%F %T"`
+            '''.format(
+                sampleid=sampleid,
+                sort_bam=sort_bams[0],
+                **self.__dict__)
+        else:
+            cmd = '''
+                set -eo pipefail
+                echo hla sambamba merge for {sampleid} start: `date "+%F %T"`
+
+                cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+                sambamba merge \\
+                    -t 4 \\
+                    {sampleid}.sort.bam \\
+                    {sort_bams}
+
+                echo hla sambamba merge for {sampleid} done: `date "+%F %T"`
+            '''.format(
+                sampleid=sampleid,
+                sort_bams=' '.join(sort_bams),
+                **self.__dict__)
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_sambamba_merge_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_sambamba_merge'
+        job_name = 'hla_sambamba_merge_{sampleid}'.format(sampleid=sampleid)
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+    def hla_sambamba_markdup(self, sampleid):
+
+        # print '  sambamba merge...'
+        # write shell
+        cmd = '''
+            set -eo pipefail
+            echo sambamba markdup for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+            sambamba markdup \\
+                -t 5 \\
+                --overflow-list-size=10000000 \\
+                --tmpdir=tmp \\
+                {sampleid}.sort.bam \\
+                {sampleid}.nodup.bam
+
+            rm -rf tmp
+
+            echo sambamba markdup for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            sampleid=sampleid, **self.__dict__)
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_sambamba_markdup_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_sambamba_markdup'
+        job_name = 'hla_sambamba_markdup_{sampleid}'.format(sampleid=sampleid)
+
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+        # add order
+        before_jobs = ['hla_sambamba_merge_{sampleid}'.format(sampleid=sampleid)]
+        after_jobs = []
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+    def hla_picard_markdup(self, sampleid):
+
+        # print '  picard markdup ...'
+        cmd = '''
+            set -eo pipefail
+            echo picard markdup for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+            java1.8.0 -Xmx5g -jar {picard_jar} \\
+                MarkDuplicates \\
+                TMP_DIR=TMP \\
+                INPUT={sampleid}.sort.bam \\
+                OUTPUT={sampleid}.nodup.bam \\
+                METRICS_FILE={sampleid}.nodup.metrics.txt \\
+                CREATE_INDEX=true \\
+                ASSUME_SORTED=true
+
+            echo picard markdup for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            sampleid=sampleid, **self.__dict__)
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_picard_markdup_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_picard_markdup'
+        job_name = 'hla_picard_markdup_{sampleid}'.format(sampleid=sampleid)
+
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+        # add order
+        before_jobs = ['hla_sambamba_merge_{sampleid}'.format(sampleid=sampleid)]
+        after_jobs = []
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+    def hla_sort_by_name(self, sampleid):
+
+        # print '  sort by name ...'
+        cmd = '''
+            set -eo pipefail
+            echo hla sort by name for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+            mkdir -p A
+
+            #  ===== for A =====
+            echo dealing with hla.A.bed...
+
+            samtools-1.6 view \\
+                -b \\
+                -L {athlates_db_dir}/bed_ori/hla.A.bed \\
+                -o A/{sampleid}.A.bam \\
+                {sampleid}.nodup.bam
+
+            samtools-1.6 view \\
+                -H \\
+                -o A/{sampleid}.A.sort.sam \\
+                A/{sampleid}.A.bam
+
+            samtools-1.6 view \\
+                A/{sampleid}.A.bam |
+            sort -k 1,1 -k 3,3 \\
+                >> A/{sampleid}.A.sort.sam
+                
+            samtools-1.6 view \\
+                -b -S \\
+                -o A/{sampleid}.A.sort.bam \\
+                A/{sampleid}.A.sort.sam
+
+            # ===== for non-A =====
+            echo dealing with hla.non-A.bed...
+
+            samtools-1.6 view \\
+                -b \\
+                -L {athlates_db_dir}/bed_ori/hla.non-A.bed \\
+                -o A/{sampleid}.A.non.bam \\
+                {sampleid}.nodup.bam
+
+            samtools-1.6 view \\
+                -H \\
+                -o A/{sampleid}.A.non.sort.sam \\
+                A/{sampleid}.A.non.bam
+
+            samtools-1.6 view \\
+                A/{sampleid}.A.non.bam |
+            sort -k 1,1 -k 3,3 \\
+                >> A/{sampleid}.A.non.sort.sam
+
+            samtools-1.6 view \\
+                -b -S \\
+                -o A/{sampleid}.A.non.sort.bam \\
+                A/{sampleid}.A.non.sort.sam
+
+            echo hla sort by name for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            sampleid=sampleid, **self.__dict__)
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_sort_by_name_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_sort_by_name'
+        job_name = 'hla_sort_by_name_{sampleid}'.format(sampleid=sampleid)
+
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+        # add order
+        before_jobs = ['hla_picard_markdup_{sampleid}'.format(sampleid=sampleid)]
+        after_jobs = []
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+    def hla_athlates_typing(self, sampleid):
+
+        # print '  athlates typing ...'
+        cmd = '''
+            set -eo pipefail
+            echo hla athlates typing for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+
+            typing \\
+                -hd 2 \\
+                -msa {athlates_db_dir}/msa_ori/A_nuc.txt \\
+                -bam A/{sampleid}.A.sort.bam \\
+                -exlbam A/{sampleid}.A.non.sort.bam \\
+                -o A/{sampleid}.A
+
+            rm -f A/*sam* A/*.tbi
+
+            # link result
+            mkdir -p {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/result
+
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/result
+
+            ln -sf ../{sampleid}/A/{sampleid}.A.typing.txt .
+
+            echo hla athlates typing for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            sampleid=sampleid, **self.__dict__)
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_athlates_typing_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_athlates_typing'
+        job_name = 'hla_athlates_typing_{sampleid}'.format(sampleid=sampleid)
+
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+        # add order
+        before_jobs = ['hla_sort_by_name_{sampleid}'.format(sampleid=sampleid)]
+        after_jobs = ['data_release']
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+    def hla_hlahd_typing(self, sampleid, lanes):
+
+        read1_list, merge_read1, merge_read2, merge_read1_gz, merge_read2_gz = utils.get_merge_read(
+            self.args['analydir'], sampleid, lanes)
+
+        # print '  hlahd typing ...'
+        cmd = '''
+            set -eo pipefail
+            echo hla hlahd typing for {sampleid} start: `date "+%F %T"`
+
+            cd {analydir}/Advance/{newjob}/HLA/HLAHD_typing/{sampleid}
+
+            if [ -f {read1_1} ];then
+                {merge_read1}
+                {merge_read2}
+            else
+                {merge_read1_gz}
+                {merge_read2_gz}
+            fi
+
+            export PATH={hlahd_dir}/bin:$PATH
+            hlahd.sh \\
+                -t 2 \\
+                -m 150 \\
+                -f {hlahd_dir}/freq_data \\
+                {sampleid}.R1.fastq {sampleid}.R2.fastq \\
+                {hlahd_dir}/HLA_gene.split.txt \\
+                {hlahd_dir}/dictionary \\
+                {sampleid} \\
+                .
+
+            # link result
+            mkdir -p {analydir}/Advance/{newjob}/HLA/HLAHD_typing/result
+
+            cd {analydir}/Advance/{newjob}/HLA/HLAHD_typing/result
+
+            ln -sf ../{sampleid}/{sampleid}/result/{sampleid}_final.result.txt .
+
+            echo hla hlahd typing for {sampleid} done: `date "+%F %T"`
+        '''.format(
+            read1_1=read1_list[0], **dict(self.__dict__, **locals()))
+
+        shell_path = '{analydir}/Advance/{newjob}/HLA/HLAHD_typing/{sampleid}/hla_hlahd_typing_{sampleid}.sh'.format(
+            sampleid=sampleid, **self.__dict__)
+
+        utils.write_shell(shell_path, cmd)
+
+        # add job
+        now_point = 'hla_hlahd_typing'
+        job_name = 'hla_hlahd_typing_{sampleid}'.format(sampleid=sampleid)
+
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
+
+        # add order
+        before_jobs = []
+        for lane in lanes:
+            before_jobs.append('qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane))
+        after_jobs = ['data_release']
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+
+# the end

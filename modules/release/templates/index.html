@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% if report_type == 'qc' %}
+  <title> 【{{pn}}】项目质控结果文件夹及结果说明 </title>
+  {% elif report_type == 'mapping' %}
+  <title> {{title}}项目质控与覆盖度结果文件夹及结果说明 </title>
+  {% elif report_type == 'primary' %}
+  <title> {{title}}项目基本分析结果文件夹及结果说明 </title>
+  {% elif report_type == 'advance' %}
+  <title> {{title}}项目高级分析结果文件夹及结果说明 </title>
+  {% endif %}
+  
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,IE11">
+
+  <link rel="shortcut icon" type="image/x-icon" href="src/images/favicon.ico" media="screen" />
+
+  <link href="src/css/base_new.css" type="text/css" rel="stylesheet" />
+
+  <link href="src/css/style.css" type="text/css" rel="stylesheet" />
+  <link href="src/js/themes/default/style1.css" type="text/css" rel="stylesheet">
+  <link href="src/css/material-scrolltop.css" type="text/css" rel="stylesheet">
+
+  <script src='src/js/jquery-1.8.3.min.js'></script>
+  <script src="src/js/material-scrolltop.js"></script>
+  <script src="src/js/jstree.min.js"></script>
+
+  <style>
+    #div_tree ul {
+      font-size: 1em;
+    }
+
+    #div_tree ul li {
+      font-size: 1em;
+    }
+
+    table.tremark tr td:first-child {
+      width: 20px;
+    }
+
+  </style>
+
+</head>
+<body id="body">
+
+  <!-- 回到顶端按钮 -->
+  <button class="material-scrolltop" type="button"></button>
+  <script>
+    $('body').materialScrollTop();
+  </script>
+
+  <!-- 左侧导航栏 -->
+  {% include 'partial/left_nav.htm' %}
+
+  <!-- 右侧内容部分-->
+  <div id="contentRight">
+
+    <!-- 标题 -->
+    <div class="text-center">
+      {% if report_type == 'qc' %}
+        <h1>【{{title}}】项目质控结果文件夹及结果说明</h1>
+      {% elif report_type == 'mapping' %}
+        <h1>【{{title}}】项目质控与覆盖度结果文件夹及结果说明</h1>
+      {% elif report_type == 'primary' %}
+        <h1>【{{title}}】项目基本分析结果文件夹及结果说明</h1>
+      {% elif report_type == 'advance' %}
+        <h1>【{{title}}】项目高级分析结果文件夹及结果说明</h1>
+      {% endif %}
+    </div>
+
+    <!-- 目录结构 -->
+    {% include 'partial/right_dir_structure.htm' %}
+    
+    <!-- 详细说明 -->
+    {% include 'partial/right_detail.htm' %}
+
+    <!-- 附录部分 -->
+    <div>
+      <h2 id="appendix">{{ appendix }} 附录</h2>
+      <h3 id="appendix-software">附录A 软件列表</h3>
+      {% include 'partial/appendix_software.htm' %}
+      
+      {% if filter_acmg %}
+        <h3 id="appendix-acmg">附录B 有害性分类说明</h3>
+        {% include 'partial/appendix_acmg.htm' %}
+      {% endif %}
+    </div>
+
+  </div>
+
+  <script>
+  // 显示隐藏按钮切换
+  $('.anno_info').click(function (e) {
+    $(this).parent().next().fadeToggle();
+  });
+
+  // 显示隐藏左侧导航列表
+  function displaySubMenu(li) {
+    var subMenu = li.getElementsByTagName("ul")[0];
+    subMenu.style.display = "block";
+  }
+  function hideSubMenu(li) {
+    var subMenu = li.getElementsByTagName("ul")[0];
+    subMenu.style.display = "none";
+  }
+  </script>
+
+</body>
+</html>

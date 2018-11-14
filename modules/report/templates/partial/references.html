@@ -1,0 +1,133 @@
+<div class="page">
+
+  <h2 id="References">参考文献</h2>
+  <table class="countt">
+
+    <!-- where is better -->
+    <tr>
+      <td>Ng PC, Henikoff S. SIFT: predicting amino acid changes that affect protein function. Nucleic Acids Res. 2003, 1; 31(13):3812-4.
+        （SIFT）</td>
+    </tr>
+
+    <tr>
+      <td>Georg B, Ehret, Patricia B, Munroe, Kenneth M, Rice, et al. Genetic variants in novel pathways influence blood pressure
+        and cardiovascular disease risk[J]. Nature, 2011, 478(7367):103-109.</td>
+    </tr>
+
+    <tr>
+      <td>Joshi P K, Esko T, Mattsson H, et al. Directional dominance on stature and cognition in diverse human populations[J]. Nature,
+        2015, 523(7561): 459-462. </td>
+    </tr>
+
+
+    <!-- Denovo -->
+    {% if denovo_samtools and denovo_filter %}
+    <tr>
+      <td>Conrad D F, Keebler J E, Depristo M A, et al. Variation in genome-wide mutation rates within and between human families[J].
+        Nature Genetics, 2011, 43(7).</td>
+    </tr>
+    <tr>
+      <td>Muona M, Berkovic S F, Dibbens L M, et al. A recurrent de novo mutation in KCNC1 causes progressive myoclonus epilepsy.[J].
+        Nature Genetics, 2014, 47.</td>
+    </tr>
+    <tr>
+      <td>Zaidi S, Choi M, Wakimoto H, et al. De novo mutations in histone-modifying genes in congenital heart disease[J]. Nature,
+        2013, 498(7453): 220-223.</td>
+    </tr>
+    <tr>
+      <td>Sanders S J, Murtha M T, Gupta A R, et al. De novo mutations revealed by whole-exome sequencing are strongly associated
+        with autism[J]. Nature, 2012, 485(7397): 237-241.</td>
+    </tr>
+    {% endif %}
+
+
+    <!-- Linkage -->
+    {% if Linkage %}
+    <tr>
+      <td>Abecasis GR,Cherny SS,Cookson WO, et al. Merlin--rapid analysis of dense genetic maps using sparse gene flow trees[J].
+        Nature genetics, 2002, Jan;30(1):97-101.</td>
+    </tr>
+    {% endif %}
+
+
+    <!-- ROH -->
+    {% if roh_res %}
+    <tr>
+      <td>Keller M C, Simonson M A, Ripke S, et al. Runs of Homozygosity Implicate Autozygosity as a Schizophrenia Risk Factor[J].
+        Plos Genetics, 2012, 8(4):: e1002656.</td>
+    </tr>
+    <tr>
+      <td>Magi A,Tattini L,Palombo F, et al. H3M2: detection of runs of homozygosity from whole-exome sequencing data[J]. Bioinformatics,
+        2014, Oct 15;30(20):2852-9.</td>
+    </tr>
+    {% endif %}
+    
+
+    <!-- Pathway -->
+    {% if Funcenrichement %}
+    <tr>
+      <td>Chen J, Aronow BJ, Jegga AG. Disease candidate gene identification and prioritization using protein interaction networks.BMC
+        Bioinformatics, 2009-2,10:73. （ToppGene Suite-Disease）</td>
+    </tr>
+    <tr>
+      <td>Chen J, Bardes EE, Aronow BJ, Jegga AG. ToppGene Suite for gene list enrichment analysis and candidate gene prioritization.
+        Nucleic Acids Research, 2009-1, doi: 10.1093/nar/gkp427.（ToppGene Suite-ToppFun）</td>
+    </tr>
+    {% endif %}
+
+
+    <!-- Phenolyzer -->
+    {% if net_work %}
+    <tr>
+      <td>Janet Piñero, Àlex Bravo, Núria Queralt-Rosinach, Alba Gutiérrez-Sacristán, Jordi Deu-Pons, Emilio Centeno, Javier García-García,
+        Ferran Sanz, and Laura I. Furlong. DisGeNET: a comprehensive platform integrating information on human disease-associated
+        genes and variants. Nucl. Acids Res. (2016)</td>
+    </tr>
+    <tr>
+      <td>Janet Piñero, Núria Queralt-Rosinach, Àlex Bravo, Jordi Deu-Pons, Anna Bauer-Mehren, Martin Baron, Ferran Sanz, Laura I.
+        Furlong. DisGeNET: a discovery platform for the dynamical exploration of human diseases and their genes. Database (2015)</td>
+    </tr>
+    <tr>
+      <td>Yang, Hui, Peter N. Robinson, and Kai Wang. Phenolyzer: phenotype-based prioritization of candidate genes for human diseases.
+        Nature Methods (2015).</td>
+    </tr>
+    {% endif %}
+
+
+
+    <!-- SV -->
+    {% if crest %}
+    <tr>
+      <td>Wang J, Mullighan C G, Easton J, et al. CREST maps somatic structural variation in cancer genomes with base-pair resolution[J].
+        Nature methods, 2011, 8(8): 652-654.（CREST）</td>
+    </tr>
+    {% endif %}
+
+    {% if breakdancer %}
+    <tr>
+      <td>Chen K, Wallis J W, McLellan M D, et al. BreakDancer: an algorithm for high-resolution mapping of genomic structural variation[J].
+        Nature methods, 2009,6(9): 677-681.（BreakDancer）</td>
+    </tr>
+    {% endif %}
+
+
+    <!-- CNV -->
+    {% if freec %}
+    <tr>
+      <td>Boeva V, Popova T, Bleakley K, et al. Control-FREEC: a tool for assessing copy number and allelic content using next-generation
+        sequencing data[J]. Bioinformatics, 2012, 28(3): 423-425. （Control-FREEC）</td>
+    </tr>
+    {% endif %}
+
+    {% if CNVnator %}
+    <tr>
+      <td>Abyzov A, Urban A E, Snyder M, et al. CNVnator: an approach to discover, genotype, and characterize typical and atypical
+        CNVs from family and population genome sequencing[J]. Genome research, 2011, 21(6): 974-984.（CNVnator）</td>
+    </tr>
+    {% endif %}
+
+
+
+  </table>
+
+</div>

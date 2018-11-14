@@ -1,0 +1,4 @@
+在过滤有害性位点的基础上(参见 Advance/FilterDB 文件夹中的筛选结果和说明)，基于样本情况筛选结果中，我们只筛选样本间共有的突变基因，而不做显隐性模式筛选、新生突变的分析。
+该文件第1列为优先级注释, CHROM列到Repeat列为基因及区域注释信息, Genotype*列到Ori_ALT列为变异位点注释信息, 1000g_Chinese列到NovoDb_WGS列为数据库频率注释,
+从dbscSNV_SCORE列到MCAP列为保守(有害)性注释, 从ClinVar列到REACTOME_PATHWAY为基因功能和通路注释, Expression_summary列到Subcellular_Location列为组织特异性表达注释。
+PatientSharedNumber列和NormalSharedNumber列分别对应该基因突变的患者和正常人样本数。

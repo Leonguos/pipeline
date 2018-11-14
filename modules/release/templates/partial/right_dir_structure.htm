@@ -1,0 +1,354 @@
+<p id="dir_structure">我们为您释放的结果文件结构如下:</p>
+<!-- Data -->
+<div id="data_dir">
+  <h3>Data 文件夹说明</h3>
+  {% if raw_data %}
+  <table class="tremark">
+  <p class="tremark"><b>RawData/样本名 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名_文库号_flowcell号_诺禾编号_lane号_read1/read2.fq.gz</b></td><td class="tremark">样本的原始下机数据</a></td></tr>
+    <tr><td></td><td><b>MD5.txt</b></td><td class="tremark">样本的原始下机数据的MD5值文件</td></tr>
+  </table>
+  {% endif %}
+
+  {% if clean_data %}
+  <table class="tremark">
+  <p class="tremark"><b>CleanData/样本名 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名_文库号_flowcell号_诺禾编号_lane号_read1/read2.clean.fq.gz</b></td><td class="tremark">样本质控后的数据</a></td></tr>
+    <tr><td></td><td><b>MD5.txt</b></td><td class="tremark">样本质控后数据的MD5值文件</td></tr>
+  </table>
+  {% endif %}
+
+  {% if bam_data %}
+  <table class="tremark">
+  <p class="tremark"><b>BamData/样本名 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.final.bam</b></td><td class="tremark">样本比对结果文件</a></td></tr>
+    <tr><td></td><td><b>样本名.final.bam.bai</b></td><td class="tremark">样本比对结果的索引文件</td></tr>
+  </table>
+  {% endif %}
+</div>
+
+<!-- Primary -->
+{% if report_type == 'primary' or report_type == 'advance' %}
+<div id="primary_dir">
+  <h3>PrimaryAnalysis 文件夹说明</h3>
+
+  <h4>SampleVariation 文件夹说明</h4>
+  {% if snpindel_result %}
+  <table class="tremark">
+  <p class="tremark"><b>样本名/SNP(INDEL) 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.{{ software.mutation }}.snp(indel).vcf.gz</b></td><td class="tremark">样本SNP(INDEL)检测突变位点结果文件</a></td></tr>
+    <tr><td></td><td><b>样本名.{{ software.mutation }}.snp(indel).annovar.*_multianno.xls.gz</b></td><td class="tremark">样本SNP(INDEL)检测突变位点注释文件</td></tr>
+  </table>
+  {% endif %}
+  
+  {% if sv_result %}
+  <table class="tremark">
+  <p class="tremark"><b>样本名/SV 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.{{ software.sv }}.gff</b></td><td class="tremark">样本SV检测结果文件</a></td></tr>
+    <tr><td></td><td><b>样本名.{{ software.sv }}.*_multianno.xls</b></td><td class="tremark">样本SV注释文件</td></tr>
+  </table>
+  {% endif %}
+  
+  {% if cnv_result %}
+  <table class="tremark">
+  <p class="tremark"><b>样本名/CNV 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.{{ software.cnv }}.gff</b></td><td class="tremark">样本CNV检测结果文件</a></td></tr>
+    <tr><td></td><td><b>样本名.{{ software.cnv }}.*_multianno.xls</b></td><td class="tremark">样本CNV注释文件</td></tr>
+  </table>
+  {% endif %}
+  
+  {% if circos_result %}
+  <table class="tremark">
+  <p class="tremark"><b>样本名/Circos 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.png</b></td><td class="tremark">样本Circos绘图结果文件</a></td></tr>
+  </table>
+  {% endif %}
+  
+  {% if filter_analysis %}
+  <h4>FilterAnalysis 文件夹说明</h4>
+  
+  <p class="tremark"><b>FilterDB/SNP(INDEL) 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.freq.xls</b></td>
+      <td class="tremark">样品检测到的SNP（INDEL）突变位点经去除在千人基因组数据（1000g_all）、ESP6500数据库（esp6500si_all）、
+        gnomAD数据库（gnomAD_ALL和gnomAD_EAS）这四个频率数据库中至少有一个频率高于1%的突变的过滤结果文件</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.freq.func.xls</b></td>
+      <td class="tremark">样品检测到的SNP（INDEL）突变位点经上述步骤以及保留处于编码区（exonic）或剪接位点区（splicing，上下10bp）的变异的过滤结果文件</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.freq.func.syn.xls</b></td>
+      <td class="tremark">样品检测到的SNP（INDEL）突变位点经上述步骤以及去除不位于高度保守区且未被软件预测为会影响剪接的同义SNP突变（以grep++分值>2的位点为高度保守区；
+        若dbscSNV的两个预测分值至少有一个大于0.6认为突变影响剪接）；去除处于Repeat区的小片段（<10bp）非移码InDel突变的过滤结果文件</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.freq.func.syn.deleterious.xls</b></td>
+      <td class="tremark">样品检测到的SNP（INDEL）经上述步骤以及保留符合以下条件之一的突变：a) 突变被预测为有害；或 b)突变被预测为影响剪接。
+        a) 有害性预测：依据SIFT，Polyphen，MutationTaster，CADD这4个软件的打分预测情况进行变异位点筛选，要求这4个软件中，有分值的软件中至少有一半支持该位点可能有害，该位点被保留；
+        b) 影响剪接的预测保留与外显子区距离不大于 2bp（±1~2bp）的剪接位点区突变；保留被dbscSNV预测为会影响剪接（dbscSNV的两个预测分值至少有一个大于0.6）的突变的过滤结果文件</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.filter.stat.xls</b></td>
+      <td class="tremark">样品检测到的SNP（INDEL）突变位点经过每一步过滤后剩余位点情况的统计文件</td>
+    </tr>
+  </table>
+  
+  <p class="tremark"><b>FilterSV(FilterCNV)/样品名 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>样本名.*.priority.xls</b></td><td class="tremark">对检测到的SV(CNV)进行变异注释结果文件</a></td></tr>
+    <tr><td></td><td><b>样本名*.LikelyDeleterious.SV(CNV).xls</b></td><td class="tremark">去除了在良性数据库有记录的变异结果文件</td></tr>
+  </table>
+    
+  {% endif %}
+
+
+</div>
+{% endif %}
+
+<!-- Advance -->
+{% if report_type == 'advance' %}
+<div id="advance_dir">
+  <h3>FinalResult 文件夹说明</h3>
+
+  {% if candidate_gene  %}
+  <p class="tremark"><b>{{ candidate_gene.counter }} {{ candidate_gene.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>candidate_gene.xlsx</b></td>
+      <td class="tremark">包含2个sheet，依次为readme: 说明文件，CandidateGene: 候选基因及其来源列表</a></td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if filterdb  %}
+  <p class="tremark"><b>{{ filterdb.counter }} {{ filterdb.name }}/VCF 文件夹说明</b>
+  <table class="tremark">
+    <tr><td></td><td><b>snp(indel).merged.vcf.gz</b></td><td class="tremark">所有样本的SNP(INDEL)合并后的VCF文件</a></td></tr>
+    <tr><td></td><td><b>snp(indel).merged.annovar.hg19_multianno.xls.gz</b></td><td class="tremark">所有样本的SNP(INDEL)合并后的VCF注释文件</td></tr>
+  </table>
+
+  <p class="tremark"><b>{{ filterdb.counter }} {{ filterdb.name }}/Filter 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>snp(indel).merged.freq.func.syn.deleteriou.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 过滤步骤说明， stat: 位点过滤统计结果，deleterios: 最终过滤后的结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if filter_acmg  %}
+  <p class="tremark"><b>{{ filter_acmg.counter }} {{ filter_acmg.name }}/家系名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>家系名.snp.indel.Pathogenic.LikelyPathogenic.VUS.LikelyBenign.Benign.xlsx</b></td>
+      <td class="tremark">包含7个sheet, 依次为readme: ACMG分类说明， stat: 5中分类的位点数统计，Pathogenic, LikelyPathogenic, VUS, LikelyBenign, Benign: 5种分类的详细结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if filter_sv_cnv  %}
+  <p class="tremark"><b>{{ filter_sv_cnv.counter }} {{ filter_sv_cnv.name }}/家系名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>家系名.LikelyDeleterious.SV(CNV).xlsx</b></td>
+      <td class="tremark">包含2个sheet, 依次为readme: SV(CNV)过滤说明， LikelyDeleterious: 去除了在良性数据库有记录的变异结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if filter_noncoding  %}
+  <p class="tremark"><b>{{ filter_noncoding.counter }} {{ filter_noncoding.name }}/家系名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>家系名.indel.anno.noncoding.GnomAD_EAS_AF.conserv.epigenome.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 非编码区过滤说明， stat: 统计结果, nocoding: 非编码区过滤最终结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if filter_model  %}
+  <p class="tremark"><b>{{ filter_model.counter }} {{ filter_model.name }}/家系名 文件夹说明</b>
+  <table class="tremark">
+    {% if model_dominant %}
+    <tr>
+      <td></td>
+      <td><b>家系名.snp(indel).dominant.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 显性筛选说明， CandidateGene: 显性筛选得到的候选基因, dominant: 显性筛选结果。</td>
+    </tr>
+    {% endif %}
+    {% if model_recessive %}
+    <tr>
+      <td></td>
+      <td><b>家系名.snp(indel).recessive.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 隐性筛选说明， CandidateGene: 隐性筛选得到的候选基因, recessive: 隐性筛选结果。</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>家系名.snp.indel.compound_heterozygous.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 复合杂合筛选说明，CandidateGene: 复合杂合筛选得到的候选基因, compound_heterozygous: 复合杂合筛选结果。</td>
+    </tr>
+    {% endif %}
+  </table>
+  {% endif %}
+
+  {% if share_compare  %}
+  <p class="tremark"><b>{{ share_compare.counter }} {{ share_compare.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>snp.indel.filter.ShareGene.PatientShare.NotInNormal.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 患者共有筛选说明， stat: 统计结果, PatientShare: 患者共有突变基因的结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if denovo  %}
+  <p class="tremark"><b>{{ denovo.counter }} {{ denovo.name }}/家系名_样本名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>*.denovo.snp(indel).intersect.freq.func.syn.deleterious.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 新生突变筛选说明, stat: 过滤统计结果, intersect: 使用{{ software.denovo | length }}款软件{{ software.denovo }}检测新生突变并取交集的结果。</td>
+    </tr>
+
+    {% if denovo_sv %}
+    <tr>
+      <td></td>
+      <td><b>*.denovoSV.*_multianno.xlsx</b></td>
+      <td class="tremark">包含个sheet, 依次为readme: DenovoSV筛选说明， DenovoSV: DenovoSV筛选结果。</td>
+    </tr>
+    {% endif %}
+
+    {% if denovo_cnv %}
+    <tr>
+      <td></td>
+      <td><b>*.denovoCNV.*_multianno.xlsx</b></td>
+      <td class="tremark">包含个sheet, 依次为readme: DenovoCNV筛选说明， DenovoCNV: DenovoCNV筛选结果。</td>
+    </tr>
+    {% endif %}
+  </table>
+  {% endif %}
+
+  {% if linkage  %}
+  <p class="tremark"><b>{{ linkage.counter }} {{ linkage.name }}/家系名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>家系名.LinkageAnalysis.xlsx</b></td>
+      <td class="tremark">包含2个sheet, 依次为readme: 连锁分析说明, LinkageAnalysis: 基于家系进行连锁分析的结果。</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>merlin_R_家系名称-nonparametric.png</b></td>
+      <td class="tremark">连锁分析结果的图像展示文件</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if roh  %}
+  <p class="tremark"><b>{{ roh.counter }} {{ roh.name }}/样本名 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>样本名.roh.xlsx</b></td>
+      <td class="tremark">包含3个sheet, 依次为readme: 连锁分析说明, roh_anno: ROH区域及相关基因信息, roh_anno_snp: ROH区域及区域内snp的信息和注释结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if network  %}
+  <p class="tremark"><b>{{ network.counter }} {{ network.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>phenolyzer.xlsx</b></td>
+      <td class="tremark">基因-疾病表型分析的主要结果, 对候选基因进行排序</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>disgenet.xlsx</b></td>
+      <td class="tremark">使用DisGeNet数据库中的关联数据，通过疾病获取相关基因以及变异信息</a></td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if pathway  %}
+  <p class="tremark"><b>{{ pathway.counter }} {{ pathway.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>pathway.xlsx</b></td>
+      <td class="tremark">通路富集结果，包括GO富集和KEGG富集结果。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if ppi  %}
+  <p class="tremark"><b>{{ ppi.counter }} {{ ppi.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>PPI.xlsx</b></td>
+      <td class="tremark">PPI分析的结果汇总表, 包含: 候选基因蛋白相互作用、依赖的网络数据详情、PPI蛋白的基因列表。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if site_as  %}
+  <p class="tremark"><b>{{ site_as.counter }} {{ site_as.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>AssoAna_Allele.final.xls</b></td>
+      <td class="tremark">基于 Allele 的关联结果。</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>AssoAna_Allele_qqplot_Pvalue_Allele.png</b></td>
+      <td class="tremark">基于 Pvalue_Allele 绘制 QQ 图。</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>AssoAna_Allele_ManhattanPlot_Pvalue_Allele.png</b></td>
+      <td class="tremark">基于Pvalue_Allele 绘制Manhattan 图。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+  {% if gene_as  %}
+  <p class="tremark"><b>{{ gene_as.counter }} {{ gene_as.name }} 文件夹说明</b>
+  <table class="tremark">
+    <tr>
+      <td></td>
+      <td><b>snp.burden.result.xls</b></td>
+      <td class="tremark">基于 Burden 的分析结果。</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>QQ_plot.snp.burden.pdf</b></td>
+      <td class="tremark">基于 Pvalue_Burden 绘制 QQ 图。</td>
+    </tr>
+  </table>
+  {% endif %}
+
+</div>
+{% endif %}

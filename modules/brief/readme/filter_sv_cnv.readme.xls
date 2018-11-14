@@ -1,0 +1,5 @@
+从软件检测到的CNV/SV结果中进一步过滤掉良性CNV/SV，保留恶性CNV/SV，分类标准如下：
+1)使用数据库DGV及其衍生系列StringentLib,InclusiveLib和DGV.GoldStandard.July2015对检测到的CNV/SV进行良性变异注释;
+2)使用数据库CNVD对检测到的CNV/SV进行恶性变异注释;
+3)根据注释情况将CNV/SV分为4类,H(high),恶有良无;P(possiblydeleterious),恶无良无;M(medium),恶有良有;L(low),恶无良有。若某变异能在两种不同的软件都能预测到则标为"*".若某变异在"genomicSuperDups"或"Repeat"列中有标注则标为"-"。
+第1列为优先级注释,从Chr列到Repeat列为基因及区域注释信息,随后为结构变异信息注释,dgvMerged和gwasCatalog列为基因功能注释，encodeGm12878列到encodeK562列为encode注释信息,StringentLib列到Varification列为良性和恶性数据库注释信息。

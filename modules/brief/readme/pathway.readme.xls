@@ -1,0 +1,18 @@
+在生物体内，不同基因通过相互协调行使其生物学功能，特别对于复杂疾病，有可能是多个基因的突变导致的表型差异，通过显著性富集分析确定突变基因参与的最主要生化代谢途径和信号转导途径。
+我们为您进行了KEGG和GO通路的富集分析。
+
+Pathway_go_CC CC(细胞组件)通路富集的结果统计表。
+Pathway_go_BP BP(生物学途径)通路富集的结果统计表。
+Pathway_go_MF MF(分子功能) 通路富集的结果统计表。
+Pathway_kegg  KEGG通路富集的结果统计表。
+
+各列的含义如下: 
+ID: GO term/KEGG pathway的ID；
+Description: GO term/KEGG pathway的描述；
+GeneRatio: 富集基因比例，即富集在GO term或KEGG pathway的候选基因数占能够对应到全部GO term或KEGG pathway数据库的候选基因数的比例；
+BgRatio: 背景基因比例，即该GO term或KEGG pathway包含的人类基因数占能够对应到全部GO term或KEGG pathway数据库的人类基因数的比例；
+pvalue: 富集分析得到的 p-value；
+p.adjust: 校正后的 p-value；
+qvalue: 富集分析得到的 q-value；
+geneID: 富集在相应GO term或KEGG pathway的基因列表;
+Count: 富集在相应GO term或KEGG pathway的基因个数。

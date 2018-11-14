@@ -1,0 +1,3 @@
+在突变位点过滤的基础上，按照显性遗传模式筛选，保留家系中患者常染色体为杂合突变(性染色体保留有突变的位点)，且家系中正常人没有突变的位点作为候选位点。
+该文件第1列为优先级注释, 从CHROM列到Repeat列为基因及区域注释信息, 从1000g_Chinese列到NovoDb_WGS列为数据库频率注释, 从dbscSNV_SCORE列到MCAP列为保守(有害)性注释,
+从ClinVar列到REACTOME_PATHWAY为基因功能和通路注释;Expression_summary列到Subcellular_Location列为组织特异性表达注释。

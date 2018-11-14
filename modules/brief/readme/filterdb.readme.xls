@@ -1,0 +1,6 @@
+"对基本分析检测到的SNP/InDel信息进行突变位点筛选,具体的筛选过程如下:"
+1)去除在千人基因组数据（1000g_all）、ESP6500数据库（esp6500siv2_all）、gnomAD数据（gnomAD_ALL和gnomAD_EAS）这四个频率数据库中至少有一个频率高于1%的突变
+2)保留外显子区（exonic）或剪接位点区（splicing，上下10bp）的变异
+3去除未被软件预测为会影响剪接且处于非高度保守区的同义SNP突变；去除处于Repeat区的小片段（<10bp）非移码InDel突变
+4)依据SIFT，Polyphen，MutationTaster，CADD这4个软件的打分预测情况进行变异位点筛选，要求这4个软件中，有分值的软件中至少有一半支持该位点可能有 害，该位点被保留；保留与外显子区距离不大于 2bp（±1~2bp）的剪接位点区突变；保留dbscSNV预测其具有会影响剪接的突变（splicing impact）的突变
+"该文件第1列为优先级注释,CHROM列到Repeat列为基因及区域注释信息,Genotype*列到Ori_ALT列为变异位点注释信息,1000g_Chinese列到NovoDb_WGS列为数据库频率注释,从dbscSNV_SCORE列到MCAP列为保守(有害)性注释,从ClinVar列到REACTOME_PATHWAY为基因功能和通路注释，Expression_summary列到Subcellular_Location列为组织特异性表达注释。"

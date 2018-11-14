@@ -1,0 +1,6 @@
+基于非编码区变异位点进行筛选，具体的筛选过程如下:
+1)对非编码区的变异信息进行初步筛选，去除基因间区和外显子区变异;
+2)对变异位点进行ENCODE注释，注释细胞系encodeGm12878,encodeH1hesc,encodeHelas3,encodeHepg2,encodeHuvec,encodeK562;
+3)将注释后的结果进行频率过滤，过滤1000g、ExAC和内部数据库，保留低频(频率低于0.01)的突变;
+4)最后进行保守性过滤，根据phyloP46way_placental, phyloP100way_vertebrate, gerp++gt2, CADD的注释信息进行过滤，保留不低于4个软件预测为保守的位点;对于InDel的保守性注释只有CADD分值，因此进守性过滤时筛选CADD值大于10的突变位点。
+该文件第1列为优先级注释,CHROM列到Repeat列为基因及区域注释信息,Genotype*列到Ori_ALT列为变异位点注释信息,从encodeGm12878列到encodeK562列为encode注释信息，从1000g2015aug_eas列到NovoDb_WGS_SNP列为数据库频率注释,从phyloP46way_placental列到gerp++gt2列为保守(有害)性注释,从clinvar_20160302列到REACTOME_PATHWAY为基因功能和通路注释。

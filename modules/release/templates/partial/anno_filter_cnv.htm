@@ -1,0 +1,129 @@
+<p class="tremark">注：注释信息包括6个部分，分别为优先级信息（1），基因及区域注释（2-17），{% if freec %}拷贝数变异信息注释（18-21），基因功能注释（22-23），Encode注释（24-29）良性与恶性数据库注释(30以后){% endif %}{% if cnvnator %}拷贝数变异信息注释（18-22），基因功能注释（23-24），Encode注释（25-30）良性与恶性数据库注释（30以后）{% endif %}{% if WES_cnv_CoNIFER %}拷贝数变异信息注释（18-20），基因功能注释（21-22），Encode注释（23-28）良性与恶性数据库注释（29以后）{% endif %}。</p>
+<p class="tremark"><b>（1）Priority：</b> 优先级信息。优先级显示了该位点重要性程度，H(high)：在恶性数据库（CNVD）中有记录，在良性数据库（DGV）中无记录；P(possibly deleterious)：在良性、恶性数据库中都无记录；M(medium)：在良性、恶性数据库中都有记录；L(low)：在良性数据库中有记录，在恶性数据库中无记录；注：（1）变异如果在"genomicSuperDups"或"Repeat"列中有标注，则该变异的优先级标记后加“-”；（2）SV/CNV得到的结果相互注释，如果该CNV变异能同时被SV软件检出，在优先级标记前加“*”，表示可信度更高。</p>
+<p class="tremark"><b>第2-15项为基因及区域注释————变异位点所处的基因（对应的氨基酸）可能直接与疾病相关。Novogene对变异位点进行已知基因结构及所处区域注释，有助于老师了解此变异位点对应的基因结构及所处区域信息。</b></p>
+<p class="tremark"><b>（2）Chr：</b> 染色体</p>
+<p class="tremark"><b>（3）Start：</b> CNV起始位置</p>
+<p class="tremark"><b>（4）End：</b> CNV终止位置</p>
+<p class="tremark"><b>（5）GeneName：</b> 基因名称注释，列出该CNV相关的基因</p>
+<p class="tremark"><b>（6）Func：</b> 对CNV所在的区域进行注释</p>
+<p class="tremark"><b>（7）Gene：</b> 列出该SV相关的转录本ID</p>
+<p class="tremark"><b>（8）GeneDetail：</b> 描述UTR、splicing、ncRNA_splicing或intergenic区域的变异情况。当Func列的值为exonic、ncRNA_exonic、intronic、ncRNA_intronic、upstream、downstream、upstream;downstream、ncRNA_UTR3、ncRNA_UTR5时，该列为空；当Func列的值为intergenic时，该列格式为dist=1366;dist=22344，表示该CNV距离两侧基因的距离</p>
+<p class="tremark"><b>（9）Gencode：</b> Gencode注释的基因名称</p>
+<p class="tremark"><b>（10）cpgIslandExt：</b> CpG岛预测结果，注释结果为CpG岛名称，如CpG: 116（116是该CpG岛中CG二核苷酸的数目），CpG岛是指在基因组的某些区段，CpG保持或高于正常概率，与甲基化修饰及基因表达调控相关</p>
+<p class="tremark"><b>（11）cytoBand：</b> 该CNV所处的染色体区段（利用Giemas染色观察得到的）。如果变异位点跨过多个区段，用短横线连接</p>
+<p class="tremark"><b>（12）wgRna：</b> 基于miRBase和snoRNABase，对变异位点相关的microRNA和snoRNA进行注释，给出microRNA和snoRNA的基因名称</p>
+<p class="tremark"><b>（13）targetScanS：</b> UCSC提供TargetScanS注释数据库，库中包含在3’UTR中保守的microRNA结合位点，来源于TargetScanHuman 5.1的预测结果；该软件预测microRNA的靶点，预测结果依据microRNA与靶点之间结合的效能进行排序，排名越靠前，说明microRNA与其靶点的结合越可能是实际存在的事件。此项给出microRNA靶点的信息，一是score，是该靶点的分值，反映的是结合效能的排名，因此，score越大，说明排名越靠后，实际发生该结合的可能性越小，作者没有推荐阈值；二是Name，是作用于该靶点的microRNA名称。例如，Score=62;Name=KRAS:miR-181:1，表示该靶点的分值是62，其位于KRAS基因的3’UTR中，受到该变异位点影响的microRNA是miR-181:1。表示该变异位点位于microRNA（miR-181:1）在基因KRAS的3’UTR上的结合位点</p>
+<p class="tremark"><b>（14）phastConsElements46way：</b> 给出该变异位点是否位于保守区域中；如果在保守区域中，给出该区域的分值。保守区域是由phastCons程序基于脊椎动物全基因组比对预测得到的，46way是指使用的物种数目为46个。有两个值，一是score，是该保守区域的分值（transformed log-odds scores），取值为0-1000,有分值即认为此位点在人中保守；二是name，是ANNOVAR给该保守区域的名称（实际这些区域并没有名称，ANNOVAR用 Raw log-odds scores作为名称，即lod=x）</p>
+<p class="tremark"><b>（15）tfbsConsSites：</b> 基于transfac矩阵数据库(v7.0)，计算所有转录因子结合位点在人/小鼠/大鼠比对中的保守分值，当结合位点的分值达到阈值时，认为该位点在人/小鼠/大鼠中保守。该列给出的是该变异位点所在的保守转录因子结合位点的位置和分值，即Name和Score。Name是结合位点处的motif名称，这些motif能够被转录因子识别，例如V$CDPCR3_01，利用一些在线服务器（如MSigDB）能够查询这个motif能够被哪些转录因子识别；Score是该结合位点的保守分值 </p>
+<p class="tremark"><b>（16）genomicSuperDups：</b> 检测该变异位点是否位于重复片段（segmental duplication）中。重复区域中检测到的遗传变异大多数是由于序列比对错误造成的，所以被注释到segmental duplications的变异需要谨慎对待，很可能是假阳性位点。给出两个值，一是Name，表示基因组中与该变异位点所在区域相似的片段的位置；二是Score，表示两个相似片段的序列一致性。例如，Score=0.994828;Name=chr19:60000，表示chr19:60000所在片段跟该变异位点所在片段相似，序列一致性为0.994828，范围0~1</p>
+<p class="tremark"><b>（17）Repeat：</b> 重复序列注释信息，重复序列来源于RepeatMasker注释。例如， Score=180;Name="1385:(CACCC)n(Simple_repeat)"。Score表示该repeat的分值；Name由两部分构成，一部分(CACCC)n是repeat的名称，另一部分Simple是repeat的类别。只要有注释信息，就表明该变异位于散在重复序列或低复杂度序列中；这些区域容易出现比对错误，所以该区域的变异位点可靠性不高</p>
+
+{% if software.cnv == 'freec' %}
+<p class="tremark"><b>第18-21项为拷贝数变异信息注释————此部分信息为拷贝数变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
+<p class="tremark"><b>（18）CopyNumber：</b> 拷贝数个数</p>
+<p class="tremark"><b>（19）Size：</b> 发生CNV的区域的大小</p>
+<p class="tremark"><b>（20）CNVID：</b>CNV的编号</p>
+<p class="tremark"><b>（21）CNVType：</b>CNV的类型</p>
+<p class="tremark">loss：拷贝数减少（Deletion）</p>
+<p class="tremark">gain：拷贝数增加（Duplication）</p>
+<p class="tremark">breakpoint：CNV的断点</p>
+
+<p class="tremark"><b>第22-23项为基因功能注释————此部分信息为变异位点功能信息，方便查询此变异是否已知或者与疾病相关。</b></p>
+<p class="tremark"><b>（22）dgvMerged：</b> 将变异位点与基因组变异数据库(Database of Genomic Variants，简称DGV)中的CNV进行比较，输出该变异位点处已经被报导的CNV</p>
+<p class="tremark"><b>（23）gwasCatalog：</b> 检测变异位点是否在以往的GWAS研究中被报导，表示该变异位点与哪些疾病相关联，“.”表示没有GWAS报导</p>
+
+<p class="tremark"><b>第24-29项为ENCODE注释————基于ENCODE的基因组中区域的功能注释，突出基因组上的可能功能原件。</b></p>
+<p class="tremark"><b>（24）encodeGm12878：</b> SV所在基因组中区域的功能注释。利用ChromHMM程序整合ENCODE中Gm12878细胞系的ChIP-seq、DNase-seq、FAIRE-seq数据，根据可能的功能（共25种功能，如Tss、TssF等），将Gm12878细胞的基因组进行分区。然后对这些功能分组，突出基因组上可能的功能元件。（该列取值与其代表的功能元件之间的对应关系为：Tss, TssF——Active Promoter；PromF——Promoter Flanking；PromP——Inactive Promoter；Enh, EnhF——Candidate Strong enhancer；EnhWF, EnhW, DNaseU, DNaseD, FaireW——Candidate Weak enhancer/DNase；CtrcfO, Ctcf——Distal CTCF/Candidate Insulator；Gen5', Elon, ElonW, Gen3', Pol2, H4K20——Transcription associated；Low——Low activity proximal to active states；ReprD, Repr, ReprW——Polycob repressed；Quies, Art——Heterochromatin/Repetitive/Copy Number Variation）</p>
+<p class="tremark"><b>（25）encodeH1hesc：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为H1-hESC</p>
+<p class="tremark"><b>（26）encodeHelas3：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HeLa-S3</p>
+<p class="tremark"><b>（27）encodeHepg2：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HepG2</p>
+<p class="tremark"><b>（28）encodeHuvec：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HUVEC</p>
+<p class="tremark"><b>（29）encodeK562：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为K562</p>
+
+<p class="tremark"><b>第30项之后为良性与恶性数据库注释————依据已有的数据库对SV/CNV的有害性做出预测，并提供相应的文献支持。</b></p>
+<p class="tremark"><b>（30）StringentLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和1个研究支持该CNVR的结果（记录24,033条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（31）InclusiveLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和2个研究支持该CNVR的结果（记录11,733条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（32）DGV.GoldStandard.July2015：</b>该库信息来源于DGV数据库，在该库里面更新了DGV数据库中的频率计算和断点鉴定，同时也给出了CNVR的内外边界信息，版本July. 2015</p>
+<p class="tremark"><b>（33）frequency：</b>DGV.GoldStandard.July2015中给出的该CNV的频率</p>
+<p class="tremark"><b>（34）DGV：</b>DGV数据库提供了健康人群中基因组大于50bp、小于3Mb的结构变异（structural variation）的信息记录（MacDonald, J.R., et al. , 2014）</p>
+<p class="tremark"><b>（35）Support_Benign_PubMedID：</b>支持该SV/CNV为良性变异的文献的PubMed编号</p>
+<p class="tremark"><b>（36）CNVD：</b>CNVD数据库（Qiu, F et al. ,2012）中包含和人类疾病相关的212,277条CNV数据，其中的记录都是人工从已经发表的和CNV疾病相关的文献（2006年-2014年3月）中提取出来的。</p>
+<p class="tremark"><b>（37）Disease：</b>CNVD数据库注释该SV/CNV与本疾病相关</p>
+<p class="tremark"><b>（38）Support_Deleterious_PubMedID：</b>支持该SV/CNV与疾病有关的文献的PubMed编号。</p>
+<p class="tremark"><b>（39）Varification：</b>该项若不为“.”，则说明该变异能同时被两款软件验证，意味着该突变有着更高的预测可信度。</p>
+
+{% elif software.cnv == 'cnvnator' %}
+<p class="tremark"><b>第18-22项为拷贝数变异信息注释————此部分信息为拷贝数变异的详细信息，包括变异的大小，类型，深度信号等。</b></p>
+<p class="tremark"><b>（18）Size：</b> 发生CNV的区域的大小</p>
+<p class="tremark"><b>（19）RD：</b>cnv区域内标准化的深度信号，正常区域的RD为1，纯合缺失的区域RD接近于0，1个拷贝的增加RD接近于1.5等</p>
+<p class="tremark"><b>（20）q0：</b>落在该CNV区域的reads中，mapping quality为0的reads比例。当一对reads能够比对到两个或更多个位置，那么随机选择一个比对位置。在这样的情况下，其mapping quality赋值为0。若某个CNV在该列的值超过0.5，认为这个CNV是冗余的</p>
+<p class="tremark"><b>（21）CNVID：</b>CNV的ID号</p>
+<p class="tremark"><b>（22）CNVType：</b>CNV的类型</p>
+<p class="tremark">Deletion：拷贝数减少</p>
+<p class="tremark">Duplication：拷贝数增加</p>
+
+<p class="tremark"><b>第23-24项为基因功能注释————此部分信息为变异位点功能信息，方便查询此变异是否已知或者与疾病相关。</b></p>
+<p class="tremark"><b>（23）dgvMerged：</b> 将变异位点与基因组变异数据库(Database of Genomic Variants，简称DGV)中的CNV进行比较，输出该变异位点处已经被报导的CNV</p>
+<p class="tremark"><b>（24）gwasCatalog：</b> 检测变异位点是否在以往的GWAS研究中被报导，表示该变异位点与哪些疾病相关联，“.”表示没有GWAS报导</p>
+
+<p class="tremark"><b>第25-30项为ENCODE注释————基于ENCODE的基因组中区域的功能注释，突出基因组上的可能功能原件。</b></p>
+<p class="tremark"><b>（25）encodeGm12878：</b> SV所在基因组中区域的功能注释。利用ChromHMM程序整合ENCODE中Gm12878细胞系的ChIP-seq、DNase-seq、FAIRE-seq数据，根据可能的功能（共25种功能，如Tss、TssF等），将Gm12878细胞的基因组进行分区。然后对这些功能分组，突出基因组上可能的功能元件。（该列取值与其代表的功能元件之间的对应关系为：Tss, TssF——Active Promoter；PromF——Promoter Flanking；PromP——Inactive Promoter；Enh, EnhF——Candidate Strong enhancer；EnhWF, EnhW, DNaseU, DNaseD, FaireW——Candidate Weak enhancer/DNase；CtrcfO, Ctcf——Distal CTCF/Candidate Insulator；Gen5', Elon, ElonW, Gen3', Pol2, H4K20——Transcription associated；Low——Low activity proximal to active states；ReprD, Repr, ReprW——Polycob repressed；Quies, Art——Heterochromatin/Repetitive/Copy Number Variation）</p>
+<p class="tremark"><b>（26）encodeH1hesc：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为H1-hESC</p>
+<p class="tremark"><b>（27）encodeHelas3：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HeLa-S3</p>
+<p class="tremark"><b>（28）encodeHepg2：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HepG2</p>
+<p class="tremark"><b>（29）encodeHuvec：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HUVEC</p>
+<p class="tremark"><b>（30）encodeK562：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为K562</p>
+
+
+<p class="tremark"><b>第31项之后为良性与恶性数据库注释————依据已有的数据库对SV/CNV的有害性做出预测，并提供相应的文献支持。</b></p>
+<p class="tremark"><b>（31）StringentLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和1个研究支持该CNVR的结果（记录24,033条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（32）InclusiveLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和2个研究支持该CNVR的结果（记录11,733条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（33）DGV.GoldStandard.July2015：</b>该库信息来源于DGV数据库，在该库里面更新了DGV数据库中的频率计算和断点鉴定，同时也给出了CNVR的内外边界信息，版本July. 2015</p>
+<p class="tremark"><b>（34）frequency：</b>DGV.GoldStandard.July2015中给出的该CNV的频率</p>
+<p class="tremark"><b>（35）DGV：</b>DGV数据库提供了健康人群中基因组大于50bp、小于3Mb的结构变异（structural variation）的信息记录（MacDonald, J.R., et al. , 2014）</p>
+<p class="tremark"><b>（36）Support_Benign_PubMedID：</b>支持该SV/CNV为良性变异的文献的PubMed编号</p>
+<p class="tremark"><b>（37）CNVD：</b>CNVD数据库（Qiu, F et al. ,2012）中包含和人类疾病相关的212,277条CNV数据，其中的记录都是人工从已经发表的和CNV疾病相关的文献（2006年-2014年3月）中提取出来的。</p>
+<p class="tremark"><b>（38）Disease：</b>CNVD数据库注释该SV/CNV与本疾病相关</p>
+<p class="tremark"><b>（39）Support_Deleterious_PubMedID：</b>支持该SV/CNV与疾病有关的文献的PubMed编号。</p>
+<p class="tremark"><b>（40）Varification：</b>该项若不为“.”，则说明该变异能同时被两款软件验证，意味着该突变有着更高的预测可信度。</p>
+
+{% elif software.cnv == 'conifer' %}
+
+
+<p class="tremark"><b>第18-19项为基因功能注释————此部分信息为变异位点功能信息，方便查询此变异是否已知或者与疾病相关。</b></p>
+<p class="tremark"><b>（18）dgvMerged：</b> 将变异位点与基因组变异数据库(Database of Genomic Variants，简称DGV)中的CNV进行比较，输出该变异位点处已经被报导的CNV</p>
+<p class="tremark"><b>（19）gwasCatalog：</b> 检测变异位点是否在以往的GWAS研究中被报导，表示该变异位点与哪些疾病相关联，“.”表示没有GWAS报导</p>
+
+
+<p class="tremark"><b>第20-25项为ENCODE注释————基于ENCODE的基因组中区域的功能注释，突出基因组上的可能功能原件。</b></p>
+<p class="tremark"><b>（20）encodeGm12878：</b> SV所在基因组中区域的功能注释。利用ChromHMM程序整合ENCODE中Gm12878细胞系的ChIP-seq、DNase-seq、FAIRE-seq数据，根据可能的功能（共25种功能，如Tss、TssF等），将Gm12878细胞的基因组进行分区。然后对这些功能分组，突出基因组上可能的功能元件。（该列取值与其代表的功能元件之间的对应关系为：Tss, TssF——Active Promoter；PromF——Promoter Flanking；PromP——Inactive Promoter；Enh, EnhF——Candidate Strong enhancer；EnhWF, EnhW, DNaseU, DNaseD, FaireW——Candidate Weak enhancer/DNase；CtrcfO, Ctcf——Distal CTCF/Candidate Insulator；Gen5', Elon, ElonW, Gen3', Pol2, H4K20——Transcription associated；Low——Low activity proximal to active states；ReprD, Repr, ReprW——Polycob repressed；Quies, Art——Heterochromatin/Repetitive/Copy Number Variation）</p>
+<p class="tremark"><b>（21）encodeH1hesc：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为H1-hESC</p>
+<p class="tremark"><b>（22）encodeHelas3：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HeLa-S3</p>
+<p class="tremark"><b>（23）encodeHepg2：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HepG2</p>
+<p class="tremark"><b>（24）encodeHuvec：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HUVEC</p>
+<p class="tremark"><b>（25）encodeK562：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为K562</p>
+
+
+
+<p class="tremark"><b>第26-28项为拷贝数变异信息注释————此部分信息为拷贝数变异的详细信息，包括变异的大小，类型。</b></p>
+<p class="tremark"><b>（26）Size：</b> 发生CNV的区域的大小</p>
+<p class="tremark"><b>（27）CNVID：</b>CNV的编号</p>
+<p class="tremark"><b>（28）CNVType：</b>CNV的类型</p>
+<p class="tremark">dup：拷贝数增加</p>
+<p class="tremark">del：拷贝数减少</p>
+
+
+
+
+<p class="tremark"><b>第29项之后为良性与恶性数据库注释————依据已有的数据库对SV/CNV的有害性做出预测，并提供相应的文献支持。</b></p>
+<p class="tremark"><b>（29）StringentLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和1个研究支持该CNVR的结果（记录24,033条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（30）InclusiveLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和2个研究支持该CNVR的结果（记录11,733条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（31）DGV.GoldStandard.July2015：</b>该库信息来源于DGV数据库，在该库里面更新了DGV数据库中的频率计算和断点鉴定，同时也给出了CNVR的内外边界信息，版本July. 2015</p>
+<p class="tremark"><b>（32）frequency：</b>DGV.GoldStandard.July2015中给出的该CNV的频率</p>
+<p class="tremark"><b>（33）DGV：</b>DGV数据库提供了健康人群中基因组大于50bp、小于3Mb的结构变异（structural variation）的信息记录（MacDonald, J.R., et al. , 2014）</p>
+<p class="tremark"><b>（34）Support_Benign_PubMedID：</b>支持该SV/CNV为良性变异的文献的PubMed编号</p>
+<p class="tremark"><b>（35）CNVD：</b>CNVD数据库（Qiu, F et al. ,2012）中包含和人类疾病相关的212,277条CNV数据，其中的记录都是人工从已经发表的和CNV疾病相关的文献（2006年-2014年3月）中提取出来的。</p>
+<p class="tremark"><b>（36）Disease：</b>CNVD数据库注释该SV/CNV与本疾病相关</p>
+<p class="tremark"><b>（37）Support_Deleterious_PubMedID：</b>支持该SV/CNV与疾病有关的文献的PubMed编号。</p>
+<p class="premark">&nbsp</p>
+{% endif %}
