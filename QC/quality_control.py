@@ -176,8 +176,8 @@ class QC(object):
                     echo $fq has been compressed.
                 else
                     pigz -p4 -f $fq
-                    md5sum $fq.gz | unix2dos > $fq.gz.MD5.txt
                 fi
+                md5sum $fq.gz | unix2dos > $fq.gz.MD5.txt
             done
 
             echo Compress and md5sum clean for sample {sampleID} done: `date "+%F %T"`

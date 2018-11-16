@@ -10,6 +10,8 @@ class FilterDB(object):
                  sample_infos, config, disease_name, tissue, ANALY_DICT):
 
         self.args = args
+        self.__dict__.update(self.args)
+        
         self.jobs = jobs
         self.orders = orders
 
@@ -34,7 +36,6 @@ class FilterDB(object):
         self.ANALYSIS_POINTS = config.ANALYSIS_POINTS
 
         self.config = config
-        self.__dict__.update(self.args)
 
         self.ref = args.get('ref')
         self.__dict__.update(dict(config.CONFIG.items('genome_' + self.ref)))
@@ -365,12 +366,13 @@ class FilterDB(object):
                     --vcf '{familyid}.snp.merged.vcf.gz;{familyid}.indel.merged.vcf.gz' \\
                     --anno '{familyid}.snp.merged.annovar.hg19_multianno.xls.gz;{familyid}.indel.merged.annovar.hg19_multianno.xls.gz' \\
                     --ped ped.xls \\
-                    --diseases '{disease}' {tissue}{model} \\
+                    --samp_info {samp_info} \\
+                    --diseases '{disease_name}' {tissue}{model} \\
                     --Fid {familyid} \\
                     --type 'snp;indel' \\
                     --freq 'GnomAD_EAS_AF 0.01' \\
                     --out .
-
+                
                 # Brief Result
                 echo generate brief results
 

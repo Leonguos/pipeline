@@ -956,6 +956,49 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                                 m2] = '{name:"CTX",value:' + k[2] + '}],'
                             sv_ctx2[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
+            if 'sv_call_lumpy' in ANALYSIS:
+                sv_stat_file = os.path.join(projdir, 'SV', m2, 'lumpy',
+                                            m2 + '.lumpy.ann.stat.xls')
+                sv_stat.append(sv_stat_file)
+                sv_anno_file = os.path.join(projdir, 'SV', m2, 'lumpy',
+                                            m2 + '.lumpy.hg19_multianno.xls')
+                sv_anno.append(sv_anno_file)
+                context['lumpy'] = True
+                context['breakdancer'] = False
+                context['BreaKmer'] = False
+                context['table_sv'] = svtxts2tab(sv_stat)
+                context['table_sv_anno'] = txts2tab([sv_anno[0]])[:6]
+                #context['table_sv_anno_head']=['染色体','SV的起始位置','SV的终止位置','基因名称','SV所在的区域','SV相关的转录本',' 变异情况描述','Gencode注释','CpG岛名称','染色体区段','变异相关的microRNA和snoRNA','预测microRNA的靶点','变异保守性预测','转录因子结合位点保守分值','重复片段','dgv数据库','gwasCatalog数据库','重复序列','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','SV左断点位置及所在染色体','SV右断点位置及所在染色体','左断点所在链方向','右断点所在链方向','覆盖左断点的reads 数目','覆盖右断点的reads数目','左断点位置reads覆盖数目','右断点位置reads覆盖数目','在左断点位置被修剪掉的reads组装长度','在右断点位置被修剪掉的reads组装长度','左断点contig平均相似度百分比','左断点位置非unique reads覆盖数目占总覆盖数目的比例','右断点contig平均相似度百分比','右断点位置非unique reads覆盖数目占总覆盖数目的比例',' 覆盖左右断点的所有reads联合序列的相对起始位置','支持该SV类型的有效序列起始染色体','覆盖左右断点的所有reads联合序列绝对起始位置','覆盖左右断点的所有reads联合序列的相对终止位置','支持该SV类型的有效序列终止染色体','覆盖左右断点的所有reads联合序列绝对终止位置','覆盖左右断点的所有reads联合序列','对于易位，另一个断点所在的染色体','对于易位，另一个断点所在染色体的坐标','SV的ID号','SV的类型']
+                #context['table_filter_sv_head']=['染色体','SV的起始位置','SV的终止位置','基因名称','SV所在的区域','SV相关的转录本',' 变异情况描述','Gencode注释','CpG岛名称','染色体区段','变异相关的microRNA和snoRNA','预测microRNA的靶点','变异保守性预测','转录因子结合位点保守分值','重复片段','dgv数据库','gwasCatalog数据库','重复序列','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','基因组中区域的功能注释','SV第一个断点处在锚定区域中比对到正链或负链的reads数量','SV另一断点处在锚定区域中比对到正链或负链的reads数量','SV的分值','SV的长度','支持SV的reads的数目','每个样本中支持该SV的reads数（多样本的情况）','易位类型','对于易位（translocation），另一个断点所在的染色体','对于易位（translocation），另一个断点所在染色体的坐标','SV的ID号','SV的类型']
+                with open(sv_stat_file, 'r') as f:
+                    for k in islice(f, 1, None):
+                        k = k.strip()
+                        k = k.split('\t')
+                        if k[1] == 'INV':
+                            sv_datainv2[
+                                m2] = '{name:"INV",value:' + k[2] + '},'
+                            sv_inv2[
+                                m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
+                        elif k[1] == 'ITX':
+                            sv_dataitx2[
+                                m2] = '{name:"ITX",value:' + k[2] + '},'
+                            sv_itx2[
+                                m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
+                        elif k[1] == 'INS':
+                            sv_datains2[
+                                m2] = ':[{name:"INS",value:' + k[2] + '},'
+                            sv_ins2[
+                                m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
+                        elif k[1] == 'DEL':
+                            sv_datadel2[
+                                m2] = '{name:"DEL",value:' + k[2] + '},'
+                            sv_del2[
+                                m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
+                        elif k[1] == 'CTX':
+                            sv_datactx2[
+                                m2] = '{name:"CTX",value:' + k[2] + '}],'
+                            sv_ctx2[
+                                m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
             if 'sv_call_breakmer' in ANALYSIS:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'breakmer',
@@ -1472,14 +1515,19 @@ if rep_ty == 'primary' or rep_ty == 'advance':
         if seq_ty != 'TS':
             for i in samplename:
                 if ('snpindel_call_samtools' in ANALYSIS
-                        or 'snpindel_call_samtools_multi' in ANALYSIS) and ('snpindel_call_gatk' not in ANALYSIS):
+                        or 'snpindel_call_samtools_multi' in ANALYSIS):
                     ge_vcf_file = os.path.join(
                         projdir, "Mutation", i + '.samtools',
                         i + '.samtools.indel.annovar.hg19_multianno.xls.gz')
-                if 'snpindel_call_gatk' in ANALYSIS:
+                elif 'snpindel_call_gatk' in ANALYSIS:
                     ge_vcf_file = os.path.join(
                         projdir, "Mutation", i + '.gatk',
                         i + '.gatk.indel.annovar.hg19_multianno.xls.gz')
+                elif 'snpindel_call_sentieon' in ANALYSIS:
+                    ge_vcf_file = os.path.join(
+                        projdir, "Mutation", i + '.sentieon',
+                        i + '.sentieon.indel.annovar.hg19_multianno.xls.gz')
+
                 A = utils.safe_open(ge_vcf_file, 'r')
                 cds, ncds = {}, {}
                 for n in A:
@@ -1577,6 +1625,20 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_delz = '{' + sv_delz[:-1] + '}'
             sv_invz = '{' + sv_invz[:-1] + '}'
         if 'sv_call_crest' in ANALYSIS:
+            for i in samplename:
+                sv_data2z += '"' + i + '"' + sv_datains2[i] + sv_datadel2[i] + sv_datainv2[i] + sv_dataitx2[i] + sv_datactx2[i]
+                sv_ins2z += '"' + i + '"' + sv_ins2[i]
+                sv_del2z += '"' + i + '"' + sv_del2[i]
+                sv_inv2z += '"' + i + '"' + sv_inv2[i]
+                sv_itx2z += '"' + i + '"' + sv_itx2[i]
+                sv_ctx2z += '"' + i + '"' + sv_ctx2[i]
+            sv_data2z = '{' + sv_data2z[:-1] + '}'
+            sv_itx2z = '{' + sv_itx2z[:-1] + '}'
+            sv_ctx2z = '{' + sv_ctx2z[:-1] + '}'
+            sv_ins2z = '{' + sv_ins2z[:-1] + '}'
+            sv_del2z = '{' + sv_del2z[:-1] + '}'
+            sv_inv2z = '{' + sv_inv2z[:-1] + '}'
+        if 'sv_call_lumpy' in ANALYSIS:
             for i in samplename:
                 sv_data2z += '"' + i + '"' + sv_datains2[i] + sv_datadel2[i] + sv_datainv2[i] + sv_dataitx2[i] + sv_datactx2[i]
                 sv_ins2z += '"' + i + '"' + sv_ins2[i]
@@ -1804,6 +1866,19 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
                 datajs.write('sv_invz=' + sv_invz + '\n')
                 datajs.write('sv_inv=sv_invz["' + samplename1 + '"]\n')
             if 'sv_call_crest' in ANALYSIS:
+                datajs.write('sv_dataz2=' + sv_data2z + '\n')
+                datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
+                datajs.write('sv_itx2z=' + sv_itx2z + '\n')
+                datajs.write('sv_itx2=sv_itx2z["' + samplename1 + '"]\n')
+                datajs.write('sv_ins2z=' + sv_ins2z + '\n')
+                datajs.write('sv_ins2=sv_ins2z["' + samplename1 + '"]\n')
+                datajs.write('sv_del2z=' + sv_del2z + '\n')
+                datajs.write('sv_del2=sv_del2z["' + samplename1 + '"]\n')
+                datajs.write('sv_inv2z=' + sv_inv2z + '\n')
+                datajs.write('sv_inv2=sv_inv2z["' + samplename1 + '"]\n')
+                datajs.write('sv_ctx2z=' + sv_ctx2z + '\n')
+                datajs.write('sv_ctx2=sv_ctx2z["' + samplename1 + '"]\n')
+            if 'sv_call_lumpy' in ANALYSIS:
                 datajs.write('sv_dataz2=' + sv_data2z + '\n')
                 datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('sv_itx2z=' + sv_itx2z + '\n')
@@ -2221,7 +2296,7 @@ for each in b:
                 did = tid
                 break
         context['svid'] = did
-        denovosv_anno_file = os.path.join(denovosv_bri_dir,
+        denovosv_anno_file = os.path.join(denovosv_dir, did,
                                           did + '.denovoSV.hg19_multianno.xls')
         denovosv_anno.append(denovosv_anno_file)
         context['table_denovosv'] = txts2tab([denovosv_anno[0]])[5:11]
@@ -2236,7 +2311,7 @@ for each in b:
                 break
         context['cnvid'] = did
         denovocnv_anno_file = os.path.join(
-            denovocnv_bri_dir, did + '.denovoCNV.hg19_multianno.xls')
+            denovocnv_dir, did, did + '.denovoCNV.hg19_multianno.xls')
         denovocnv_anno.append(denovocnv_anno_file)
         context['table_denovocnv'] = txts2tab([denovocnv_anno[0]])[5:11]
 

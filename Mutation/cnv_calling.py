@@ -184,7 +184,7 @@ class CNV(object):
 
             # circos configure all
             cp {circos_dir}/conf/*.conf .
-            python {circos_dir}/scripts/conf.py \\
+            python {circos_dir}/scripts/config.py \\
                 --id {sampleID} \\
                 --inpath . \\
                 --outpath . \\

@@ -9,7 +9,7 @@ class Mapping(object):
         clean.fq -> sort.bam -> nodup.bam -> final.bam
     '''
 
-    def __init__(self, args, jobs, orders, sample_lists, sample_infos, config):
+    def __init__(self, args, jobs, orders, sample_lists, sample_infos, config, qc_status, mapping_status):
 
         self.args = args
         self.__dict__.update(args)
@@ -24,6 +24,9 @@ class Mapping(object):
 
         self.sample_lists = sample_lists
         self.sample_infos = sample_infos
+
+        self.qc_status = qc_status
+        self.mapping_status = mapping_status
 
         self.ANALYSIS_POINTS = config.ANALYSIS_POINTS
 
@@ -55,6 +58,11 @@ class Mapping(object):
         for sampleID, items in self.sample_lists.iteritems():
             if sampleID  not in self.args['sample_infos_waiting']:
                 continue
+
+            if self.mapping_status == 'done':
+                self.final_bam(sampleID, sampleID)
+                continue
+
             is_jiace = items.get('jiace')
             # print 'Jiace', is_jiace
             sort_bams = []
@@ -165,10 +173,12 @@ class Mapping(object):
             threads=self.threads['bwa_mem'])
 
         # add order
-        before_jobs = ['qc_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)]
+        before_jobs = []
+        if self.qc_status == 'waiting':
+            before_jobs = ['qc_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)]
         after_jobs = ['{merge_soft}_merge_{sampleID}'.format(sampleID=sampleID, **self.__dict__)]
 
-        if self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']:
+        if self.qc_status == 'waiting' and (self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']):
             after_jobs += [
                 'gzip_md5_clean_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)
             ]
@@ -229,7 +239,9 @@ class Mapping(object):
             threads=self.threads['sentieon_bwa_mem'])
 
         # add order
-        before_jobs = ['qc_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)]
+        before_jobs = []
+        if self.qc_status == 'waiting':
+            before_jobs = ['qc_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)]
         after_jobs = ['{merge_soft}_merge_{sampleID}'.format(sampleID=sampleID, **self.__dict__)]
 
         if self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']:

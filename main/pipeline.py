@@ -88,7 +88,6 @@ class MainPipeline(object):
         # temp
         advance_dirs = {
             'Merged_vcf': '{analydir}/Advance/{newjob}/Merged_vcf',
-            # 'FilterDB': '{analydir}/Advance/{newjob}/FilterDB',
             'ACMG': '{analydir}/Advance/{newjob}/ACMG',
             'FilterSV': '{analydir}/Advance/{newjob}/FilterSV',
             'FilterCNV': '{analydir}/Advance/{newjob}/FilterCNV',
@@ -124,6 +123,8 @@ class MainPipeline(object):
         qc_status = utils.get_status('qc', self.startpoint, config.ANALYSIS_POINTS)
         mapping_status = utils.get_status('bwa_mem', self.startpoint, config.ANALYSIS_POINTS)
 
+        print 'qc status:', qc_status
+        print 'mapping status:', mapping_status
 
         ANALY_DICT = utils.get_analysis_dict(self.analy_array, config.ANALYSIS_CODE)
         self.args.update({'ANALY_DICT': ANALY_DICT})
@@ -258,14 +259,14 @@ class MainPipeline(object):
             mutation_soft, sv_soft, cnv_soft, denovo_soft)
 
         # QC
-        if ANALY_DICT['quality_control']:
+        if ANALY_DICT['quality_control'] and qc_status == 'waiting':
             utils.print_color('> QC', 'white')
             QC(self.args, self.jobs, self.orders, sample_lists, config).start()
 
         # Mapping
         if ANALY_DICT['mapping']:
             utils.print_color('> Mapping', 'white')
-            Mapping(self.args, self.jobs, self.orders, sample_lists, sample_infos, config).start()
+            Mapping(self.args, self.jobs, self.orders, sample_lists, sample_infos, config, qc_status, mapping_status).start()
 
         # Mutation
         if ANALY_DICT['snpindel_call']:

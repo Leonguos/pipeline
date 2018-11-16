@@ -153,15 +153,15 @@ def get_chrom_list(refgenome, sex, MT=False):
 
     if refgenome.lower() in ('b37', ):
         chrom_list = [str(i) for i in range(1, 23)] + ['X']
-        chrom_list += ['Y'] if sex.lower() in ('m', 'male') else []
+        chrom_list += ['Y'] if sex.lower() in ('u', 'm', 'male') else []
         chrom_list += ['MT'] if MT else []
     elif refgenome.lower() in ('hg19', 'hg38'):
         chrom_list = ['chr' + str(i) for i in range(1, 23)] + ['chrX']
-        chrom_list += ['Y'] if sex.lower() in ('m', 'male') else ['chrY']
+        chrom_list += ['Y'] if sex.lower() in ('u', 'm', 'male') else ['chrY']
         chrom_list += ['chrM'] if MT else []
     elif refgenome.lower() in ('mm9', 'mm10'):
         chrom_list = ['chr' + str(i) for i in range(1, 20)] + ['chrX']
-        chrom_list += ['Y'] if sex.lower() in ('m', 'male') else ['chrY']
+        chrom_list += ['Y'] if sex.lower() in ('u', 'm', 'male') else ['chrY']
         chrom_list += ['chrM'] if MT else []
     else:
         print '[error] invalid refgenome: {}'.format(refgenome)

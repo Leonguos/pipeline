@@ -1479,12 +1479,12 @@ GCTCTTTGCCCTTCTCGTCGAAAATTGTCTCCTCATTCGAAACTTCTCTGT           <br />
 <p class="paragraph">SV是structural variation的缩写。结构变异指的是在基因组上一些大的结构性的变异，比如大片段丢失（deletion）、大片段插入（insertion）、大片段重复（duplication）、拷贝数变异（copy number variants）、倒位（inversion）、易位（translocation）。一般来说，结构变异涉及的序列长度在1kb到3Mb之间。结构变异普遍存在于人类基因组中，是个人差异和一些疾病易感性的来源。结构变异还可能导致融合基因的发生，一些癌症已经证实和结构变异导致的基因融合事件有关。</p>
 {% if breakdancer %}
 <p class="paragraph">我们采用<a href="http://breakdancer.sourceforge.net/"  target=_blank>BreakDancer</a>(Chen K <i>et al.</i>)对SV信息进行检测。</p>
-{% endif %}
-{% if crest %}
+{% elif crest %}
 <p class="paragraph">我们采用<a href="http://www.stjuderesearch.org/site/lab/zhang"  target=_blank>CREST</a>(Wang J <i>et al.</i>)对SV信息进行检测。</p>
-{% endif %}
-{% if BreaKmer %}
+{% elif BreaKmer %}
 <p class="paragraph">我们采用<a href="https://github.com/ccgd-profile/BreaKmer"  target=_blank>BreaKmer</a>(Abo R P <i>et al.</i>)对SV信息进行检测。</p>
+{% elif lumpy %}
+<p class="paragraph">我们采用<a href="https://github.com/arq5x/lumpy-sv" target=_blank>Lumpy</a>对SV信息进行检测。</p>
 {% endif %}
 
 <p class="center">

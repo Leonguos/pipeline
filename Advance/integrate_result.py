@@ -44,12 +44,17 @@ class IntegrateResult(object):
 
             cd ${IntegrateResult}
 
-            python ${moduledir}/IntegrateResult/integrate.v4.7.py \\
-                --pwd ${analydir} \\
-                --samp_info ${samp_info} \\
+            python ${ROOT_DIR}/modules/integrate/integrate.py \\
+                --analydir ${analydir} \\
+                --samp-info ${samp_info} \\
                 --newjob ${newjob} \\
-                --analy_array ${array} \\
+                --moduledir ${moduledir} \\
+                --confidence N \\
+                --analy-array ${array} \\
                 --out .
+
+            grep -v '\\.' total.candidate.gene.xls | tr  ',' '\\n' | sort -u > temp
+            mv temp total.candidate.gene.xls
 
             awk -v OFS='\\t' 'NR==1 || $1!="GeneName" {print $1, $2, $3}' Integrate.xls  | sort -u > CandidateGene.xls
             python ${ROOT_DIR}/modules/brief/text2excel.py \\

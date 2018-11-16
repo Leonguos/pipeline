@@ -32,7 +32,7 @@ class Other(object):
             cd {analydir}/Advance/{newjob}/Network
 
             # Phenolyzer
-            python {moduledir}/Phenolyzer/phenolyzer-0.1.5/phenolyzer_pipe4.6.py \\
+            python {moduledir}/Phenolyzer/phenolyzer-0.1.5/phenolyzer_pipe4.7.py \\
                 --dir {analydir} \\
                 --disease "{disease_name}" \\
                 --genelist {analydir}/Advance/{newjob}/IntegrateResult/total.candidate.gene.xls \\

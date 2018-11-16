@@ -123,8 +123,9 @@ class Denovo(object):
 
         print '>   samtools call trio for {familyid}'.format(**context)
 
+        # denovo do not deal with MT
         chrom_list = utils.get_chrom_list(
-            self.ref, self.sample_infos[context['sampleid']]['sex'], self.args['MT'])
+            self.ref, self.sample_infos[context['sampleid']]['sex'])
 
         pedfile = '{analydir}/Advance/{newjob}/Denovo/CallTrio/{familyid}/{familyid}.ped'.format(
             **dict(self.__dict__, **context))
@@ -401,6 +402,8 @@ class Denovo(object):
 
             cd {analydir}/Advance/{newjob}/Denovo/Intersect/{familyid}
 
+            mkdir -p SNP INDEL
+
             # Intersect
             python {moduledir}/Varition/Filter/IntegrateFile_pipe4.6.py \\
                 -inputs {snps} \\
@@ -554,6 +557,20 @@ class Denovo(object):
                 {BriefResults}/Denovo/{familyid}/{familyid}.denovo{SVTYPE}.hg19_multianno.xlsx \\
                 {ROOT_DIR}/modules/brief/readme/denovo_sv_cnv.readme.xls \\
                 {familyid}.denovo{SVTYPE}.hg19_multianno.xls
+
+            echo denovo {svtype} done: `date "+%F %T"`
+        '''
+        
+        '''
+            python {ROOT_DIR}/modules/brief/brief_anno.py \\
+                    -i {familyid}.denovo{SVTYPE}.hg19_multianno.xls \\
+                    -O {BriefResults}/Denovo/{familyid}/{familyid}.denovo{SVTYPE}.hg19_multianno.brief.xls \\
+                    -t sv_cnv
+
+            python {ROOT_DIR}/modules/brief/text2excel.py \\
+                {BriefResults}/Denovo/{familyid}/{familyid}.denovo{SVTYPE}.hg19_multianno.brief.xlsx \\
+                {ROOT_DIR}/modules/brief/readme/denovo_sv_cnv.readme.xls \\
+                {BriefResults}/Denovo/{familyid}/{familyid}.denovo{SVTYPE}.hg19_multianno.brief.xls
 
             echo denovo {svtype} done: `date "+%F %T"`
         '''
