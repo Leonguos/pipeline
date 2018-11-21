@@ -13,6 +13,7 @@ import argparse
 import numpy as np
 from itertools import islice
 import socket
+import pprint
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -79,21 +80,23 @@ context = {}
 ANALY_DICT = utils.get_analysis_dict(analy_array, config.ANALYSIS_CODE)
 context.update(ANALY_DICT)
 
+pprint.pprint(ANALY_DICT)
+
 context['software'] = dict(utils.get_software_version(), **utils.get_softwares(analy_array, ANALY_DICT))
-# print context
+pprint.pprint(context['software'])
 # exit()
 
 
-ANALYSIS = []
-for code in analy_array:
-    if '.' in code:
-        code = float(code)
-    else:
-        code = int(code)
-    ANALYSIS.append(config.ANALYSIS_CODE[code][0])
-    ANALYSIS.append(config.ANALYSIS_CODE[int(code)][0])
-# print ANALYSIS
-# exit()
+# ANALYSIS = []
+# for code in analy_array:
+#     if '.' in code:
+#         code = float(code)
+#     else:
+#         code = int(code)
+#     ANALYSIS.append(config.ANALYSIS_CODE[code][0])
+#     ANALYSIS.append(config.ANALYSIS_CODE[int(code)][0])
+# # print ANALYSIS
+# # exit()
 
 ## for out dir
 if not os.path.exists(odir):
@@ -225,60 +228,57 @@ elif rep_ty == 'advance':
     context['dep_res'] = True
     context['muts_res'] = True
 
-if 'snpindel_call' in ANALYSIS:
+if ANALY_DICT['snpindel_call']:
     context['snp_indel_res'] = True
 
-if 'sv_call' in ANALYSIS:
+if ANALY_DICT['sv_call']:
     context['sv_res'] = True
 
-if 'cnv_call' in ANALYSIS:
+if ANALY_DICT['cnv_call']:
     context['cnv_res'] = True
 
-if 'filter_acmg' in ANALYSIS:
-    ANALYSIS.append('filter_db')
-
-if 'filter_db' in ANALYSIS:
+if ANALY_DICT['filter_db']:
     context['filter_res'] = True
     advanceDir = os.path.join(projdir, 'Advance', newjob)
     advanceBriDir = os.path.join(projdir, 'Advance', newjob, 'BriefResults')
     gene_dir = os.path.join(advanceDir, 'IntegrateResult', 'total.candidate.gene.xls')
 
-if 'filter_model' in ANALYSIS:
+if ANALY_DICT['filter_model']:
     context['model_res'] = True
 
-if 'denovo' in ANALYSIS:
+if ANALY_DICT['denovo']:
     context['denovo_res'] = True
 
-if 'linkage' in ANALYSIS:
+if ANALY_DICT['linkage']:
     context['linkage_res'] = True
 
-if 'filter_noncoding' in ANALYSIS:
+if ANALY_DICT['filter_noncoding']:
     context['Noncoding'] = True
 
-if 'roh' in ANALYSIS:
+if ANALY_DICT['roh']:
     context['roh_res'] = True
 
-if 'pathway' in ANALYSIS:
+if ANALY_DICT['pathway']:
     context['Pathway'] = True
 
 context[seq_ty] = True
 
-if 'denovo_sv' in ANALYSIS:
+if ANALY_DICT['denovo_sv']:
     context['DenovoSV'] = True
 
-if 'denovo_cnv' in ANALYSIS:
+if ANALY_DICT['denovo_cnv']:
     context['DenovoCNV'] = True
 
-if 'ppi' in ANALYSIS:
+if ANALY_DICT['ppi']:
     context['ppinter'] = True
 
-if 'hpa' in ANALYSIS:
+if ANALY_DICT.get('hpa'):
     context['HPA'] = True
 
-if 'site_association' in ANALYSIS:
+if ANALY_DICT['site_association']:
     context['asso_site'] = True
 
-if 'filter_drug' in ANALYSIS:
+if ANALY_DICT['filter_drug']:
     context['rep_person'] = True
 
 infile = os.path.join(projdir, 'qc_list_' + suffix)
@@ -466,7 +466,7 @@ if sam != 'Null':
             elif i.startswith('#B'):
                 bg = i[1:]
 
-if 'phenolyzer' in ANALYSIS and diseases != '' and rep_ty == "advance":
+if ANALY_DICT['phenolyzer'] and diseases != '' and rep_ty == "advance":
     context['net_work'] = True
 else:
     context['net_work'] = False
@@ -720,7 +720,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
     advanceBriDir = os.path.join(projdir, 'Advance', newjob, 'BriefResults')
     SumDir = os.path.join(advanceDir, 'Summary')
     # only regonize GATK calling
-    if 'snpindel_call_gatk' in ANALYSIS:
+    if ANALY_DICT['snpindel_call_gatk']:
         if sf == 'Y':
             single_snp_filter = os.path.join(projdir, "Mutation", m + '.gatk',
                                              "FilterSNP",
@@ -738,7 +738,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             m + '.gatk.indel.annovar.hg19_multianno.xls.gz')
         context['samtools'] = False
 
-    elif ('snpindel_call_samtools' in ANALYSIS or 'snpindel_call_samtools_multi' in ANALYSIS):
+    elif ANALY_DICT['snpindel_call_samtools']:
         if sf == 'Y':
             single_snp_filter = os.path.join(projdir, "Mutation",
                                              m + '.samtools', "FilterSNP",
@@ -757,7 +757,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             m + '.samtools.indel.annovar.hg19_multianno.xls.gz')
         context['samtools'] = True
 
-    elif 'snpindel_call_sentieon' in ANALYSIS:
+    elif ANALY_DICT['snpindel_call_sentieon']:
         snp_anno = os.path.join(
             projdir, "Mutation", m + '.sentieon',
             m + '.sentieon.snp.annovar.hg19_multianno.xls.gz')
@@ -766,7 +766,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             m + '.sentieon.indel.annovar.hg19_multianno.xls.gz')
         context['sentieon'] = True
 
-    if 'snpindel_call' in ANALYSIS:
+    if ANALY_DICT['snpindel_call']:
         context['table_anno'] = txts2tab([snp_anno])[:6]
         context['table_anno_indel'] = txts2tab([indel_anno])[:6]
 
@@ -802,9 +802,9 @@ if rep_ty == 'primary' or rep_ty == 'advance':
     context['fig_CoNIFER'] = []
     context['fig_CNV'] = []
 
-    if 'sv_call' in ANALYSIS:
+    if ANALY_DICT['sv_call']:
         sv_stat, sv_anno = [], []
-    if 'cnv_call' in ANALYSIS:
+    if ANALY_DICT['cnv_call']:
         cnv_stat, cnv_anno = [], []
         context['fig_cnv_circos'] = []
 
@@ -872,7 +872,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_tdp2[
                 m2] = ':[{name:"cds",value:0},{name:"splicing",value:0},{name:"utr5",value:0},{name:"utr3",value:0},{name:"intron",value:0},{name:"upstream",value:0},{name:"downstream",value:0},{name:"ncRNA",value:0},{name:"intergenic",value:0},{name:"unknown",value:0}],'
 
-            if 'sv_call_breakdancer' in ANALYSIS:
+            if ANALY_DICT['sv_call_breakdancer']:
                 sv_stat_file = os.path.join(
                     projdir, 'SV', m2, 'breakdancer',
                     m2 + '.breakdancer.flt.gff.ann.stat.txt')
@@ -913,7 +913,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                             sv_del[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
-            if 'sv_call_crest' in ANALYSIS:
+            if ANALY_DICT['sv_call_crest']:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'crest',
                                             m2 + '.crest.gff.ann.stat.xls')
                 sv_stat.append(sv_stat_file)
@@ -956,7 +956,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                                 m2] = '{name:"CTX",value:' + k[2] + '}],'
                             sv_ctx2[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
-            if 'sv_call_lumpy' in ANALYSIS:
+            if ANALY_DICT['sv_call_lumpy']:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'lumpy',
                                             m2 + '.lumpy.ann.stat.xls')
                 sv_stat.append(sv_stat_file)
@@ -1000,7 +1000,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                             sv_ctx2[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
-            if 'sv_call_breakmer' in ANALYSIS:
+            if ANALY_DICT['sv_call_breakmer']:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'breakmer',
                                             m2 + '.breakmer.gff.ann.stat.xls')
                 sv_stat.append(sv_stat_file)
@@ -1048,7 +1048,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                             sv_tdp2[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
-            if ('cnv_call_cnvnator' in ANALYSIS) and ('cnv_call_freec' not in ANALYSIS):
+            if ANALY_DICT['cnv_call_cnvnator']:
                 cnv_stat_file = os.path.join(projdir, 'SV', m2, 'cnvnator',
                                              m2 + '.cnvnator.gff.ann.stat.xls')
                 cnv_stat.append(cnv_stat_file)
@@ -1077,7 +1077,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                             cnv_los[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
-            if 'cnv_call_freec' in ANALYSIS:
+            if ANALY_DICT['cnv_call_freec']:
                 cnv_stat_file = os.path.join(projdir, 'SV', m2, 'freec',
                                              m2 + '.freec.ann.stat.xls')
                 cnv_stat.append(cnv_stat_file)
@@ -1115,7 +1115,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},{name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
 
                 ##circos pic   add by chenyanli
-            if ('cnv_call_cnvnator' in ANALYSIS) and ('cnv_call_freec' not in ANALYSIS):
+            if ANALY_DICT['cnv_call_cnvnator']:
                 cir_dir = os.path.join(projdir, 'SV', m2, 'cnvnator', 'Circos')
                 cir_images_dir = os.path.join(odir, 'src/pictures/circos')
                 #assert not os.system('cp %s %s' % (os.path.join(cir_dir,m2+'.png'),os.path.join(cir_images_dir,m2+'.png')))
@@ -1132,7 +1132,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                     '"', '"' +
                     os.path.join('src/pictures/circos', m2 + '.JPEG') + '"', m2
                 ])
-            if 'cnv_call_freec' in ANALYSIS:
+            if ANALY_DICT['cnv_call_freec']:
                 cir_dir = os.path.join(projdir, 'SV', m2, 'freec', 'Circos')
                 cir_images_dir = os.path.join(odir, 'src/pictures/Circos')
                 #assert not os.system('cp %s %s' % (os.path.join(cir_dir,m2+'.png'),os.path.join(cir_images_dir,m2+'.png')))
@@ -1155,7 +1155,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                 ])
             ###added by yincan 20171209
             ############################# WES cnv_stat.xls
-            if 'cnv_call_conifer' in ANALYSIS:
+            if ANALY_DICT['cnv_call_conifer']:
                 cnv_stat_file = os.path.join(projdir, 'SV', m2, 'conifer',
                                              m2 + '.conifer.stat.xls')
                 cnv_stat.append(cnv_stat_file)
@@ -1177,7 +1177,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                             cnv_los[
                                 m2] = ':[{name:"cds",value:' + k[3] + '},{name:"splicing",value:' + k[4] + '},{name:"utr5",value:' + k[5] + '},{name:"utr3",value:' + k[6] + '},   {name:"intron",value:' + k[7] + '},{name:"upstream",value:' + k[8] + '},{name:"downstream",value:' + k[9] + '},{name:"ncRNA",value:' + k[10] + '},{name:"intergenic",value:' + k[11] + '},{name:"unknown",value:' + k[12] + '}],'
             ###########################
-            if 'cnv_call_conifer' in ANALYSIS:
+            if ANALY_DICT['cnv_call_conifer']:
                 Conifer_dir = os.path.join(projdir, 'SV', m2, 'conifer')
                 Conifer_pic = os.path.join(Conifer_dir, 'pics')
                 cir_images_dir = os.path.join(odir, 'src/pictures/Circos')
@@ -1230,7 +1230,7 @@ context['FilterCNV_anno'] = []
 ## advance
 ## not ready
 if rep_ty == 'advance':
-    if 'filter_db' in ANALYSIS:
+    if ANALY_DICT['filter_db']:
         filter_stat = []
         vcf_dir = os.path.join(advanceDir, 'Merged_vcf')
         vcf_bri_dir = os.path.join(advanceBriDir, 'FilterDB')
@@ -1244,7 +1244,7 @@ if rep_ty == 'advance':
                          "snp.merged.freq.func.syn.deleterious.brief.xls")
         ])[:6]
 
-    if 'filter_sv' in ANALYSIS:
+    if ANALY_DICT['filter_sv']:
         for i in samplename:
             fsv = [
                 os.path.join(advanceBriDir, 'FilterSV',
@@ -1255,7 +1255,7 @@ if rep_ty == 'advance':
                 if len(txts2tab(fsv)[:6]) > len(context['FilterSV_anno']):
                     context['FilterSV_anno'] = txts2tab(fsv)[:6]
 
-    if 'filter_cnv' in ANALYSIS:
+    if ANALY_DICT['filter_cnv']:
         for i in samplename:
             fcnv = [
                 os.path.join(advanceBriDir, 'FilterCNV',
@@ -1265,10 +1265,10 @@ if rep_ty == 'advance':
             if os.path.exists(fcnv[0]):
                 if len(txts2tab(fcnv)[:6]) > len(context['FilterCNV_anno']):
                     context['FilterCNV_anno'] = txts2tab(fcnv)[:6]
-                    print fcnv
-                    print context['FilterCNV_anno'][0]
-                    # exit()
-    if 'ppi' in ANALYSIS:
+                    # print fcnv
+                    # print context['FilterCNV_anno'][0]
+
+    if ANALY_DICT['ppi']:
         ppi_geneint_file = [
             os.path.join(advanceDir, 'PPI', 'Gene_interactions.xls')
         ]
@@ -1276,7 +1276,7 @@ if rep_ty == 'advance':
         if os.path.exists(ppi_geneint_file[0]):
             context['table_ppi_inter'] = txts2tab(ppi_geneint_file)[:6]
 
-    if 'hpa' in ANALYSIS:
+    if ANALY_DICT.get('hpa'):
         context['HPA'] = True
         if hpa_mode == 'brief':
             context['HPA_brief'] = True
@@ -1287,7 +1287,7 @@ if rep_ty == 'advance':
         if os.path.exists(hpa_file):
             context['table_hpa']=txts2tab(hpa_file)[:6]
 
-    if 'filter_drug' in ANALYSIS:
+    if ANALY_DICT['filter_drug']:
         drug_anno_file = [
             os.path.join(advanceDir, 'Pharmacogenomics',
                          'Pharmacogenetics.xls')
@@ -1296,7 +1296,7 @@ if rep_ty == 'advance':
         if os.path.exists(drug_anno_file[0]):
             context['drug_anno'] = txts2tab(drug_anno_file)[:6]
 
-    if 'site_association' in ANALYSIS:
+    if ANALY_DICT['site_association']:
         #context['asso']=True
         context['asso_site'] = True
         asso_file = [
@@ -1324,7 +1324,7 @@ if rep_ty == 'advance':
             '/SiteAS/AssoAna_Allele_ManhattanPlot_Pvalue_Allele.png ' + odir +
             '/src/pictures/SiteAS/')
 
-    if 'gene_association' in ANALYSIS:
+    if ANALY_DICT['gene_association']:
         context['GeneAS'] = True
         GeneAS_file = [
             os.path.join(advanceDir, 'GeneAS', 'snp.burden.result.xls')
@@ -1344,7 +1344,7 @@ if rep_ty == 'advance':
             'cp ' + advanceDir + '/GeneAS/QQ_plot.snp.burden.snp.png ' + odir +
             '/src/pictures/GeneAS/')
 
-    if 'pathway' in ANALYSIS:
+    if ANALY_DICT['pathway']:
         context['fig_pathway_go'] = []
         context['fig_pathway_kegg'] = []
         if not os.path.exists(odir + '/src/pictures/Pathway/'):
@@ -1511,19 +1511,19 @@ cnv_losz = ''
 indel_lenz = ''
 indel_lennz = ''
 if rep_ty == 'primary' or rep_ty == 'advance':
-    if 'snpindel_call' in ANALYSIS:
+    if ANALY_DICT['snpindel_call']:
         if seq_ty != 'TS':
             for i in samplename:
-                if ('snpindel_call_samtools' in ANALYSIS
-                        or 'snpindel_call_samtools_multi' in ANALYSIS):
+                # ge_vcf_file = '{projdir}/Mutation/{i}.{mutation}/{i}.{mutation}.indel.annovar.hg19_multianno.xls.gz'
+                if ANALY_DICT['snpindel_call_samtools']:
                     ge_vcf_file = os.path.join(
                         projdir, "Mutation", i + '.samtools',
                         i + '.samtools.indel.annovar.hg19_multianno.xls.gz')
-                elif 'snpindel_call_gatk' in ANALYSIS:
+                elif ANALY_DICT['snpindel_call_gatk']:
                     ge_vcf_file = os.path.join(
                         projdir, "Mutation", i + '.gatk',
                         i + '.gatk.indel.annovar.hg19_multianno.xls.gz')
-                elif 'snpindel_call_sentieon' in ANALYSIS:
+                elif ANALY_DICT['snpindel_call_sentieon']:
                     ge_vcf_file = os.path.join(
                         projdir, "Mutation", i + '.sentieon',
                         i + '.sentieon.indel.annovar.hg19_multianno.xls.gz')
@@ -1611,8 +1611,8 @@ if rep_ty == 'primary' or rep_ty == 'advance':
         snp_tstvz = '{' + snp_tstvz[:-1] + '}'
         snp_newtstvz = '{' + snp_newtstvz[:-1] + '}'
 
-    if 'sv_call' in ANALYSIS:
-        if 'sv_call_breakdancer' in ANALYSIS:
+    if ANALY_DICT['sv_call']:
+        if ANALY_DICT['sv_call_breakdancer']:
             for i in samplename:
                 sv_dataz += '"' + i + '"' + sv_datatra[i] + sv_datains[i] + sv_datadel[i] + sv_datainv[i]
                 sv_insz += '"' + i + '"' + sv_ins[i]
@@ -1624,7 +1624,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_insz = '{' + sv_insz[:-1] + '}'
             sv_delz = '{' + sv_delz[:-1] + '}'
             sv_invz = '{' + sv_invz[:-1] + '}'
-        if 'sv_call_crest' in ANALYSIS:
+        if ANALY_DICT['sv_call_crest']:
             for i in samplename:
                 sv_data2z += '"' + i + '"' + sv_datains2[i] + sv_datadel2[i] + sv_datainv2[i] + sv_dataitx2[i] + sv_datactx2[i]
                 sv_ins2z += '"' + i + '"' + sv_ins2[i]
@@ -1638,7 +1638,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_ins2z = '{' + sv_ins2z[:-1] + '}'
             sv_del2z = '{' + sv_del2z[:-1] + '}'
             sv_inv2z = '{' + sv_inv2z[:-1] + '}'
-        if 'sv_call_lumpy' in ANALYSIS:
+        if ANALY_DICT['sv_call_lumpy']:
             for i in samplename:
                 sv_data2z += '"' + i + '"' + sv_datains2[i] + sv_datadel2[i] + sv_datainv2[i] + sv_dataitx2[i] + sv_datactx2[i]
                 sv_ins2z += '"' + i + '"' + sv_ins2[i]
@@ -1652,7 +1652,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_ins2z = '{' + sv_ins2z[:-1] + '}'
             sv_del2z = '{' + sv_del2z[:-1] + '}'
             sv_inv2z = '{' + sv_inv2z[:-1] + '}'
-        if 'sv_call_breakmer' in ANALYSIS:
+        if ANALY_DICT['sv_call_breakmer']:
             for i in samplename:
                 sv_data2z += '"' + i + '"' + sv_datains2[i] + sv_datadel2[i] + sv_datainv2[i] + sv_dataitx2[i] + sv_datactx2[i] + sv_datatdp2[i]
                 sv_ins2z += '"' + i + '"' + sv_ins2[i]
@@ -1668,7 +1668,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
             sv_del2z = '{' + sv_del2z[:-1] + '}'
             sv_inv2z = '{' + sv_inv2z[:-1] + '}'
             sv_tdp2z = '{' + sv_tdp2z[:-1] + '}'
-    if 'cnv_call' in ANALYSIS:
+    if ANALY_DICT['cnv_call']:
         for i in samplename:
             cnv_dataz += '"' + i + '"' + cnv_datagai[i] + cnv_datalos[i]
             cnv_gaiz += '"' + i + '"' + cnv_gai[i]
@@ -1759,7 +1759,7 @@ erzd = "{" + erzd[:-1] + "}"
 halfline = str(halfline)
 datanow2 = "{" + datanow2[:-1] + "}"
 
-if ('phenolyzer' in ANALYSIS) and (diseases != ''):
+if (ANALY_DICT['phenolyzer']) and (diseases != ''):
     net_dir = os.path.join(advanceDir, 'Network')
     assert not os.system(
         'cp -f ' + net_dir + '/network.js ' + odir + '/src/js')
@@ -1814,7 +1814,7 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
             'var legendallclose=function(e){' + legendallclose + '};\n')
         datajs.write('var legendallopen=function(e){' + legendallopen + '};\n')
         if rep_ty == 'primary' or rep_ty == 'advance':
-            if 'snpindel_call' in ANALYSIS:
+            if ANALY_DICT['snpindel_call']:
                 datajs.write('snvexoniz2=' + snvexoniz1 + '\n')
                 datajs.write('snvexoni2 = snvexoniz2["' + samplename1 + '"]\n')
                 datajs.write('indel_lenz=' + indel_lenz + '\n')
@@ -1847,14 +1847,14 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
                 datajs.write('indel_newoldz=' + indel_newoldz + '\n')
                 datajs.write(
                     'indel_newold=indel_newoldz["' + samplename1 + '"]\n')
-            if 'cnv_call' in ANALYSIS:
+            if ANALY_DICT['cnv_call']:
                 datajs.write('cnv_dataz2=' + cnv_dataz + '\n')
                 datajs.write('cnv_data2=cnv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('cnv_gaiz=' + cnv_gaiz + '\n')
                 datajs.write('cnv_gai=cnv_gaiz["' + samplename1 + '"]\n')
                 datajs.write('cnv_losz=' + cnv_losz + '\n')
                 datajs.write('cnv_los=cnv_losz["' + samplename1 + '"]\n')
-            if ('sv_call_breakdancer' in ANALYSIS) and ('sv_call_crest' not in ANALYSIS):
+            if ANALY_DICT['sv_call_breakdancer']:
                 datajs.write('sv_dataz2=' + sv_dataz + '\n')
                 datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('sv_traz=' + sv_traz + '\n')
@@ -1865,7 +1865,7 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
                 datajs.write('sv_del=sv_delz["' + samplename1 + '"]\n')
                 datajs.write('sv_invz=' + sv_invz + '\n')
                 datajs.write('sv_inv=sv_invz["' + samplename1 + '"]\n')
-            if 'sv_call_crest' in ANALYSIS:
+            if ANALY_DICT['sv_call_crest']:
                 datajs.write('sv_dataz2=' + sv_data2z + '\n')
                 datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('sv_itx2z=' + sv_itx2z + '\n')
@@ -1878,7 +1878,7 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
                 datajs.write('sv_inv2=sv_inv2z["' + samplename1 + '"]\n')
                 datajs.write('sv_ctx2z=' + sv_ctx2z + '\n')
                 datajs.write('sv_ctx2=sv_ctx2z["' + samplename1 + '"]\n')
-            if 'sv_call_lumpy' in ANALYSIS:
+            if ANALY_DICT['sv_call_lumpy']:
                 datajs.write('sv_dataz2=' + sv_data2z + '\n')
                 datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('sv_itx2z=' + sv_itx2z + '\n')
@@ -1891,7 +1891,7 @@ with open(odir + '/src/js/network.js', 'a') as datajs:
                 datajs.write('sv_inv2=sv_inv2z["' + samplename1 + '"]\n')
                 datajs.write('sv_ctx2z=' + sv_ctx2z + '\n')
                 datajs.write('sv_ctx2=sv_ctx2z["' + samplename1 + '"]\n')
-            if 'sv_call_breakmer' in ANALYSIS:
+            if ANALY_DICT['sv_call_breakmer']:
                 datajs.write('sv_dataz2=' + sv_data2z + '\n')
                 datajs.write('sv_data2=sv_dataz2["' + samplename1 + '"]\n')
                 datajs.write('sv_itx2z=' + sv_itx2z + '\n')
@@ -1925,7 +1925,7 @@ for each in b:
     modelD_anno_snp_stat = []
     modelD_anno_indel_stat = []
 
-    if 'filter_acmg' in ANALYSIS:
+    if ANALY_DICT['filter_acmg']:
         damlevel_stat = []
         damlevel_dir = os.path.join(advanceDir, 'ACMG')
         damlevel_bri_dir = os.path.join(advanceBriDir, 'ACMG')
@@ -1942,7 +1942,7 @@ for each in b:
         if os.path.exists(damlevel_anno_file[0]):
             context['damlevel_anno'] = txts2tab(damlevel_anno_file)[:6]
 
-    if 'model_dominant' in ANALYSIS:
+    if ANALY_DICT['model_dominant']:
         MF_Dir = os.path.join(advanceDir, 'ModelF')
         MF_bri_Dir = os.path.join(advanceBriDir, 'ModelF')
         modelD_anno_snp_file = os.path.join(MF_bri_Dir, each,
@@ -1990,7 +1990,7 @@ for each in b:
     modelR_anno_snp_stat = []
     modelR_anno_indel_stat = []
     modelC_anno_stat = []
-    if 'model_recessive' in ANALYSIS:
+    if ANALY_DICT['model_recessive']:
         MF_Dir = os.path.join(advanceDir, 'ModelF')
         MF_bri_Dir = os.path.join(advanceBriDir, 'ModelF')
         modelR_anno_snp_file = os.path.join(MF_bri_Dir, each, 
@@ -2100,7 +2100,7 @@ for each in b:
             context['ModelC'] = False
 
 
-    if 'share_compare' in ANALYSIS:
+    if ANALY_DICT['share_compare']:
         shareCompare_stat = []
         shareCompare_file = os.path.join(
             advanceBriDir, 'Share',
@@ -2116,7 +2116,7 @@ for each in b:
     # ========================= Denovo ============================
     print 'denovo start'
     # only show intersect results
-    if 'denovo' in ANALYSIS:
+    if ANALY_DICT['denovo']:
 
         denovo_rate_dir = os.path.join(advanceDir, 'Denovo', 'DenovoRate')
         denovo_intersect_dir = os.path.join(advanceDir, 'Denovo', 'Intersect')
@@ -2150,145 +2150,8 @@ for each in b:
         context['table_denovo_rate_indel'] = txts2tab([denovo_rate_indel])[:6]
 
 
-    # if 'denovo_samtools' in ANALYSIS:
-    #     denovos_indel_stat = []
-    #     denovos_snp_anno = []
-    #     denovos_anno_stat = []
-    #     denovos_dir = os.path.join(advanceDir, 'Denovo', 'DenovoSam')
-    #     for tid in os.listdir(denovos_dir):
-    #         if tid in c:
-    #             did = tid
-    #             break
-    #     denovos_snp_anno_file = os.path.join(
-    #         denovos_dir, did, did + '.denovo.snp.annovar.hg19_multianno.xls')
-    #     denovos_anno_stat_file = os.path.join(
-    #         denovos_dir, did, did + '.denovo.snp.filter.stat.xls')
-    #     denovos_indel_stat_file = os.path.join(
-    #         denovos_dir, did, did + '.denovo.indel.filter.stat.xls')
-    #     denovos_snp_anno.append(denovos_snp_anno_file)
-    #     denovos_anno_stat.append(denovos_anno_stat_file)
-    #     denovos_indel_stat.append(denovos_indel_stat_file)
-        
-    #     context['Denovoid'] = did
-    #     context['denovo_samtools'] = True
-    #     context['table_denovos_snp_anno'] = txts2tab([denovos_snp_anno[0]])[:6]
-    #     context['table_denovos_anno_stat'] = txts2tab(
-    #         [denovos_anno_stat[0]])[:6]
-    #     context['table_denovos_indel_stat'] = txts2tab(
-    #         [denovos_indel_stat[0]])[:6]
-
-    # denovog_snp_anno = []
-    # denovog_anno_stat = []
-    # if 'denovo_denovogear' in ANALYSIS:
-    #     denovog_dir = os.path.join(advanceDir, 'Denovo', 'DenovoGear')
-    #     for tid in os.listdir(denovog_dir):
-    #         if tid in c:
-    #             did = tid
-    #             break
-    #     denovog_snp_anno_file = os.path.join(
-    #         denovog_dir, did, 'SNP',
-    #         did + '.denovo.snp.annovar.hg19_multianno.xls')
-    #     denovog_anno_stat_file = os.path.join(
-    #         denovog_dir, did, 'SNP', did + '.denovo.snp.filter.stat.xls')
-    #     denovog_snp_anno.append(denovog_snp_anno_file)
-    #     denovog_anno_stat.append(denovog_anno_stat_file)
-    #     context['Denovoid'] = did
-    #     context['denovo_denovogear'] = True
-    #     context['table_denovog_snp_anno'] = txts2tab([denovog_snp_anno[0]])[:6]
-    #     context['table_denovog_anno_stat'] = txts2tab(
-    #         [denovog_anno_stat[0]])[:6]
-
-    # denovo_filter_indel_stat = []
-    # denovo_filter_snp_anno = []
-    # denovo_filter_anno_stat = []
-    # if 'denovo_filter' in ANALYSIS:
-    #     denovo_filter_dir = os.path.join(advanceDir, 'Denovo', 'denovo_filter')
-    #     for tid in os.listdir(denovo_filter_dir):
-    #         if tid in c:
-    #             did = tid
-    #             break
-    #     denovo_filter_snp_anno_file = os.path.join(
-    #         denovo_filter_dir, did, 'SNP',
-    #         did + '.trio.merge.snp.denovo.annovar.hg19_multianno.xls')
-    #     denovo_filter_anno_stat_file = os.path.join(
-    #         denovo_filter_dir, did, 'SNP', 'Denovo.' + did + '.snp.filter.stat.xls')
-    #     denovo_filter_indel_stat_file = os.path.join(
-    #         denovo_filter_dir, did, 'INDEL',
-    #         'Denovo.' + did + '.indel.filter.stat.xls')
-    #     denovo_filter_snp_anno.append(denovo_filter_snp_anno_file)
-    #     denovo_filter_anno_stat.append(denovo_filter_anno_stat_file)
-    #     denovo_filter_indel_stat.append(denovo_filter_indel_stat_file)
-    #     context['Denovoid'] = did
-    #     context['denovo_filter'] = True
-    #     context['table_denovo_filter_snp_anno'] = txts2tab([denovo_filter_snp_anno[0]])[:6]
-    #     context['table_denovo_filter_anno_stat'] = txts2tab(
-    #         [denovo_filter_anno_stat[0]])[:6]
-    #     context['table_denovo_filter_indel_stat'] = txts2tab(
-    #         [denovo_filter_indel_stat[0]])[:6]
-
-    # denovor_snp_anno = []
-    # denovor_anno_stat = []
-    # if 'denovo_raw' in ANALYSIS:
-    #     denovor_dir = os.path.join(advanceDir, 'Denovo', 'DenovoR')
-    #     for tid in os.listdir(denovor_dir):
-    #         if tid in c:
-    #             did = tid
-    #             break
-    #     denovor_snp_anno_file = os.path.join(
-    #         denovor_dir, did, 'SNP',
-    #         did + '.trio.merge.snp.denovo.final.annovar.hg19_multianno.xls')
-    #     denovor_anno_stat_file = os.path.join(
-    #         denovor_dir, did, 'SNP', 'Denovo.' + did + '.snp.filter.stat.xls')
-    #     denovor_snp_anno.append(denovor_snp_anno_file)
-    #     denovor_anno_stat.append(denovor_anno_stat_file)
-    #     context['Denovoid'] = did
-    #     context['DenovoR'] = True
-    #     context['table_denovor_snp_anno'] = txts2tab([denovor_snp_anno[0]])[:6]
-    #     context['table_denovor_anno_stat'] = txts2tab(
-    #         [denovor_anno_stat[0]])[:6]
-
-    # denovosaf_snp_anno = []
-    # denovorate_snp = []
-    # denovosaf_indel_anno = []
-    # denovorate_indel = []
-    # denovosaf_snp_brief = []
-    # if ('denovo_samtools' in ANALYSIS) and ('denovo_filter' in ANALYSIS):
-    #     denovos_dir = os.path.join(advanceDir, 'Denovo', 'DenovoSam')
-    #     denovosaf_dir = os.path.join(advanceDir, 'Denovo', 'Intersect')
-    #     denovosaf_bri_dir = os.path.join(advanceBriDir, 'Denovo')
-    #     denovorate_dir = os.path.join(advanceDir, 'Denovo')
-    #     for tid in os.listdir(denovos_dir):
-    #         if tid in c:
-    #             did = tid
-    #             break
-    #     denovosaf_snp_anno_file = os.path.join(
-    #         denovosaf_dir, did, did + '.denovo.snp.intersect.filter.stat.xls')
-    #     denovosaf_snp_anno.append(denovosaf_snp_anno_file)
-    #     denovorate_snp_file = os.path.join(denovorate_dir, 'DenovoSNPRate.xls')
-    #     denovorate_snp.append(denovorate_snp_file)
-    #     denovosaf_indel_anno_file = os.path.join(
-    #         denovosaf_dir, did,
-    #         did + '.denovo.indel.intersect.filter.stat.xls')
-    #     denovosaf_indel_anno.append(denovosaf_indel_anno_file)
-    #     denovorate_indel_file = os.path.join(denovorate_dir,
-    #                                          'DenovoInDelRate.xls')
-    #     denovorate_indel.append(denovorate_indel_file)
-    #     denovorate_anno_brief = os.path.join(
-    #         denovosaf_bri_dir,
-    #         did + '.denovo.snp.intersect.freq.func.syn.deleterious.brief.xls')
-    #     denovosaf_snp_brief.append(denovorate_anno_brief)
-    #     context['denovo_filter'] = True
-    #     context['denovo_samtools'] = True
-    #     context['table_denovosaf_snp'] = txts2tab([denovosaf_snp_anno[0]])[:6]
-    #     context['table_denovorate'] = txts2tab([denovorate_snp[0]])[1:]
-    #     context['table_denovosaf_indel'] = txts2tab(
-    #         [denovosaf_indel_anno[0]])[:6]
-    #     context['table_denovorate_indel'] = txts2tab([denovorate_indel[0]])[1:]
-    #     context['table_denovorate_brief'] = txts2tab(
-    #         [denovosaf_snp_brief[0]])[:6]
-
     denovosv_anno = []
-    if 'denovo_sv' in ANALYSIS:
+    if ANALY_DICT['denovo_sv']:
         denovosv_dir = os.path.join(advanceDir, 'Denovo', 'DenovoSV')
         denovosv_bri_dir = os.path.join(advanceBriDir, 'Denovo')
         for tid in os.listdir(denovosv_dir):
@@ -2302,7 +2165,7 @@ for each in b:
         context['table_denovosv'] = txts2tab([denovosv_anno[0]])[:6]
 
     denovocnv_anno = []
-    if 'denovo_cnv' in ANALYSIS:
+    if ANALY_DICT['denovo_cnv']:
         denovocnv_dir = os.path.join(advanceDir, 'Denovo', 'DenovoCNV')
         denovocnv_bri_dir = os.path.join(advanceBriDir, 'Denovo')
         for tid in os.listdir(denovocnv_dir):
@@ -2316,7 +2179,7 @@ for each in b:
         context['table_denovocnv'] = txts2tab([denovocnv_anno[0]])[:6]
 
     #####非编码区筛选,changed by yincan 20171221
-    if 'filter_noncoding' in ANALYSIS:
+    if ANALY_DICT['filter_noncoding']:
         noncoding_stat = []
         NC_Dir = os.path.join(advanceDir, 'Noncoding')
         NC_bri_Dir = os.path.join(advanceBriDir, 'Noncoding')
@@ -2350,7 +2213,7 @@ if sam != 'Null':
                     each = line[0]
                     linkage_stat = []
                     context['fig_linkage'] = []
-                    if 'linkage' in ANALYSIS:
+                    if ANALY_DICT['linkage']:
                         linkage_dir = os.path.join(advanceDir, 'MerLinkage')
                         linkage_stat_file = os.path.join(
                             linkage_dir, 'Linkage_' + each + '_me', 'report',
@@ -2410,7 +2273,7 @@ if sam != 'Null':
                     line1 = line[0]
                     line2 = line[1]
                     roh_snp_anno = []
-                    if 'roh' in ANALYSIS:
+                    if ANALY_DICT['roh']:
                         roh_dir = os.path.join(advanceDir, 'ROH')
                         roh_bri_dir = os.path.join(advanceBriDir, 'ROH')
                         roh_snp_file = os.path.join(
@@ -2424,7 +2287,7 @@ if sam != 'Null':
                 line1 = line[0]
                 line2 = line[1]
                 roh_snp_anno = []
-                if 'roh' in ANALYSIS:
+                if ANALY_DICT['roh']:
                     roh_dir = os.path.join(advanceDir, 'ROH')
                     roh_bri_dir = os.path.join(advanceBriDir, 'ROH')
                     roh_snp_file = os.path.join(
@@ -2437,7 +2300,7 @@ if sam != 'Null':
             line1 = line[0]
             line2 = line[1]
             roh_snp_anno = []
-            if 'roh' in ANALYSIS:
+            if ANALY_DICT['roh']:
                 roh_dir = os.path.join(advanceDir, 'ROH')
                 roh_bri_dir = os.path.join(advanceBriDir, 'ROH')
                 roh_snp_file = os.path.join(roh_bri_dir,
@@ -2461,14 +2324,14 @@ nonnum = 2
 fsvnum = 2
 fcnvnum = 2
 
-if 'filter_acmg' in ANALYSIS:
+if ANALY_DICT['filter_acmg']:
     nonnum += 1
     fsvnum += 1
     fcnvnum += 1
-if 'filter_noncoding' in ANALYSIS:
+if ANALY_DICT['filter_noncoding']:
     fsvnum += 1
     fcnvnum += 1
-if 'filter_sv' in ANALYSIS:
+if ANALY_DICT['filter_sv']:
     fcnvnum += 1
 
 sharenum = 1
@@ -2477,25 +2340,25 @@ linkagenum = 1
 rohnum = 1
 ppinum = 1
 hpanum = 1
-if ('model_dominant' in ANALYSIS) or ('model_recessive' in ANALYSIS):
+if ANALY_DICT['model_dominant'] or ANALY_DICT['model_recessive']:
     sharenum += 1
     denovonum += 1
     linkagenum += 1
     rohnum += 1
     ppinum += 1
     hpanum += 1
-if 'share_compare' in ANALYSIS:
+if ANALY_DICT['share_compare']:
     denovonum += 1
     linkagenum += 1
     rohnum += 1
     ppinum += 1
     hpanum += 1
-if 'denovo' in ANALYSIS:
+if ANALY_DICT['denovo']:
     linkagenum += 1
     rohnum += 1
     ppinum += 1
     hpanum += 1
-if 'linkage' in ANALYSIS:
+if ANALY_DICT['linkage']:
     rohnum += 1
     ppinum += 1
     hpanum += 1
@@ -2659,7 +2522,8 @@ cmd = '''
 
     python {REPORT_DIR}/report_trans.py {odir} {remote_report_dir}
 
-    sendEmail -f humaninfo@novogene.com -t {mail} \\
+    sendEmail -f humaninfo@novogene.com \\
+        -t "{mail}" \\
         -u "[{projdir}] {ReportType} report" \\
         -o message-content-type=text \\
         -o message-charset=utf8 \\
@@ -2681,7 +2545,7 @@ if datastat == 'Y':
         --sample {sam} \\
         --suffix {suffix} \\
         --analy_array {analy_array} \\
-        --mail {mail} \\
+        --mail "{mail}" \\
         --seqsty {seq_ty} \\
         --repsty {rep_ty} \\
     '''

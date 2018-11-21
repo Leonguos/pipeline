@@ -20,7 +20,7 @@ header_map = {
     'snpindel': [
         'Priority:FILTER', 'GeneName:Gene', 'GeneDetail:Gencode+1', 'cytoBand',
         'genomicSuperDups:avsnp', 'FORMAT:Ori_ALT+1', '1000g_Chinese:LRT',
-        'CADD:MCAP', 'ClinVar', 'OMIM', 'HGMD_Disease_ID:'
+        'CADD:MCAP+1', 'ClinVar', 'OMIM', 'HGMD_Disease_ID:'
     ],
     'acmg': ['ACMG', 'Heredity', 'Priority:avsnp', 'ClinVar:Heredity'],
     'sv_cnv': ['Priority:cpgIslandExt', 'genomicSuperDups', 'Repeat', 'encodeK562+1:StringentLib', 'dgvMerged', 'gwasCatalog', 'encodeGm12878:encodeK562+1', 'StringentLib:'],

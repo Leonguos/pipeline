@@ -1,0 +1,230 @@
+<!-- hostvars: {{ hostvars }} -->
+
+
+<div class="center">
+  <p class="name_fig">分析软件列表</p>
+</div>
+
+<table id="software" class="gy">
+  <tr><th>Analysis</th><th>Software</th><th>Notes</th><th>Version</th></tr>
+  
+  <!-- Mapping -->
+  {% if mapping %}
+    <tr>
+      <td rowspan=4 style="text-align:left">比对</td>
+      {% if software.alignment == 'bwa' %}
+        <td><a href="{{ software.bwa.href }}" target=_blank>BWA</a></td>
+        <td>测序结果与参考基因组进行比对，得到bam结果</td>
+        <td>{{ software.bwa.version }}</td>
+      {% elif software.alignment == 'sentieon' %}
+        <td><a href="{{ software.sentieon.href }}" target=_blank>Sentieon</a></td>
+        <td>测序结果与参考基因组进行比对，得到bam结果</td>
+        <td>{{ software.sentieon.version }}</td>
+      {% endif %}
+    </tr>
+
+    <tr>
+      {% if software.sort == 'samtools' %}
+        <td><a href="{{ software.samtools.href }}" target=_blank>Samtools</a></td>
+        <td>对比对结果进行按染色体排序</td>
+        <td>{{ software.samtools.version }}</td>
+      {% elif software.sort == 'sentieon' %}
+        <td><a href="{{ software.sentieon.href }}" target=_blank>Sentieon</a></td>
+        <td>对比对结果进行按染色体排序</td>
+        <td>{{ software.sentieon.version }}</td>
+      {% endif %}
+    </tr>
+
+    <tr>
+      {% if software.merge == 'sambamba' %}
+        <td><a href="{{ software.sambamba.href }}" target=_blank>Sambamba</a></td>
+        <td>合并同一样本bam结果</td>
+        <td>{{ software.samtools.version }}</td>
+      {% elif software.merge == 'sentieon' %}
+        <td><a href="{{ software.sentieon.href }}" target=_blank>Sentieon</a></td>
+        <td>合并同一样本bam结果</td>
+        <td>{{ software.sentieon.version }}</td>
+      {% endif %}
+    </tr>
+
+    <tr>
+      {% if software.markdup == 'sambamba' %}
+        <td><a href="{{ software.sambamba.href }}" target=_blank>Sambamba</a></td>
+        <td>对合并后的bam结果进行标记重复</td>
+        <td>{{ software.samtools.version }}</td>
+      {% elif software.markdup == 'sentieon' %}
+        <td><a href="{{ software.sentieon.href }}" target=_blank>Sentieon</a></td>
+        <td>对合并后的bam结果进行标记重复</td>
+        <td>{{ software.sentieon.version }}</td>
+      {% endif %}
+    </tr>
+  {% endif %}
+
+  <!-- Mutation -->
+  {% if snpindel_call %}
+    {% if software.mutation == 'samtools' %}
+      <tr>
+        <td rowspan=2 style="text-align:left">SNP/INDEL检测</td>
+        <td><a href="{{ software.samtools.href}}" target=_blank>SAMtools</a></td>
+        <td>检测、过滤SNP及INDEL信息，并将结果分开</td>
+        <td>{{ software.samtools.version }}</td>
+      </tr>
+    {% elif software.mutation == 'sentieon' %}
+      <tr>
+        <td rowspan=2 style="text-align:left">SNP/INDEL检测</td>
+        <td><a href="{{ software.sentieon.href }}" target=_blank>Sentieon</a></td>
+        <td>检测、过滤SNP及INDEL信息，并将结果分开</td>
+        <td>{{ software.sentieon.version }}</td>
+      </tr>
+    {% elif software.mutation == 'gatk' %}
+      <tr>
+        <td rowspan=2 style="text-align:left">SNP/INDEL检测</td>
+        <td><a href="{{ software.gatk.href }}" target=_blank>GATK</a></td>
+        <td>检测、过滤SNP及INDEL信息，并将结果分开</td>
+        <td>{{ software.gatk.version }}</td>
+      </tr>
+      
+    {% endif %}
+
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释SNP及INDEL结果</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% endif %}
+
+
+  <!-- SV -->
+  {% if software.sv == 'crest' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">SV检测</td>
+      <td><a href="{{ software.crest.href }}" target=_blank>CREST</a></td>
+      <td>检测样本SV</td>
+      <td>{{ software.crest.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释SV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% elif software.sv == 'breakdancer' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">SV检测</td>
+      <td><a href="{{ software.breakdancer.href }}" target=_blank>BreakDancer</a></td>
+      <td>检测样本SV</td>
+      <td>{{ software.breakdancer.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释SV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% elif software.sv == 'breakmer' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">SV检测</td>
+      <td><a href="{{ software.breakmer.href }}" target=_blank>BreaKmer</a></td>
+      <td>检测样本SV</td>
+      <td>{{ software.breakmer.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释SV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% elif software.sv == 'lumpy' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">SV检测</td>
+      <td><a href="{{ software.lumpy.href }}" target=_blank>Lumpy</a></td>
+      <td>检测样本SV</td>
+      <td>{{ software.lumpy.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释SV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% endif %}
+
+
+  <!-- CNV -->
+  {% if software.cnv == 'freec' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">CNV检测结果</td>
+      <td><a href="{{ software.freec.href }}" target=_blank>Control-FREEC</a></td>
+      <td>检测样本CNV</td>
+      <td>{{ software.freec.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释CNV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% elif software.cnv == 'cnvnator' %}
+    <tr><td rowspan=2 style="text-align:left">CNV检测结果</td>
+      <td><a href="{{ software.cnvnator.version }}" target=_blank>Cnvnator</a></td>
+      <td>检测样本CNV</td>
+      <td>{{ software.cnvnator.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释CNV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% elif software.cnv == 'conifer' %}
+    <tr>
+      <td rowspan=2 style="text-align:left">CNV检测结果</td>
+      <td><a href="{{ software.conifer.href }}" target=_blank>CoNIFER</a></td>
+      <td>检测样本CNV</td>
+      <td>{{ software.conifer.version }}</td>
+    </tr>
+    <tr>
+      <td><a href="{{ software.annovar.href }}" target=_blank>ANNOVAR</a></td>
+      <td>注释CNV</td>
+      <td>{{ software.annovar.version }}</td>
+    </tr>
+  {% endif %}
+
+
+  <!-- Denovo -->
+  {% if denovo %}
+  <tr>
+    <td rowspan={{ software.denovo | length }} style="text-align:left">新生突变检测</td>
+
+    {% if 'samtools' in software.denovo %}
+      <td><a href="{{ software.samtools.href }}" target=_blank>SAMtools</a></td>
+      <td>使用samtools检测新生突变</td>
+      <td>{{ software.samtools.version }}</td>
+    {% endif %}
+    
+    {% if 'triodenovo' in software.denovo %}
+    </tr>
+    <tr>
+      <td><a href="{{ software.triodenovo.href }}" target=_blank>Triodenovo</a></td>
+      <td>使用triodenovo检测新生突变</td>
+      <td>{{ software.triodenovo.version }}</td>
+    {% endif %}
+  </tr>
+  {% endif %}
+
+
+  <!-- Linkage -->
+  {% if linkage %}
+  <tr>
+    <td rowspan=1 style="text-align:left">连锁区域检测</td>
+    <td><a href="{{ software.merlin.href }}" target=_blank>Merlin</a></td>
+    <td>检测家系样本连锁区域</td>
+    <td>{{ software.merlin.version }}</td>
+  </tr>
+  {% endif %}
+
+  <!-- ROH -->
+  {% if roh %}
+  <tr>
+    <td rowspan=1 style="text-align:left">ROH区域检测</td>
+    <td><a href="{{ software.h3m2.href }}" target=_blank>H3M2</a></td>
+    <td>检测近亲结婚家系样本ROH区域</td>
+    <td>{{ software.h3m2.version }}</td>
+  </tr>
+  {% endif %}
+
+</table>

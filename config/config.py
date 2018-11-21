@@ -165,7 +165,8 @@ ANALYSIS_POINTS = {
     # annotation or merge
     'annotate_vcf':        ['3G', (3, 0, 3)],
     'bcftools_merge':      ['1G', (3, 0, 3)],
-    'annotate_merged_vcf': ['3G', (3, 0, 4)],
+    'annotate_merged_vcf_snp': ['8G', (3, 0, 4)],
+    'annotate_merged_vcf_indel': ['6G', (3, 0, 4)],
     'extract_annotation':  ['1G', (3, 0, 5)],
     'variation_summary':   ['1G', (3, 0, 6)],
 
@@ -259,6 +260,8 @@ ANALYSIS_MEM_WGS = {
     'gatk_recal': '17G',
     'gatk_hc_call': '17G',
     'gatk_vqsr': '7G',
+    'annotate_merged_vcf_snp': '15G',
+    'annotate_merged_vcf_indel': '10G',
 }
 
 # the end

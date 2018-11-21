@@ -293,6 +293,10 @@ def get_args(config, utils, __version__):
         default='N')
 
     parser.add_argument(
+        '--hla-gene',
+        help='the gene to do HLA typing for ATHLATES, default will do all genes')
+
+    parser.add_argument(
         '-sps',
         '--show-startpoints',
         help='Show the available startpoints',

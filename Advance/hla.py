@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding=utf-8 -*-
+import glob
 import utils
 
 
 class HLA(object):
 
-    def __init__(self, args, jobs, orders, sample_lists, sample_infos, config):
+    def __init__(self, args, jobs, orders, sample_lists, sample_infos, config, qc_status):
 
         self.args = args
         self.jobs = jobs
@@ -14,12 +15,10 @@ class HLA(object):
 
         self.sample_lists = sample_lists
         self.sample_infos = sample_infos
-        self.ANALYSIS_POINTS = config.ANALYSIS_POINTS
 
-        if 1.2 in args['analy_array']:
-            self.rm_clean = 'true'
-        else:
-            self.rm_clean = 'false'
+        self.qc_status = qc_status
+        
+        self.ANALYSIS_POINTS = config.ANALYSIS_POINTS
 
         self.__dict__.update(args)
         self.refgenome = args.get('ref')
@@ -30,6 +29,20 @@ class HLA(object):
     def start(self):
 
         print '>  hla start ...'
+
+        hla_beds = glob.glob('{athlates_db_dir}/bed/*.non*.bed'.format(**self.__dict__))
+        hla_genes = map(lambda x: x.rsplit('.')[-2].strip('non-'), hla_beds)
+        
+        if self.args['hla_gene']:
+            new_hla_genes = []
+            for gene in self.args['hla_gene'].split(','):
+                if gene not in hla_genes:
+                    print '[error] your supply gene not in database: {gene}'.format(**locals())
+                    exit(1)
+                new_hla_genes.append(gene)
+            hla_genes = new_hla_genes
+
+        print '>  hla genelist: {}'.format(sorted(hla_genes))
 
         for sampleid, items in self.sample_lists.iteritems():
 
@@ -49,8 +62,10 @@ class HLA(object):
             self.hla_sambamba_merge(sampleid, sort_bams)
             # self.hla_sambamba_markdup(sampleid)
             self.hla_picard_markdup(sampleid)
-            self.hla_sort_by_name(sampleid)
-            self.hla_athlates_typing(sampleid)
+
+            for gene in hla_genes:
+                self.hla_sort_by_name(sampleid, gene)
+                self.hla_athlates_typing(sampleid, gene)
 
             self.hla_hlahd_typing(sampleid, lanes)
 
@@ -99,7 +114,10 @@ class HLA(object):
         utils.add_job(self.jobs, now_point, self.args['startpoint'],
                       self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
         # add order
-        before_jobs = ['qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane)]
+        before_jobs = []
+        if self.qc_status == 'waiting':
+            before_jobs = ['qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane)]
+
         after_jobs = ['hla_sambamba_merge_{sampleid}'.format(sampleid=sampleid, **lane)]
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
@@ -231,129 +249,127 @@ class HLA(object):
         after_jobs = []
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
-    def hla_sort_by_name(self, sampleid):
+    def hla_sort_by_name(self, sampleid, gene):
 
         # print '  sort by name ...'
         cmd = '''
             set -eo pipefail
-            echo hla sort by name for {sampleid} start: `date "+%F %T"`
+            echo hla sort by name for {sampleid} {gene} start: `date "+%F %T"`
 
-            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/gene/{gene}
 
-            mkdir -p A
-
-            #  ===== for A =====
-            echo dealing with hla.A.bed...
+            #  ===== for gene {gene} =====
+            echo dealing with hla.{gene}.bed...
 
             samtools-1.6 view \\
                 -b \\
-                -L {athlates_db_dir}/bed_ori/hla.A.bed \\
-                -o A/{sampleid}.A.bam \\
-                {sampleid}.nodup.bam
+                -L {athlates_db_dir}/bed/hla.{gene}.bed \\
+                -o {sampleid}.{gene}.bam \\
+                ../../{sampleid}.nodup.bam
 
             samtools-1.6 view \\
                 -H \\
-                -o A/{sampleid}.A.sort.sam \\
-                A/{sampleid}.A.bam
+                -o {sampleid}.{gene}.sort.sam \\
+                {sampleid}.{gene}.bam
 
             samtools-1.6 view \\
-                A/{sampleid}.A.bam |
-            sort -k 1,1 -k 3,3 \\
-                >> A/{sampleid}.A.sort.sam
+                {sampleid}.{gene}.bam |
+            sort -k 1,1 -k 3,3 -T TMP \\
+                >> {sampleid}.{gene}.sort.sam
                 
             samtools-1.6 view \\
                 -b -S \\
-                -o A/{sampleid}.A.sort.bam \\
-                A/{sampleid}.A.sort.sam
+                -o {sampleid}.{gene}.sort.bam \\
+                {sampleid}.{gene}.sort.sam
 
-            # ===== for non-A =====
-            echo dealing with hla.non-A.bed...
+            # ===== for non-{gene} =====
+            echo dealing with hla.non-{gene}.bed...
 
             samtools-1.6 view \\
                 -b \\
-                -L {athlates_db_dir}/bed_ori/hla.non-A.bed \\
-                -o A/{sampleid}.A.non.bam \\
+                -L {athlates_db_dir}/bed/hla.non-{gene}.bed \\
+                -o {sampleid}.{gene}.non.bam \\
                 {sampleid}.nodup.bam
 
             samtools-1.6 view \\
                 -H \\
-                -o A/{sampleid}.A.non.sort.sam \\
-                A/{sampleid}.A.non.bam
+                -o {sampleid}.{gene}.non.sort.sam \\
+                {sampleid}.{gene}.non.bam
 
             samtools-1.6 view \\
-                A/{sampleid}.A.non.bam |
-            sort -k 1,1 -k 3,3 \\
-                >> A/{sampleid}.A.non.sort.sam
+                {sampleid}.{gene}.non.bam |
+            sort -k 1,1 -k 3,3 -T TMP \\
+                >> {sampleid}.{gene}.non.sort.sam
 
             samtools-1.6 view \\
                 -b -S \\
-                -o A/{sampleid}.A.non.sort.bam \\
-                A/{sampleid}.A.non.sort.sam
+                -o {sampleid}.{gene}.non.sort.bam \\
+                {sampleid}.{gene}.non.sort.sam
 
-            echo hla sort by name for {sampleid} done: `date "+%F %T"`
+            echo hla sort by name for {sampleid} {gene} done: `date "+%F %T"`
         '''.format(
-            sampleid=sampleid, **self.__dict__)
+            **dict(self.__dict__, **locals()))
 
-        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_sort_by_name_{sampleid}.sh'.format(
-            sampleid=sampleid, **self.__dict__)
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/gene/{gene}/hla_sort_by_name_{sampleid}_{gene}.sh'.format(
+            **dict(self.__dict__, **locals()))
 
         utils.write_shell(shell_path, cmd)
 
         # add job
         now_point = 'hla_sort_by_name'
-        job_name = 'hla_sort_by_name_{sampleid}'.format(sampleid=sampleid)
+        job_name = 'hla_sort_by_name_{sampleid}_{gene}'.format(**locals())
 
         utils.add_job(self.jobs, now_point, self.args['startpoint'],
                       self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
 
         # add order
-        before_jobs = ['hla_picard_markdup_{sampleid}'.format(sampleid=sampleid)]
+        before_jobs = ['hla_picard_markdup_{sampleid}'.format(**locals())]
         after_jobs = []
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
-    def hla_athlates_typing(self, sampleid):
+    def hla_athlates_typing(self, sampleid, gene):
 
         # print '  athlates typing ...'
         cmd = '''
             set -eo pipefail
-            echo hla athlates typing for {sampleid} start: `date "+%F %T"`
+            echo hla athlates typing for {sampleid} {gene} start: `date "+%F %T"`
 
-            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}
+            cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/gene/{gene}
 
             typing \\
                 -hd 2 \\
-                -msa {athlates_db_dir}/msa_ori/A_nuc.txt \\
-                -bam A/{sampleid}.A.sort.bam \\
-                -exlbam A/{sampleid}.A.non.sort.bam \\
-                -o A/{sampleid}.A
+                -msa {athlates_db_dir}/msa/{gene}_nuc.txt \\
+                -bam {sampleid}.{gene}.sort.bam \\
+                -exlbam {sampleid}.{gene}.non.sort.bam \\
+                -o {sampleid}.{gene}
 
-            rm -f A/*sam* A/*.tbi
+            rm -f *sam* *.tbi
 
             # link result
             mkdir -p {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/result
 
             cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/result
 
-            ln -sf ../{sampleid}/A/{sampleid}.A.typing.txt .
+            ln -sf ../{sampleid}/gene/{gene}/{sampleid}.{gene}.typing.txt .
 
-            echo hla athlates typing for {sampleid} done: `date "+%F %T"`
+            echo hla athlates typing for {sampleid} {gene} done: `date "+%F %T"`
         '''.format(
-            sampleid=sampleid, **self.__dict__)
+            **dict(self.__dict__, **locals()))
 
-        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/hla_athlates_typing_{sampleid}.sh'.format(
-            sampleid=sampleid, **self.__dict__)
+        shell_path = '{analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/gene/{gene}/hla_athlates_typing_{sampleid}_{gene}.sh'.format(
+            **dict(self.__dict__, **locals()))
 
         utils.write_shell(shell_path, cmd)
 
         # add job
         now_point = 'hla_athlates_typing'
-        job_name = 'hla_athlates_typing_{sampleid}'.format(sampleid=sampleid)
+        job_name = 'hla_athlates_typing_{sampleid}_{gene}'.format(**locals())
 
         utils.add_job(self.jobs, now_point, self.args['startpoint'],
                       self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
 
         # add order
-        before_jobs = ['hla_sort_by_name_{sampleid}'.format(sampleid=sampleid)]
+        before_jobs = ['hla_sort_by_name_{sampleid}_{gene}'.format(**locals())]
         after_jobs = ['data_release']
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
@@ -413,8 +429,9 @@ class HLA(object):
 
         # add order
         before_jobs = []
-        for lane in lanes:
-            before_jobs.append('qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane))
+        if self.qc_status == 'waiting':
+            for lane in lanes:
+                before_jobs.append('qc_{sampleid}_{novoid}_{flowcell}_L{lane}'.format(sampleid=sampleid, **lane))
         after_jobs = ['data_release']
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 

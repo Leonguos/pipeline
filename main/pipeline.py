@@ -356,7 +356,7 @@ class MainPipeline(object):
         # HLA
         if ANALY_DICT['hla']:
             utils.print_color('> HLA', 'white')
-            HLA(self.args, self.jobs, self.orders, sample_lists, sample_infos, config).start()
+            HLA(self.args, self.jobs, self.orders, sample_lists, sample_infos, config, qc_status).start()
 
         # result and report
         utils.print_color('> Result', 'white')

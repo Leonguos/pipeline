@@ -1,4 +1,4 @@
-<p class="tremark">注：注释内容包括8个部分,关联信息(1-10),优先级信息（11），基因及区域注释（12-33），变异位点信息（34-45），数据库（频率）注释（46-61），保守（有害）性预测（62-68），基因功能及通路注释（69-80）, 基因的组织特异性表达情况的注释（81-85）</p>
+<p class="tremark">注：注释内容包括8个部分,关联信息(1-10),优先级信息（11），基因及区域注释（12-33），数据库（频率）注释（34-45），保守（有害）性预测（46-62），变异位点信息注释（63-69），基因功能及通路注释（70-81）, 基因的组织特异性表达情况的注释（82-86）</p>
 <p class="tremark"><b>&nbsp;&nbsp;第1-10项为关联信息</b></p>
 <p class='tremark'><b>(1) Alt_case：</b> case 中突变碱基的数目</p>
 <p class='tremark'><b>(2) Alt_control：</b> control 中突变碱基的数目</p>
@@ -26,10 +26,10 @@
 <p class="tremark"><b>（20）Description:</b> 变异位点所在基因的描述</p>
 <p class="tremark"><b>（21）Func：</b>对变异位点所在的区域进行注释（exonic, splicing, UTR5, UTR3, intronic, ncRNA_exonic, ncRNA_intronic, ncRNA_UTR3, ncRNA_UTR5, ncRNA _splicing, upstream, downstream, intergenic）。说明：1、exonic应该包括coding exonic portion、UTR3和UTR5，但ANNOVAR注释结果中exonic只代表coding exonic portion。2、当一个变异位点位于多个基因或转录本，且功能不同，这些功能按照优先级排序，该列输出优先级最高的功能类型：Exonic = splicing > ncRNA> > UTR5/UTR3 > intron > upstream/downstream > intergenic。 当一个变异既位于一个基因的UTR3，又位于另一个基因的UTR5时，该列输出"UTR5,UTR3"。当一个变异既位于一个基因的downstream，又位于另一个基因的upstream时，该列输出"upstream,downstream "</p>
 <p class="tremark"><b>（22）Gene：</b> 列出该变异位点相关的转录本（只有功能符合Func列的转录本才列出）。如果Func为intergenic，此处列出两侧的基因名</p>
-<p class="tremark"><b>（23）GeneDetail：</b> 描述UTR、splicing、ncRNA_splicing或intergenic区域的变异情况。当Func列的值为exonic、ncRNA_exonic、intronic、ncRNA_intronic、upstream、downstream、upstream；downstream、ncRNA_UTR3、ncRNA_UTR5时，该列为空；当Func列的值为exonic;splicing时，表示该位点位于某些转录本的exonic区，另一些转录本的splicing区，这种情况下，GeneDetail会给出该位点对于转录本splicing的影响，例如，NM_172210:exon6:c.1090+5C>A，表示该变异位于转录本NM_172210上，exon6表示第6个人外显子，c.1090+5C>A表示cDNA的1090bp下游5bp处发生由C到A的突变；当Func列的值为intergenic时，该列格式为dist=1366;dist=22344，表示该变异位点距离两侧基因的距离</p>
+<p class="tremark"><b>（23）GeneDetail：</b> 描述UTR、splicing、ncRNA_splicing或intergenic区域的变异情况。当Func列的值为exonic、ncRNA_exonic、intronic、ncRNA_intronic、upstream、downstream、upstream；downstream、ncRNA_UTR3、ncRNA_UTR5时，该列为空；当Func列的值为exonic;splicing时，表示该位点位于某些转录本的exonic区，另一些转录本的splicing区，这种情况下，GeneDetail会给出该位点对于转录本splicing的影响，例如，NM_172210:exon6:c.1090+5C>A，表示该变异位于转录本NM_172210上，exon6表示第6个人外显子，c.1090+5C>A表示CDS的1090bp下游5bp处发生由C到A的突变；当Func列的值为intergenic时，该列格式为dist=1366;dist=22344，表示该变异位点距离两侧基因的距离</p>
 <p class="tremark"><b>（24）ExonicFunc：</b> 外显子区的SNV or InDel变异类型（SNV的变异类型包括synonymous_SNV, missense_SNV, stopgain, stopgloss和unknown；InDel的变异类型包括frameshift insertion, frameshift deletion, stopgain, stoploss, nonframeshift insertion, nonframeshift deletion和unknown）</p>
 <p class="tremark"><b>（25）AAChange：</b> 氨基酸改变，只有当Func列为exonic或exonic;splicing时，该列才有结果。按照每个转录本进行注释（例如，AIM1L:
-NM_001039775:exon2:c.C2768T:p.P923L，其中，AIM1L表示该变异所在的基因名称，NM_001039775表示该变异所在的转录本ID，exon2表示该变异位于转录本的第二个外显子上，c.C2768T表示该变异引起cDNA在第2768位上由C突变为T，p.P923L表示该变异引起蛋白序列在第923位上的氨基酸由Pro变为Leu）</p>
+NM_001039775:exon2:c.C2768T:p.P923L，其中，AIM1L表示该变异所在的基因名称，NM_001039775表示该变异所在的转录本ID，exon2表示该变异位于转录本的第二个外显子上，c.C2768T表示该变异引起CDS在第2768位上由C突变为T，p.P923L表示该变异引起蛋白序列在第923位上的氨基酸由Pro变为Leu）</p>
 <p class="tremark"><b>（26）Gencode：</b> Gencode注释的基因名称</p>
 <p class="tremark"><b>（27）cpgIslandExt：</b>CpG岛预测结果，注释结果为CpG岛名称，如CpG: 116(116是该CpG岛中CG二核苷酸的数目)</p>
 <p class="tremark"><b>（28）cytoband：</b>该变异位点所处的染色体区段（利用Giemas染色观察得到的）。如果变异位点跨过多个区段，用短横线连接</p>
@@ -59,7 +59,7 @@ NM_001039775:exon2:c.C2768T:p.P923L，其中，AIM1L表示该变异所在的基�
 <p class="tremark"><b>（45）NovoDb_WGS_SNP：</b> 在诺禾正常人全基因组数据库中，该变异位点上突变碱基的等位基因频率</p>
 
 
-<p class="tremark"><b>&nbsp;&nbsp;第46-61项为保守（有害）性注释————个体中的突变往往非常多（全基因组范围内能达到3.6M-4.4M），而真正有害的突变却是罕见的，有很多根据变异位点的保守型等信息进行有害性预测的软件能帮助我们进行突变位点的有害性评估。Novogene采用国际惯用的变异有害性预测软件对突变位点的有害性进行预测，协助找出真正有害的突变位点。</b></p>
+<p class="tremark"><b>&nbsp;&nbsp;第46-62项为保守（有害）性注释————个体中的突变往往非常多（全基因组范围内能达到3.6M-4.4M），而真正有害的突变却是罕见的，有很多根据变异位点的保守型等信息进行有害性预测的软件能帮助我们进行突变位点的有害性评估。Novogene采用国际惯用的变异有害性预测软件对突变位点的有害性进行预测，协助找出真正有害的突变位点。</b></p>
 
 <p class="tremark"><b>（46）dbscSNV_SCORE：</b> 是预测突变是否影响splicing的注释数据库。dbscSNV基于多种预测突变是否影响splicing的软件，通过Ada和RF两种机器学习方法得到两个综合的预测分值。建议使用0.6作为判定阈值，即dbscSNV两个分值中至少一个大于0.6，认为突变可能影响剪接</p>
 <p class="tremark"><b>（47）spidex：</b> 一种机器学习方法用来预测基因突变如何影响RNA剪接，一般认为分值大于4小于-4影响拼接</p>
@@ -77,11 +77,13 @@ NM_001039775:exon2:c.C2768T:p.P923L，其中，AIM1L表示该变异所在的基�
 <p class="tremark"><b>（59）gerp++gt2：</b> dbNSFP version3.0中的gerp++只包含coding variant的注释。为了注释所有变异位点的保守性，ANNOVAR整理了gerp++gt2，包含GERP++ 分值大于2的位点。越保守的位点发生变异，对于蛋白的影响越大。分值越高，位点越保守。通常，GERP++ 分值大于2的位点认为是保守位点，可能具有功能</p>
 <p class="tremark"><b>（60）CADD：</b>CADD是一种对SNV、InDel的有害性进行打分的工具，它整合多种信息来注释变异位点的功能；不仅预测编码区变异（包括同义突变和非同义突变的影响）的功能影响，还预测非编码区变异的功能影响。对于SNP，仅对CADD分值排名在前10%的SNP给出分值，'.'表示CADD分值排名不在前10%。我们的注释结果中，有分值时，逗号前后分别是CADD和CADD_Phred；CADD列是初始分值，CADD_Phred是转换后的分值；没有分值，即为'.'时，表示CADD_Phred值小于10。CADD_Phred分值中，10表示score排名在前10%，20表示前1%，30表示前0.1%，因此，分值要求越低，能保留下来的位点越多。对于SNP，CADD作者建议CADD_Phred分值>15，文章中通常用10或15；InDel没有建议值</p>
 <p class="tremark"><b>（61）MCAP：</b> 是一种致病性似然分数，即孟德尔临床应用致病性（Mendelian Clinically Applicable Pathogenicity，MCAP）分数。MCAP用于分类的变量是基于现有致病性似然值结合对进化保守性和跨物种推断人类种群内频率的直接评估，MCAP作者建议的阈值分值大于0.025</p>
+<p class="tremark"><b>（62）REVEL：</b>是一种整合了多种软件预测分值，预测罕见错义突变致病性的方法。REVEL的分值范围为0-1，分值越大越有害，文献中作者取值分值为0.5时对应检测有害性突变的敏感性为0.754，特异性为0.891。</p>
 
 
-<p class="tremark"><b>&nbsp;&nbsp;第62-68项为变异位点信息注释————此部分信息为变异位点的详细信息，包括变异位点的覆盖深度，突变前后碱基型和纯杂合信息等。变异位点的信息能在家系分析或者筛选中起到重要的作用。</b></p>
-<p class="tremark"><b>（62）INFO：</b> 变异软件检测的变异位点信息</p>
-<p class="tremark"><b>（63）FORMAT：</b> 用“：”分隔了若干个字段：</p>
+
+<p class="tremark"><b>&nbsp;&nbsp;第63-69项为变异位点信息注释————此部分信息为变异位点的详细信息，包括变异位点的覆盖深度，突变前后碱基型和纯杂合信息等。变异位点的信息能在家系分析或者筛选中起到重要的作用。</b></p>
+<p class="tremark"><b>（63）INFO：</b> 变异软件检测的变异位点信息</p>
+<p class="tremark"><b>（64）FORMAT：</b> 用“：”分隔了若干个字段：</p>
 
 {% if samtools %}
 	<!--用SAMtools检测SNP/InDel-->
@@ -102,27 +104,27 @@ NM_001039775:exon2:c.C2768T:p.P923L，其中，AIM1L表示该变异所在的基�
 	<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GQ: 该位点基因型质量值（Genotype Quality）</p>
 	<p class="tremark">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PL：标准化基因型似然值（逗号分隔的三个值，依次对应0/0、0/1、1/1三种基因型，值越小越好）</p>
 {% endif %}
-<p class="tremark"><b>（64）SampleName：</b> 与FORMAT列对应，‘：’分隔的每一部分对应FORMAT‘：’分隔的每一部分</p>
-<p class="tremark"><b>（65）Ori_REF：</b> 该位点在VCF文件中REF列的值。对于InDel，VCF文件中REF的值可能跟本文件REF列的值不一致，因为使用ANNOVAR注释时，用bcftools norm对InDel位点进行了left-normalization，导致InDel注释结果文件中的REF和ALT比VCF文件中的REF、ALT短</p>
-<p class="tremark"><b>（66）Ori_ALT：</b> 该位点在VCF文件中ALT列的值，即该位点所有的突变碱基型。每个样本的GT中0、1、2、…等编号是依据Ori_REF和Ori_ALT这两列进行编号的，0表示跟Ori_REF相同，1表示Ori_ALT的第一种突变碱基型。本文件ALT列的值对应Ori_ALT列中的一个，但可能不一致，因为使用ANNOVAR注释时，用bcftools norm对InDel位点进行了left-normalization，导致InDel的ALT列的值比其在VCF文件中对应的ALT短</p>
-<p class="tremark"><b>（67）shared_hom：</b> 在当前位点处发生纯合突变的样本数目</p>
-<p class="tremark"><b>（68）shared_het：</b> 在当前位点处发生杂合突变的样本数目</p>
+<p class="tremark"><b>（65）SampleName：</b> 与FORMAT列对应，‘：’分隔的每一部分对应FORMAT‘：’分隔的每一部分</p>
+<p class="tremark"><b>（66）Ori_REF：</b> 该位点在VCF文件中REF列的值。对于InDel，VCF文件中REF的值可能跟本文件REF列的值不一致，因为使用ANNOVAR注释时，用bcftools norm对InDel位点进行了left-normalization，导致InDel注释结果文件中的REF和ALT比VCF文件中的REF、ALT短</p>
+<p class="tremark"><b>（67）Ori_ALT：</b> 该位点在VCF文件中ALT列的值，即该位点所有的突变碱基型。每个样本的GT中0、1、2、…等编号是依据Ori_REF和Ori_ALT这两列进行编号的，0表示跟Ori_REF相同，1表示Ori_ALT的第一种突变碱基型。本文件ALT列的值对应Ori_ALT列中的一个，但可能不一致，因为使用ANNOVAR注释时，用bcftools norm对InDel位点进行了left-normalization，导致InDel的ALT列的值比其在VCF文件中对应的ALT短</p>
+<p class="tremark"><b>（68）shared_hom：</b> 在当前位点处发生纯合突变的样本数目</p>
+<p class="tremark"><b>（69）shared_het：</b> 在当前位点处发生杂合突变的样本数目</p>
 
-<p class="tremark"><b>&nbsp;&nbsp;第69-80项为基因功能及通路注释————对突变位点所在基因进行疾病相关数据库，通路及功能相关注释，能了解到该突变位点是否已知与某类型疾病相关，也能了解到该突变位点所在基因存在于哪些通路中，对了解该基因的生物学功能有重要意义。</b></p>
-<p class="tremark"><b>（69）OMIM：</b> 人类孟德尔遗传病数据库注释，给出与变异位点所在基因相关的遗传疾病名称</p>
-<p class="tremark"><b>（70）GWAS_Pubmed_pValue：</b> 该变异位点在以往的GWAS研究中，被哪篇文章报导与疾病相关联，并给出该位点在文章中的p-value。格式为：分号分隔的pubmedID(p-value)</p>
-<p class="tremark"><b>（71）HGMD_Disease_ID：</b> 人类基因突变数据库注释，给出该变异位点相关的疾病名称和在HGMD数据库中的ID。格式为：Disease_name（HGMD中的ID号）</p>
-<p class="tremark"><b>（72）HGMD_Mutation_URL：</b> 给出该变异位点在人类基因突变数据库（HGMD）中收录的文献报道中的突变形式以及参考文献网址（注意：注释的是这个位点的突变，没有完全按照一样的参考碱基型和突变碱基型注释，比如一个位点发生了SNP突变，但按照发生在这个位点的突变注释，可能注释上的为InDel突变）。以“|”分隔的几部分分别表示突变的密码子，氨基酸，cDNA等信息。例如gCGC-TGC|Arg27Cys|c.79C>T|p.R27C 表示CGC 密码子第一个C突变成了T，第27位氨基酸由精氨酸变成半胱氨酸（p.R27C表示同样意思），突变在cDNA上第79位由C变成T。由于突变是密码子第一个碱基，在其左侧的碱基“G”也以小写字母体现。另外还有如VS1 ds G-A +37|c.154+37G>A， IVS 表示内含子编号，“+” 表示下游，“-” 表示上游，"as" 表示 acceptor splice site，"ds" 表示 donor splice site；对于InDel突变，如 TGCCCCC^408CCCccATGAATGGTC|c.1223_1224dupCC，突变本身以小写碱基表示，且会在两侧加上各10bp flanking碱基，以^开头的数字表示密码子的个数。突变的命名规则详情可参见<a href="http://www.hgvs.org/mutnomen/recs-DNA.html#number"  target=_blank>HGVS（HUMAN GENOME VARIATION SOCIETY）</a></p>
-<p class="tremark"><b>（73）PubMedID：</b>给出与该突变位点或基因相关的PubMed文献编号，来源于HGMD和OMIM数据库，通过在<a href="https://www.ncbi.nlm.nih.gov/pubmed/"  target=_blank>Pubmed</a>中输入编号可检索到编号对应的文献，PubMed编号以|分隔。在HGMD中有突变时（即HGMD_Disease_ID 列不为'.'），第一个PubMed编号一般为HGMD数据库中突变点所对应的参考文献编号，其他的参考文献按照发表时间排列，编号顺序越靠前表示越是最近发表的，因此同一个基因的第一个PubMed编号可能不同，这是因为HGMD对应的参考文献是对应到位点的，而同一基因在HGMD中的不同突变位点的参考文献并没有合并到一起，以便于区分同一基因已知不同突变位点的参考文献编号</p>
-<p class="tremark"><b>（74-76）GO_BP, GO_CC, GO_MF：</b> Gene Ontology数据库注释，GO是基因本体学注释，包括了基因的生物学过程（Biological Process，BP），细胞组分（Cellular Component，CC）和分子功能（Molecular Function，MF）的注释。给出变异位点所在蛋白质或者基因参与的生物学通路名称</p>
-<p class="tremark"><b>（77）KEGG_PATHWAY：</b>全基因组及代谢途径数据库注释，给出变异位点所在基因参与的代谢通路名称 </p>
-<p class="tremark"><b>（78）PID_PATHWAY：</b> 通路相互作用数据库注释，给出与变异位点所在蛋白相互作用的通路名称</p>
-<p class="tremark"><b>（79）BIOCARTA_PATHWAY：</b> BIOCARTA数据库注释，给出变异位点所在基因参与的分子通路名称</p>
-<p class="tremark"><b>（80）REACTOME_PATHWAY：</b>人类生物学反应及信号通路数据库注释，给出变异位点所在基因参与的信号通路名称</p>
+<p class="tremark"><b>&nbsp;&nbsp;第70-81项为基因功能及通路注释————对突变位点所在基因进行疾病相关数据库，通路及功能相关注释，能了解到该突变位点是否已知与某类型疾病相关，也能了解到该突变位点所在基因存在于哪些通路中，对了解该基因的生物学功能有重要意义。</b></p>
+<p class="tremark"><b>（70）OMIM：</b> 人类孟德尔遗传病数据库注释，给出与变异位点所在基因相关的遗传疾病名称</p>
+<p class="tremark"><b>（71）GWAS_Pubmed_pValue：</b> 该变异位点在以往的GWAS研究中，被哪篇文章报导与疾病相关联，并给出该位点在文章中的p-value。格式为：分号分隔的pubmedID(p-value)</p>
+<p class="tremark"><b>（72）HGMD_Disease_ID：</b> 人类基因突变数据库注释，给出该变异位点相关的疾病名称和在HGMD数据库中的ID。格式为：Disease_name（HGMD中的ID号）</p>
+<p class="tremark"><b>（73）HGMD_Mutation_URL：</b> 给出该变异位点在人类基因突变数据库（HGMD）中收录的文献报道中的突变形式以及参考文献网址（注意：注释的是这个位点的突变，没有完全按照一样的参考碱基型和突变碱基型注释，比如一个位点发生了SNP突变，但按照发生在这个位点的突变注释，可能注释上的为InDel突变）。以“|”分隔的几部分分别表示突变的密码子，氨基酸，CDS等信息。例如gCGC-TGC|Arg27Cys|c.79C>T|p.R27C 表示CGC 密码子第一个C突变成了T，第27位氨基酸由精氨酸变成半胱氨酸（p.R27C表示同样意思），突变在CDS上第79位由C变成T。由于突变是密码子第一个碱基，在其左侧的碱基“G”也以小写字母体现。另外还有如VS1 ds G-A +37|c.154+37G>A， IVS 表示内含子编号，“+” 表示下游，“-” 表示上游，"as" 表示 acceptor splice site，"ds" 表示 donor splice site；对于InDel突变，如 TGCCCCC^408CCCccATGAATGGTC|c.1223_1224dupCC，突变本身以小写碱基表示，且会在两侧加上各10bp flanking碱基，以^开头的数字表示密码子的个数。突变的命名规则详情可参见<a href="http://www.hgvs.org/mutnomen/recs-DNA.html#number"  target=_blank>HGVS（HUMAN GENOME VARIATION SOCIETY）</a></p>
+<p class="tremark"><b>（74）PubMedID：</b>给出与该突变位点或基因相关的PubMed文献编号，来源于HGMD和OMIM数据库，通过在<a href="https://www.ncbi.nlm.nih.gov/pubmed/"  target=_blank>Pubmed</a>中输入编号可检索到编号对应的文献，PubMed编号以|分隔。在HGMD中有突变时（即HGMD_Disease_ID 列不为'.'），第一个PubMed编号一般为HGMD数据库中突变点所对应的参考文献编号，其他的参考文献按照发表时间排列，编号顺序越靠前表示越是最近发表的，因此同一个基因的第一个PubMed编号可能不同，这是因为HGMD对应的参考文献是对应到位点的，而同一基因在HGMD中的不同突变位点的参考文献并没有合并到一起，以便于区分同一基因已知不同突变位点的参考文献编号</p>
+<p class="tremark"><b>（75-77）GO_BP, GO_CC, GO_MF：</b> Gene Ontology数据库注释，GO是基因本体学注释，包括了基因的生物学过程（Biological Process，BP），细胞组分（Cellular Component，CC）和分子功能（Molecular Function，MF）的注释。给出变异位点所在蛋白质或者基因参与的生物学通路名称</p>
+<p class="tremark"><b>（78）KEGG_PATHWAY：</b>全基因组及代谢途径数据库注释，给出变异位点所在基因参与的代谢通路名称 </p>
+<p class="tremark"><b>（79）PID_PATHWAY：</b> 通路相互作用数据库注释，给出与变异位点所在蛋白相互作用的通路名称</p>
+<p class="tremark"><b>（80）BIOCARTA_PATHWAY：</b> BIOCARTA数据库注释，给出变异位点所在基因参与的分子通路名称</p>
+<p class="tremark"><b>（81）REACTOME_PATHWAY：</b>人类生物学反应及信号通路数据库注释，给出变异位点所在基因参与的信号通路名称</p>
 
-<p class="tremark"><b>&nbsp;&nbsp;第81-85项为基因的组织特异性表达情况的注释————本部分展示Human Protein Atlas（HPA）数据库（Uhlén M, et al. Science, 2015）中记录的可编码蛋白的基因在正常人类的44个组织的蛋白表达情况和32个组织的RNA转录水平的检测结果，及HPA网站的相应可视化结果链接。</b></p>
-<p class="tremark"><b>（81）Expression_summary：</b>蛋白表达情况的概述，综合免疫组化结果、RNA结果、和亚细胞分布结果，描述基因在不同组织的表达分布情况和在亚细胞层面的表达分布情况。 </p>
-<p class="tremark"><b>（82）Expression_Visual_Link：</b>基因的表达情况在HPA网站的可视化结果链接。</p>
-<p class="tremark"><b>（83）RNA_tissue_category：</b> RNA组织表达情况概述，分为“At least five-fold higher mRNA levels in a group of 2-7 tissues <Group enriched>”，“At least five-fold higher mRNA levels in a particular tissue as compared to all other tissues <Tissue enriched>”，“At least five-fold higher mRNA levels in a particular tissue as compared to average levels in all tissues <Tissue enhanced>”，“Detected in 2-31 tissues but not elevated in any tissue <Mixed>”，“Detected in all tissues (FPKM>=0.5) <Expressed in all>”，“FPKM<0.5 in all tissues <Not detected>”六类。 </p>
-<p class="tremark"><b>（84）tissue_with_max_FPKM：</b> 该蛋白在正常人类非特异性表达的组织中最大表达量；数据库涉及正常人类组织（tissue）44个（按照字母顺序排列），每个组织包含1~5种具体的细胞类型（cell type），蛋白在每个细胞类型的表达情况根据免疫染色按“high”，“medium”，“low”，“not detected”进行记录，每个组织的表达量根据所包含的细胞类型中表达量的最高值，并以所折算的数字进行记录（“high”=3，“medium”=2，“low”=1，“not detected”=0），以示区分。</p>
-<p class="tremark"><b>（85）Subcellular_Location：</b> 基因的亚细胞分布位置，如“nucleus”,“ mitochondria”等。</p>
+<p class="tremark"><b>&nbsp;&nbsp;第82-86项为基因的组织特异性表达情况的注释————本部分展示Human Protein Atlas（HPA）数据库（Uhlén M, et al. Science, 2015）中记录的可编码蛋白的基因在正常人类的44个组织的蛋白表达情况和32个组织的RNA转录水平的检测结果，及HPA网站的相应可视化结果链接。</b></p>
+<p class="tremark"><b>（82）Expression_summary：</b>蛋白表达情况的概述，综合免疫组化结果、RNA结果、和亚细胞分布结果，描述基因在不同组织的表达分布情况和在亚细胞层面的表达分布情况。 </p>
+<p class="tremark"><b>（83）Expression_Visual_Link：</b>基因的表达情况在HPA网站的可视化结果链接。</p>
+<p class="tremark"><b>（84）RNA_tissue_category：</b> RNA组织表达情况概述，分为“At least five-fold higher mRNA levels in a group of 2-7 tissues <Group enriched>”，“At least five-fold higher mRNA levels in a particular tissue as compared to all other tissues <Tissue enriched>”，“At least five-fold higher mRNA levels in a particular tissue as compared to average levels in all tissues <Tissue enhanced>”，“Detected in 2-31 tissues but not elevated in any tissue <Mixed>”，“Detected in all tissues (FPKM>=0.5) <Expressed in all>”，“FPKM<0.5 in all tissues <Not detected>”六类。 </p>
+<p class="tremark"><b>（85）tissue_with_max_FPKM：</b> 该蛋白在正常人类特异性组织中的最大表达量；数据库涉及正常人类组织（tissue）44个（按照字母顺序排列），每个组织包含1~5种具体的细胞类型（cell type），蛋白在每个细胞类型的表达情况根据免疫染色按“high”，“medium”，“low”，“not detected”进行记录，每个组织的表达量根据所包含的细胞类型中表达量的最高值，并以所折算的数字进行记录（“high”=3，“medium”=2，“low”=1，“not detected”=0），以示区分。</p>
+<p class="tremark"><b>（86）Subcellular_Location：</b> 基因的亚细胞分布位置，如“nucleus”,“ mitochondria”等。</p>

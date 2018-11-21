@@ -1262,8 +1262,8 @@ class Mutation(object):
         utils.write_shell(shell_path, cmd)
 
         # add job
-        now_point = 'annotate_merged_vcf'
-        job_name = 'annotate_merged_{mut_type}'.format(mut_type=mut_type)
+        now_point = 'annotate_merged_vcf_{}'.format(mut_type)
+        job_name = 'annotate_merged_{}'.format(mut_type)
         utils.add_job(
             self.jobs,
             now_point,

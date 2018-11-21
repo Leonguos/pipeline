@@ -334,6 +334,7 @@ def get_softwares(analy_array, ANALY_DICT, args=None, seqstrag=None):
         sort_soft = 'samtools'
         merge_soft = 'sambamba'
         markdup_soft = 'sambamba'
+
     if ANALY_DICT['mapping_with_sentieon']:
         alignment_soft = 'sentieon'
         sort_soft = 'sentieon'
