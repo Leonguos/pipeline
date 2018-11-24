@@ -144,11 +144,14 @@ class Project(object):
                         continue
 
                     lane = get_value(linelist, get_index('lane', title, 'ori_lane'))[-1]
+
                     patientID = get_value(linelist, get_index('patientid', title))
                     libID = get_value(linelist, get_index('libid', title))
                     novoid = get_value(linelist, get_index('novoid', title))
                     index = get_value(linelist, get_index('index', title))
                     path = get_value(linelist, get_index('path', title)).rstrip('/')
+
+                    # print path
 
                     flowcell, libID = get_flowcell_lib(path, libID, index, lane)
 

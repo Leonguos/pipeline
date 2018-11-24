@@ -258,53 +258,29 @@ class HLA(object):
 
             cd {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/{sampleid}/gene/{gene}
 
-            #  ===== for gene {gene} =====
-            echo dealing with hla.{gene}.bed...
+            mkdir -p TMP
 
-            samtools-1.6 view \\
-                -b \\
-                -L {athlates_db_dir}/bed/hla.{gene}.bed \\
-                -o {sampleid}.{gene}.bam \\
-                ../../{sampleid}.nodup.bam
+            for gene in {gene} non-{gene};do
 
-            samtools-1.6 view \\
-                -H \\
-                -o {sampleid}.{gene}.sort.sam \\
-                {sampleid}.{gene}.bam
+                samtools-1.6 view \\
+                    -b -L {athlates_db_dir}/bed/hla.$gene.bed \\
+                    -o {sampleid}.$gene.bam \\
+                    -@ 4 \\
+                    ../../{sampleid}.nodup.bam
 
-            samtools-1.6 view \\
-                {sampleid}.{gene}.bam |
-            sort -k 1,1 -k 3,3 -T TMP \\
-                >> {sampleid}.{gene}.sort.sam
-                
-            samtools-1.6 view \\
-                -b -S \\
-                -o {sampleid}.{gene}.sort.bam \\
-                {sampleid}.{gene}.sort.sam
+                # use '-' for stdin
+                (
+                    samtools-1.6 view -H {sampleid}.$gene.bam
+                    samtools-1.6 view {sampleid}.$gene.bam | sort -k1,1 -k3,3 -T TMP
+                ) | samtools-1.6 view -bS -o {sampleid}.$gene.sort.bam -@ 4 -
 
-            # ===== for non-{gene} =====
-            echo dealing with hla.non-{gene}.bed...
+                rm -f {sampleid}.$gene.bam
 
-            samtools-1.6 view \\
-                -b \\
-                -L {athlates_db_dir}/bed/hla.non-{gene}.bed \\
-                -o {sampleid}.{gene}.non.bam \\
-                {sampleid}.nodup.bam
+            done
 
-            samtools-1.6 view \\
-                -H \\
-                -o {sampleid}.{gene}.non.sort.sam \\
-                {sampleid}.{gene}.non.bam
+            rm -rf TMP
 
-            samtools-1.6 view \\
-                {sampleid}.{gene}.non.bam |
-            sort -k 1,1 -k 3,3 -T TMP \\
-                >> {sampleid}.{gene}.non.sort.sam
-
-            samtools-1.6 view \\
-                -b -S \\
-                -o {sampleid}.{gene}.non.sort.bam \\
-                {sampleid}.{gene}.non.sort.sam
+            rm -f ../../{sampleid}.nodup.bam
 
             echo hla sort by name for {sampleid} {gene} done: `date "+%F %T"`
         '''.format(
@@ -340,10 +316,10 @@ class HLA(object):
                 -hd 2 \\
                 -msa {athlates_db_dir}/msa/{gene}_nuc.txt \\
                 -bam {sampleid}.{gene}.sort.bam \\
-                -exlbam {sampleid}.{gene}.non.sort.bam \\
+                -exlbam {sampleid}.non-{gene}.sort.bam \\
                 -o {sampleid}.{gene}
 
-            rm -f *sam* *.tbi
+            rm -f *bam
 
             # link result
             mkdir -p {analydir}/Advance/{newjob}/HLA/ATHLATES_typing/result
@@ -394,6 +370,7 @@ class HLA(object):
             fi
 
             export PATH={hlahd_dir}/bin:$PATH
+
             hlahd.sh \\
                 -t 2 \\
                 -m 150 \\
@@ -403,6 +380,8 @@ class HLA(object):
                 {hlahd_dir}/dictionary \\
                 {sampleid} \\
                 .
+
+            rm -f {sampleid}.R[12].fastq
 
             # link result
             mkdir -p {analydir}/Advance/{newjob}/HLA/HLAHD_typing/result

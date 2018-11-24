@@ -276,6 +276,8 @@ class Mapping(object):
                     {sampleID}.old.bam \\
                     {sort_bams_list}
 
+                rm -f {sort_bams_list}
+
                 echo sambamba merge for {sampleID} done: `date "+%F %T"`
             '''
         else:
@@ -303,6 +305,8 @@ class Mapping(object):
                         -t {merge_threads} \\
                         {sampleID}.sort.bam \\
                         {sort_bams_list}
+
+                    rm -f {sort_bams_list}
 
                     echo sambamba merge for {sampleID} done: `date "+%F %T"`
                 '''
