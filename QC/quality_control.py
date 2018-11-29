@@ -136,6 +136,8 @@ class QC(object):
 
                 # Rscript {sampleID}_{novoid}_{flowcell}_L{lane}.QCplot.R
 
+                rm -f *.R *.png *.pdf
+
                 echo QC for sample {sampleID} done: `date "+%F %T"`
             '''
 

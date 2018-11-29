@@ -23,7 +23,13 @@ header_map = {
         'CADD:MCAP+1', 'ClinVar', 'OMIM', 'HGMD_Disease_ID:'
     ],
     'acmg': ['ACMG', 'Heredity', 'Priority:avsnp', 'ClinVar:Heredity'],
-    'sv_cnv': ['Priority:cpgIslandExt', 'genomicSuperDups', 'Repeat', 'encodeK562+1:StringentLib', 'dgvMerged', 'gwasCatalog', 'encodeGm12878:encodeK562+1', 'StringentLib:'],
+    # 'sv_cnv': [
+    #     'Priority:cpgIslandExt', 'genomicSuperDups:Repeat+1', 'encodeK562+1:StringentLib',
+    #     'dgvMerged', 'gwasCatalog', 'encodeGm12878:encodeK562+1', 'StringentLib:'
+    # ],
+    'sv_cnv': [
+        'Priority:'
+    ],
     'noncoding': [
         'CHROM:FILTER', 'GeneName:cpgIslandExt', 'cytoBand', 'genomicSuperDups:avsnp',
         'FORMAT:Ori_ALT+1', '1000g_Chinese:NovoDb_WGS+1',

@@ -243,6 +243,8 @@ class SV(object):
                 -r {ref} \\
                 -o {sampleID}
 
+            rm -f *bam*
+
             echo lumpy call for {sampleID} done: `date "+%F %T"`
         '''.format(
             **dict(self.__dict__, **locals()))

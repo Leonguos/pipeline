@@ -79,14 +79,14 @@ def GetMpileup(ulist,infile,Sam,Snum):
             else:
                 tmpregions = regionInfo.split(':')[0]+':'+'0-'+str(int(thisSite)-1)
             tmpregione =  regionInfo.split(':')[0]+':'+str(int(thisSite)+1)+'-'+str(int(thisSite)+5)
-            Mcmd += 'samtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f /PUBLIC/database/HUMAN/genome/Human/human_g1k_v37_decoy.fasta  %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(tmpregions,Sam,'-5 tmp indel','/','/','/')
+            Mcmd += 'samtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f %s %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(tmpregions, reffasta, Sam,'-5 tmp indel','/','/','/')
             if Snum > 1:
                 for i in range(2,Snum+1):
                     Mcmd += '"\\t"$%s' %str(6+(i-1)*3-2)
                     Mcmd += '"\\t"$%s' %str(6+(i-1)*3-1)
                     Mcmd += '"\\t"$%s' %str(6+(i-1)*3)
             Mcmd += '}\' >> %s\n' %infile
-        Mcmd += 'samtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f /PUBLIC/database/HUMAN/genome/Human/human_g1k_v37_decoy.fasta  %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(regionInfo,Sam,mtype,refInfo,altInfo,genotypeInfo)
+        Mcmd += 'samtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f %s %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(regionInfo, reffasta, Sam,mtype,refInfo,altInfo,genotypeInfo)
         if Snum > 1:
             for i in range(2,Snum+1):
                 Mcmd += '"\\t"$%s' %str(6+(i-1)*3-2)
@@ -94,7 +94,7 @@ def GetMpileup(ulist,infile,Sam,Snum):
                 Mcmd += '"\\t"$%s' %str(6+(i-1)*3)
         Mcmd += '}\' >> %s' %infile
         if mtype == 'indel':
-            Mcmd += '\nsamtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f /PUBLIC/database/HUMAN/genome/Human/human_g1k_v37_decoy.fasta  %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(tmpregione,Sam,'+5 tmp indel','/','/','/')
+            Mcmd += '\nsamtools mpileup -r %s  -q 1 -C 50 -t DP,DV -m 2 -F 0.002 -f %s %s |  awk -F "\\t" \'{print "%s\\t"$1"\\t"$2"\\t%s\\t%s\\t%s\\t"$4"\\t"$5"\\t"$6' %(tmpregione, reffasta, Sam,'+5 tmp indel','/','/','/')
             if Snum > 1:
                 for i in range(2,Snum+1):
                     Mcmd += '"\\t"$%s' %str(6+(i-1)*3-2)
@@ -112,12 +112,14 @@ parser = argparse.ArgumentParser(description = 'Get mpileup format result.')
 parser.add_argument('-B', '--Bams', metavar = 'String/File', help="All samples bam file need to generate mpileup file.Comma separated or per line in a file. eg: test1.bam,test2.bam,test3.bam", required=True)
 #parser.add_argument(
 parser.add_argument('-input', '--input', metavar = 'File', help="Annotated file.", required=True)
+parser.add_argument('-r', '--reffasta', metavar = 'File', help="The reference fasta file.", required=True)
 parser.add_argument('-output','--outfile' ,  metavar = 'File', help="Out put result of mpileup", required=False)
 parser.add_argument('-O', '--outshell', metavar = 'File', help="Output run shell.", required=False)
 argv = vars(parser.parse_args())
 
 inputf = argv['input'].strip()
 outf = argv['outfile'].strip()
+reffasta = argv['reffasta']
 
 ##bams
 sam = argv['Bams']

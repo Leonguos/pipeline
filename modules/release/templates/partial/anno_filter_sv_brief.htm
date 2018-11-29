@@ -62,6 +62,56 @@
 <p class="tremark"><b>（45）Support_Deleterious_PubMedID：</b>支持该SV/CNV与疾病有关的文献的PubMed编号。</p>
 <p class="tremark"><b>（46）Varification：</b>该项若不为“.”，则说明该变异能同时被两款软件验证，意味着该突变有着更高的预测可信度。</p>
 
+
+
+{% elif software.sv == 'lumpy' %}
+
+<p class="tremark"><b>&nbsp;&nbsp;第18-28项为结构变异信息注释————此部分信息为结构变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
+
+<p class="tremark"><b>（18）STRANDS： </b>链正负性 </p>
+<p class="tremark"><b>（19）CIPOS： </b>位置的置信区间 </p>
+<p class="tremark"><b>（20）CIEND： </b>结束位置的置信区间 </p>
+<p class="tremark"><b>（21）CIPOS95： </b>位置的95%置信区间 </p>
+<p class="tremark"><b>（22）CIEND95： </b>结束位置的95%置信区间 </p>
+<p class="tremark"><b>（23）SU： </b>支持该变异的所有 reads 数  </p>
+<p class="tremark"><b>（24）PE： </b>支持该变异的 pair-end reads 数  </p>
+<p class="tremark"><b>（25）SR： </b>支持该变异的 split reads 数  </p>
+<p class="tremark"><b>（26）PRPOS： </b>支持变异的reads的位置 </p>
+<p class="tremark"><b>（27）PREND： </b>支持变异的reads的结束位置 </p>
+
+<p class="tremark"><b>（28）TCHR：</b> 对于易位（translocation），另一个断点所在的染色体</p>
+<p class="tremark"><b>（29）TSTART：</b> 对于易位（translocation），另一个断点所在染色体的坐标</p>
+<p class="tremark"><b>（30）SVID：</b> SV的ID号</p>
+<p class="tremark"><b>（31）SVType：</b> SV的类型</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Breakpoint：SV的断点</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;CTX：(Inter-chromosomal translocations)染色体间易位</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;ITX：(Intra-chromosomal translocations)染色体内易位</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;DEL：(Deletion)删除</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;DUP：（ Duplicate）重复</p>
+
+<p class="tremark"><b>第32-33项为基因功能注释————此部分信息为变异位点功能信息，方便查询此变异是否已知或者与疾病相关。</b></p>
+<p class="tremark"><b>（33）dgvMerged：</b> 将变异位点与基因组变异数据库(Database of Genomic Variants，简称DGV)中的CNV进行比较，输出该变异位点处已经被报导的CNV</p>
+<p class="tremark"><b>（33）gwasCatalog：</b> 检测变异位点是否在以往的GWAS研究中被报导，表示该变异位点与哪些疾病相关联，“.”表示没有GWAS报导</p>
+
+<p class="tremark"><b>第34-39项为ENCODE注释————基于ENCODE的基因组中区域的功能注释，突出基因组上的可能功能原件。</b></p>
+<p class="tremark"><b>（34）encodeGm12878：</b> SV所在基因组中区域的功能注释。利用ChromHMM程序整合ENCODE中Gm12878细胞系的ChIP-seq、DNase-seq、FAIRE-seq数据，根据可能的功能（共25种功能，如Tss、TssF等），将Gm12878细胞的基因组进行分区。然后对这些功能分组，突出基因组上可能的功能元件。（该列取值与其代表的功能元件之间的对应关系为：Tss, TssF——Active Promoter；PromF——Promoter Flanking；PromP——Inactive Promoter；Enh, EnhF——Candidate Strong enhancer；EnhWF, EnhW, DNaseU, DNaseD, FaireW——Candidate Weak enhancer/DNase；CtrcfO, Ctcf——Distal CTCF/Candidate Insulator；Gen5', Elon, ElonW, Gen3', Pol2, H4K20——Transcription associated；Low——Low activity proximal to active states；ReprD, Repr, ReprW——Polycob repressed；Quies, Art——Heterochromatin/Repetitive/Copy Number Variation）</p>
+<p class="tremark"><b>（35）encodeH1hesc：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为H1-hESC</p>
+<p class="tremark"><b>（36）encodeHelas3：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HeLa-S3</p>
+<p class="tremark"><b>（37）encodeHepg2：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HepG2</p>
+<p class="tremark"><b>（38）encodeHuvec：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HUVEC</p>
+<p class="tremark"><b>（39）encodeK562：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为K562</p>
+
+<p class="tremark"><b>第40项之后为良性与恶性数据库注释————依据已有的数据库对SV/CNV的有害性做出预测，并提供相应的文献支持。</b></p>
+<p class="tremark"><b>（40）StringentLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和1个研究支持该CNVR的结果（记录24,033条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（41）InclusiveLib：</b>依据DGV数据库中的给出的CNV信息，合并互相重叠高于50%的CNV组成CNVR（CNV Region）。针对CNVR区域，规定包含的是至少2个个体和2个研究支持该CNVR的结果（记录11,733条），（Zarrei, M., et al., 2015）</p>
+<p class="tremark"><b>（42）DGV.GoldStandard.July2015：</b>该库信息来源于DGV数据库，在该库里面更新了DGV数据库中的频率计算和断点鉴定，同时也给出了CNVR的内外边界信息，版本July. 2015</p>
+<p class="tremark"><b>（43）frequency：</b>DGV.GoldStandard.July2015中给出的该CNV的频率</p>
+<p class="tremark"><b>（44）DGV：</b>DGV数据库提供了健康人群中基因组大于50bp、小于3Mb的结构变异（structural variation）的信息记录（MacDonald, J.R., et al. , 2014）</p>
+<p class="tremark"><b>（45）Support_Benign_PubMedID：</b>支持该SV/CNV为良性变异的文献的PubMed编号</p>
+<p class="tremark"><b>（46）CNVD：</b>CNVD数据库（Qiu, F et al. ,2012）中包含和人类疾病相关的212,277条CNV数据，其中的记录都是人工从已经发表的和CNV疾病相关的文献（2006年-2014年3月）中提取出来的。</p>
+<p class="tremark"><b>（47）Disease：</b>CNVD数据库注释该SV/CNV与本疾病相关</p>
+<p class="tremark"><b>（48）Support_Deleterious_PubMedID：</b>支持该SV/CNV与疾病有关的文献的PubMed编号。</p>
+
 {% else %}
 <p class="tremark"><b>&nbsp;&nbsp;第18-42项为结构变异信息注释————此部分信息为结构变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
 <p class="tremark"><b>（18）Left Pos：</b> SV左断点位置及所在染色体</p>

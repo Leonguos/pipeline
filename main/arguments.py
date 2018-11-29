@@ -293,6 +293,12 @@ def get_args(config, utils, __version__):
         default='N')
 
     parser.add_argument(
+        '--confidence',
+        help='mark confidence for integrate results or not[default=%(default)s]',
+        choices=['Y', 'N'],
+        default='N')
+
+    parser.add_argument(
         '--hla-gene',
         help='the gene to do HLA typing for ATHLATES, default will do all genes')
 

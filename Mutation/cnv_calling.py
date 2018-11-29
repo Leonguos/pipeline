@@ -82,6 +82,8 @@ class CNV(object):
                 --suffix {newjob} \\
                 --out {analydir}/SV
 
+            rm -f *.hdf5
+
             echo cnv call with conifer done: `date "+%F %T"`
             '''.format(
                 probe=probe, **self.__dict__)
@@ -126,6 +128,8 @@ class CNV(object):
                 --sex {sex} \\
                 --ref {ref} \\
                 --o .
+
+            rm -f *cpn *txt
 
             echo cnv call with freec for {sampleID} done: `date "+%F %T"`
             '''.format(

@@ -49,8 +49,9 @@ class IntegrateResult(object):
                 --samp-info ${samp_info} \\
                 --newjob ${newjob} \\
                 --moduledir ${moduledir} \\
-                --confidence N \\
                 --analy-array ${array} \\
+                --reffasta ${reffasta} \\
+                --confidence ${confidence} \\
                 --out .
 
             grep -v '\\.' total.candidate.gene.xls | tr  ',' '\\n' | sort -u > temp

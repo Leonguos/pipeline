@@ -395,7 +395,7 @@ def DealFile(ProFile,File,Filterpos,SamLi,SamInfo,tagDic={}):#File:fidInfo   ,Sa
             Filterpos[pos].append(uline[genep])#Filterpos[pos]:[fiuline,count,genename]
     return fititle,Filterpos,SamInfo
 
-def addTag(ProFile,fidInfo,fidList,samp_info,configDic,confidence='N'): 
+def addTag(ProFile,fidInfo,fidList,samp_info,configDic,reffasta, confidence='N'): 
     ##files=fidDic[fid1]['files']
     if fidList == []:
         exit('-sam_info must be gived, and famliyid must be not empty.')
@@ -472,11 +472,11 @@ def addTag(ProFile,fidInfo,fidList,samp_info,configDic,confidence='N'):
         #make confidence:    
         #if confidence == 'Y':
         bamlist = [configDic['mappingDir']+'/'+i+'.'+i+'/'+i+'.final.bam' for i in SamLi]
-        step1 = 'cd {path} \n##step1: generate pileup file\npython {BASE_DIR}/mpileup.py -B {bamfiles} -input {infile} -output {outfile} -O {outshell}'.format(
+        step1 = 'cd {path} \n##step1: generate pileup file\npython {BASE_DIR}/mpileup.py -B {bamfiles} -input {infile} -output {outfile} -O {outshell} -r {reffasta}'.format(
             path=outpath, bamfiles=','.join(bamlist), infile = outpath+'/'+sfid+'.integrate.xls', outfile=confidencePath+'/'+sfid+'.Mpileup.xls',
-            outshell = confidencePath+'/'+sfid+'.mpileup.sh', BASE_DIR=BASE_DIR)
+            outshell = confidencePath+'/'+sfid+'.mpileup.sh', BASE_DIR=BASE_DIR, reffasta=reffasta)
         step2 = '##step2: run\nsh {outshell}'.format(outshell=confidencePath+'/'+sfid+'.mpileup.sh')
-        step3 = '##step3: mark confidence\npython {BASE_DIR}/MarkConfidence.py -I {infile} -O {outfile}  -Pileup {pileupfile} -R {sampleinfo} -F {fid} -Check Y'.format(
+        step3 = '##step3: mark confidence\npython {BASE_DIR}/mark_confidence.py -I {infile} -O {outfile}  -Pileup {pileupfile} -R {sampleinfo} -F {fid} -Check Y'.format(
             infile=outpath+'/'+sfid+'.integrate.xls', outfile=confidencePath+'/'+sfid+'.integrate',
             pileupfile=confidencePath+'/'+sfid+'.Mpileup.xls', sampleinfo=samp_info, fid=sfid, BASE_DIR=BASE_DIR)
         with open(outpath+'/'+sfid+'_mkconfidence.sh','w') as mkconfidenceShell:
@@ -488,6 +488,7 @@ def addTag(ProFile,fidInfo,fidList,samp_info,configDic,confidence='N'):
             os.system(cmd)
         else:
             print("Warnning: You did not make confidence or the family just has only one sample.\nIt is suggested that confidence markers should be according to the number of variants.")
+
     with open(outpath+'/total.candidate.gene.xls','w') as candidategene:
         candidategene.write('\n'.join(genelist))
 
@@ -503,7 +504,7 @@ def catALL(fidList,analypath):
             catfidfilecmd = 'cat {fidfile} >> {outfile} &&\\\nrm -f {fidfile} '.format(fidfile=analypath+'/'+sfid+'.integrate.xls',outfile=outfile)
             os.system(catfidfilecmd)
             if os.path.exists(analypath+'/'+'mkconfidence/'+sfid+'.integrate.confidence.xls'):
-                catconfidencecmd = '&&\\\ncat {fidconfidence} >> {confidencefile} && \\\nrm -f {fidconfidence}'.format(fidconfidence=analypath+'/'+'mkconfidence/'+sfid+'.integrate.confidence.xls', confidencefile=confidencefile)
+                catconfidencecmd = 'cat {fidconfidence} >> {confidencefile} && \\\nrm -f {fidconfidence}'.format(fidconfidence=analypath+'/'+'mkconfidence/'+sfid+'.integrate.confidence.xls', confidencefile=confidencefile)
                 os.system(catconfidencecmd)
     else:
         cmd = 'mv -f {fidfile} {outfile}'.format(fidfile=analypath+'/'+fidList[0]+'.integrate.xls',outfile=outfile)
@@ -534,6 +535,7 @@ def main():
     newjob = args['newjob']
     analydir = args['analydir']
     analy_array = args['analy_array'].split(',')
+    reffasta = args['reffasta']
 
     ANALY_DICT = utils.get_analysis_dict(analy_array, config.ANALYSIS_CODE)
     pprint.pprint(ANALY_DICT)
@@ -572,7 +574,7 @@ def main():
         os.system(cmd)
 
     #######################################################addfile for every family###############################################
-    addTag(ProFile,fidInfo,fidList,samp_info,ConfigDic,confidence)
+    addTag(ProFile,fidInfo,fidList,samp_info,ConfigDic,reffasta,confidence)
     ##cat all family result:
     catALL(fidList,ConfigDic['integrateDir'])
     ##extract no ACMG for candidate:
@@ -592,6 +594,7 @@ if __name__ == '__main__':
     parser.add_argument('--out', help='the output directory', default='.')
     parser.add_argument('--samp-info', help="the sample_info file")
     parser.add_argument('--newjob', help="the job name")
+    parser.add_argument('-r', '--reffasta', help="the reference fasta file", required=True)
 
     parser.add_argument(
         '--confidence',

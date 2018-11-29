@@ -509,28 +509,40 @@ class Mapping(object):
         # based on sort.bam
         # print '  stat uncover...'
         # write shell
-        cmd = '''
-            set -eo pipefail
-            echo stat uncover for {sampleID} start: `date "+%F %T"`
+        if self.args['seqstrag'] != 'WGS':
+            cmd = '''
+                set -eo pipefail
+                echo stat uncover for {sampleID} start: `date "+%F %T"`
 
-            cd {analydir}/Alnstat/{sampleID}
+                cd {analydir}/Alnstat/{sampleID}
 
-            samtools-1.3.1 depth \\
-                -aa -q 0 -Q 0 \\
-                -b {TR} \\
-                {analydir}/Mapping/{patientID}.{sampleID}/{sampleID}.sort.bam |
-            awk -F'\\t' '$3==0' |
-            grep -vwf target_region.00.depth > target_region.0.depth
+                samtools-1.6 depth \\
+                    -aa -q 0 -Q 0 \\
+                    -b {TR} \\
+                    {analydir}/Mapping/{patientID}.{sampleID}/{sampleID}.sort.bam |
+                awk -F'\\t' '$3==0' |
+                grep -vwf target_region.00.depth > target_region.0.depth
 
-            python {moduledir}/Alnstat/uncover_pos_chr_pipe4.6.py \\
-                target_region.0.depth \\
-                {sampleID} \\
-                {sampleID}.uncovered_region.annovar.result.xls
+                python {moduledir}/Alnstat/uncover_pos_chr_pipe4.6.py \\
+                    target_region.0.depth \\
+                    {sampleID} \\
+                    {sampleID}.uncovered_region.annovar.result.xls
 
-            rm -f target_region.0.depth
+                rm -f target_region.0.depth
 
-            echo stat uncover for {sampleID} done: `date "+%F %T"`
-        '''.format(
+                echo stat uncover for {sampleID} done: `date "+%F %T"`
+            '''
+        else:
+            cmd = '''
+                set -eo pipefail
+                echo stat uncover for {sampleID} start: `date "+%F %T"`
+            
+                rm -f *.depth *.bed *.pdf* *.png
+
+                echo stat uncover for {sampleID} done: `date "+%F %T"`
+            '''
+
+        cmd = cmd.format(
             patientID=patientID,
             sampleID=sampleID,
             **self.args)

@@ -77,6 +77,8 @@ class MainPipeline(object):
 
         self.ROOT_DIR = config.CONFIG.get('common', 'root_dir')
 
+        self.args.update(dict(config.CONFIG.items('genome_' + self.refgenome)))
+
         self.args.update(self.__dict__)
         # print self.args
 

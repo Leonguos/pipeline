@@ -31,7 +31,7 @@
 <p class="tremark"><b>（23）encodeHuvec：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为HUVEC</p>
 <p class="tremark"><b>（24）encodeK562：</b> SV所在基因组中区域的功能注释。同上，只是细胞系为K562</p>
 
-{% if breakdancer %}
+{% if software.sv == 'breakdancer' %}
 <p class="tremark"><b>第25项以后为结构变异信息注释————此部分信息为结构变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
 <p class="tremark"><b>（25）Orientation1：</b> SV第一个断点处在锚定区域中比对到正链或负链的reads数量</p>
 <p class="tremark"><b>（26）Orientation2：</b> SV另一断点处在锚定区域中比对到正链或负链的reads数量</p>
@@ -49,6 +49,32 @@
 <p class="tremark">Insersion：插入</p>
 <p class="tremark">Translocation：易位</p>
 <p class="tremark">Inversions：倒位</p>
+
+{% elif software.sv == 'lumpy' %}
+
+<p class="tremark"><b>&nbsp;&nbsp;第25项以后为结构变异信息注释————此部分信息为结构变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
+
+<p class="tremark"><b>（25）STRANDS： </b>链正负性 </p>
+<p class="tremark"><b>（36）CIPOS： </b>位置的置信区间 </p>
+<p class="tremark"><b>（27）CIEND： </b>结束位置的置信区间 </p>
+<p class="tremark"><b>（28）CIPOS95： </b>位置的95%置信区间 </p>
+<p class="tremark"><b>（29）CIEND95： </b>结束位置的95%置信区间 </p>
+<p class="tremark"><b>（30）SU： </b>支持该变异的所有 reads 数  </p>
+<p class="tremark"><b>（31）PE： </b>支持该变异的 pair-end reads 数  </p>
+<p class="tremark"><b>（32）SR： </b>支持该变异的 split reads 数  </p>
+<p class="tremark"><b>（33）PRPOS： </b>支持变异的reads的位置 </p>
+<p class="tremark"><b>（34）PREND： </b>支持变异的reads的结束位置 </p>
+
+<p class="tremark"><b>（35）TCHR：</b> 对于易位（translocation），另一个断点所在的染色体</p>
+<p class="tremark"><b>（36）TSTART：</b> 对于易位（translocation），另一个断点所在染色体的坐标</p>
+<p class="tremark"><b>（37）SVID：</b> SV的ID号</p>
+<p class="tremark"><b>（38）SVType：</b> SV的类型</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;Breakpoint：SV的断点</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;CTX：(Inter-chromosomal translocations)染色体间易位</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;ITX：(Intra-chromosomal translocations)染色体内易位</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;DEL：(Deletion)删除</p>
+<p class="tremark">&nbsp;&nbsp;&nbsp;DUP：（ Duplicate）重复</p>
+
 {% else %}
 <p class="tremark"><b>第25项以后为结构变异信息注释————此部分信息为结构变异的详细信息，包括变异的类型，覆盖深度等。</b></p>
 <p class="tremark"><b>（25）Left Pos：</b> SV左断点位置及所在染色体</p>
