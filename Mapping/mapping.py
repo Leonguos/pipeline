@@ -244,7 +244,7 @@ class Mapping(object):
             before_jobs = ['qc_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(sampleID=sampleID, **lane)]
         after_jobs = ['{merge_soft}_merge_{sampleID}'.format(sampleID=sampleID, **self.__dict__)]
 
-        if self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']:
+        if self.qc_status == 'waiting' and (self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']):
             after_jobs += [
                 'gzip_md5_clean_{sampleID}_{novoid}_{flowcell}_L{lane}'.format(
                     sampleID=sampleID, **lane)

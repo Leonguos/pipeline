@@ -268,7 +268,6 @@ class HLA(object):
                     -@ 4 \\
                     ../../{sampleid}.nodup.bam
 
-                # use '-' for stdin
                 (
                     samtools-1.6 view -H {sampleid}.$gene.bam
                     samtools-1.6 view {sampleid}.$gene.bam | sort -k1,1 -k3,3 -T TMP

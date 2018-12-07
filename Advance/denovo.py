@@ -52,6 +52,7 @@ class Denovo(object):
 
         # 当sample_info中有指定data列为2或3的，则只做标有2或3的家系
         # 否则默认sample_info中符合的家系都做
+
         denovo_infos = dict(
             filter(lambda (k, v): v['data'] in ('2', '3'),
                    self.sample_infos.items()))

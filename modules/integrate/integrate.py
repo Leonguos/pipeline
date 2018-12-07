@@ -563,7 +563,7 @@ def main():
     if os.path.isfile(samp_info):
         fidList = []
         fidInfo = {}
-        fidInfo,fidList = ProFile.dealSaminfo(ProCheckInfo,ProFile,samp_info,ANALY_DICT)
+        fidInfo, fidList = ProFile.dealSaminfo(ProCheckInfo,ProFile,samp_info,ANALY_DICT)
     else:
         sys.exit('The '+samp_info+' is not a file.')
 
