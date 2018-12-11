@@ -1236,7 +1236,7 @@ class Mutation(object):
                 {sample_list}
 
             # ===== 2 add PubmedID and reformat HGMD =====
-            python {moduledir}/AddOMIM_HGMD/AddHGMD_OMIM_Priority_pipe4.6.py \\
+            python {moduledir}/AddOMIM_HGMD/AddHGMD_OMIM_Priority_pipe4.7.py \\
                 VCF/{mut_type}.merged_sn.annovar.{REF}_multianno.xls \\
                 VCF/{mut_type}.merged.annovar.{REF}_multianno_mid.xls \\
                 {REF}

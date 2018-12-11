@@ -2688,4 +2688,10 @@ if datastat == 'Y':
 
 cmd = cmd.format(**locals())
 print textwrap.dedent('\033[33;40m' + cmd + '\033[0m')
-os.system("ssh {} '{}'".format(socket.gethostname(), cmd))
+
+if 'NJ' in ROOT_DIR:
+    host = 'njlogin04'
+else:
+    host = 'login04'
+
+os.system("ssh {} '{}'".format(host, cmd))

@@ -545,13 +545,13 @@ class DataRelease(object):
             dest = '{PrimaryAnalysis}/FilterAnalysis//Filter{SVTYPE}/{sample}/'.format(
                 **dict(self.__dict__, **locals()))
 
-            priority_xls = '{analydir}/Advance/{newjob}/Filter{SVTYPE}/{sample}/{sample}.{soft}*.priority.xls'.format(
-                **dict(self.__dict__, **locals()))
+            # priority_xls = '{analydir}/Advance/{newjob}/Filter{SVTYPE}/{sample}/{sample}.{soft}*.priority.xls'.format(
+            #     **dict(self.__dict__, **locals()))
+            # self.link_data(priority_xls, dest)
 
             deleterious_xls = '{analydir}/Advance/{newjob}/Filter{SVTYPE}/{sample}/{sample}.LikelyDeleterious.{SVTYPE}.xls'.format(
                 **dict(self.__dict__, **locals()))
 
-            self.link_data(priority_xls, dest)
             self.link_data(deleterious_xls, dest)
 
             # for advance

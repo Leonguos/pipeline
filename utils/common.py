@@ -316,6 +316,9 @@ def check_target_region(CONFIG, seqstrag, refgenome, rawTR):
         else:
             TR = rawTR
 
+    elif seqstrag == 'TS':
+        TR = rawTR
+
     return TR
 
 

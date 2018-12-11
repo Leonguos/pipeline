@@ -45,11 +45,11 @@ class Project(object):
 
         with open(sample_info) as f:
             for line in f:
-                if line.startswith('#B'):
+                if line.lower().startswith('#b'):
                     fenqi = line.strip('#').strip()
-                elif line.startswith('#disease'):
+                elif line.lower().startswith('#disease'):
                     disease_name = line.strip().split(':')[-1].strip().strip('"').strip("'")
-                elif line.startswith('#tissue'):
+                elif line.lower().startswith('#tissue'):
                     tissue = line.strip().split(':')[-1].strip().strip('"').strip("'")
                 elif line.lower().startswith('#familyid'):
                     title = [t.lower() for t in line.lstrip('#').strip().split('\t')]
