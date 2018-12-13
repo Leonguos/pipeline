@@ -46,6 +46,7 @@ class SV(object):
                 self.breakdancer_call(sampleID)
             elif self.sv_soft == 'lumpy':
                 self.lumpy_call(sampleID)
+
             self.annotate_gff(sampleID)
 
     def crest_call(self, sampleID, chrom_list):

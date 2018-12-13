@@ -88,6 +88,7 @@ class Denovo(object):
                 ped['pa_context']['familyid'] = familyid_sampleid
                 ped['ma_context']['familyid'] = familyid_sampleid
                 peds.append(ped)
+
         if not peds:
             print '[error] no sample can do denovo analysis according to your sample_info, please check!'
             exit(1)
@@ -531,6 +532,8 @@ class Denovo(object):
 
         print '>    denovo {svtype} for {familyid}'.format(svtype=svtype, **context)
 
+        # print context
+
         denovo_dir = self.denovo_dir_map[svtype]
 
         pedfile = '{analydir}/Advance/{newjob}/Denovo/{denovo_dir}/{familyid}/{familyid}.ped'.format(
@@ -598,7 +601,15 @@ class Denovo(object):
                       self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
 
         # add order
-        before_jobs = []
+        for sampleid in map(context.get, ('sampleid', 'pa', 'ma')):
+            if svtype == 'sv':
+                before_jobs = ['annotate_gff_{}'.format(sampleid)]
+            elif self.sv_cnv_soft[svtype] == 'freec':
+                before_jobs = ['freec_call_{}'.format(sampleid)]
+
+        if self.sv_cnv_soft[svtype] == 'conifer':
+            before_jobs = ['conifer_call']
+
         after_jobs = ['data_release']
         utils.add_order(
             self.orders,

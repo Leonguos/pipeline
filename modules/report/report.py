@@ -2681,7 +2681,7 @@ if datastat == 'Y':
         --sample {sam} \\
         --suffix {suffix} \\
         --analy_array {analy_array} \\
-        --mail {mail} \\
+        --mail '{mail}' \\
         --seqsty {seq_ty} \\
         --repsty {rep_ty} \\
     '''
