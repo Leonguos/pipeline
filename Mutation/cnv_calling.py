@@ -69,6 +69,9 @@ class CNV(object):
                     sampleID=sampleID, analydir=self.analydir)
                 out.write('{}\t{}\n'.format(sampleID, bam))
 
+        samples = ' '.join(sampleIDs)
+        REF = 'hg19' if self.__dict__['ref'] == 'b37' else self.__dict__['ref']
+
         cmd = '''
             set -eo pipefail
             echo cnv call with conifer start: `date "+%F %T"`\n
@@ -82,11 +85,18 @@ class CNV(object):
                 --suffix {newjob} \\
                 --out {analydir}/SV
 
+            for s in {samples};do
+                python {moduledir}/Varition/CNV/CoNIFER/conifer_v0.2.2/cnv_chrom_plot.py \\
+                    {analydir}/SV/$s/conifer/$s.conifer.{REF}_multianno.xls \\
+                    {ref} \\
+                    {samp_info}
+            done
+
             rm -f *.hdf5
 
             echo cnv call with conifer done: `date "+%F %T"`
             '''.format(
-                probe=probe, **self.__dict__)
+                **dict(self.__dict__, **locals()))
 
         shell_path = '{analydir}/SV/CoNIFER_{newjob}/conifer_call.sh'.format(
             **self.args)
@@ -112,6 +122,8 @@ class CNV(object):
             target = '\\\n{:16}--target {} '.format(' ', self.args['TR'])
         sex = 'XX' if self.sample_infos[sampleID]['sex'] == 'F' else 'XY'
 
+        REF = 'hg19' if self.__dict__['ref'] == 'b37' else self.__dict__['ref']
+
         cmd = '''
             set -eo pipefail
             echo cnv call with freec for {sampleID} start: `date "+%F %T"`
@@ -129,11 +141,15 @@ class CNV(object):
                 --ref {ref} \\
                 --o .
 
+            python {moduledir}/Varition/CNV/freec/Chr_CNV_freec_pipe4.5.py \\
+                --inf ./{sampleID}.freec.{REF}_multianno.xls \\
+                --ref {ref} \\
+                --sample_info {samp_info}
+
             rm -f *cpn *txt
 
             echo cnv call with freec for {sampleID} done: `date "+%F %T"`
-            '''.format(
-                sampleID=sampleID, sex=sex, seqtype=seqtype, target=target, **self.__dict__)
+            '''.format(**dict(self.__dict__, **locals()))
 
         shell_path = '{analydir}/SV/{sampleID}/freec/freec_call_{sampleID}.sh'.format(
             sampleID=sampleID, **self.args)

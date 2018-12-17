@@ -1087,9 +1087,9 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                 cnv_stat_tmp = svtxts2tab(cnv_stat)
                 #del cnv_stat_tmp[1][1][0]
                 context['freec'] = True
-                assert not os.system(
-                    "python %s/Varition/CNV/freec/Chr_CNV_freec_pipe4.5.py --i %s --ref %s --sample_info %s"
-                    % (moduledir, cnv_anno_file, ref, sam))
+                # assert not os.system(
+                #     "python %s/Varition/CNV/freec/Chr_CNV_freec_pipe4.5.py --i %s --ref %s --sample_info %s"
+                #     % (moduledir, cnv_anno_file, ref, sam))
                 assert not os.system('convert -resize 800 %s %s' %
                                      (os.path.join(projdir, 'SV', m2, 'freec',
                                                    m2 + '.Chr_CNV.png'),
@@ -1184,9 +1184,10 @@ if rep_ty == 'primary' or rep_ty == 'advance':
                 cnv_anno_file = os.path.join(
                     Conifer_dir, m2 + '.conifer.hg19_multianno.xls')
                 cnv_anno.append(cnv_anno_file)
-                assert not os.system(
-                    "python %s/Varition/CNV/CoNIFER/conifer_v0.2.2/cnv_chrom_plot.py %s %s %s"
-                    % (moduledir, cnv_anno_file, ref, sam))
+                # assert not os.system(
+                #     "python %s/Varition/CNV/CoNIFER/conifer_v0.2.2/cnv_chrom_plot.py %s %s %s"
+                #     % (moduledir, cnv_anno_file, ref, sam))
+
                 context['WES_cnv_CoNIFER'] = True
                 if os.path.exists(
                         os.path.join(Conifer_dir, m2 + '.Chr_CNV.png')):
@@ -1265,8 +1266,8 @@ if rep_ty == 'advance':
             if os.path.exists(fcnv[0]):
                 if len(txts2tab(fcnv)[:6]) > len(context['FilterCNV_anno']):
                     context['FilterCNV_anno'] = txts2tab(fcnv)[:6]
-                    print fcnv
-                    print context['FilterCNV_anno'][0]
+                    # print fcnv
+                    # print context['FilterCNV_anno'][0]
                     # exit()
     if 'ppi' in ANALYSIS:
         ppi_geneint_file = [
@@ -1405,7 +1406,7 @@ names = ''
 for i in samplename:
     names += '"' + i + '",'
 names = '[' + names[:-1] + ']'
-print names
+# print names
 divlen = len('*'.join(samplename))
 context['divlen'] = (divlen / 100 + 2) * 25
 sampnum = len(samplename)
@@ -1940,6 +1941,7 @@ for each in b:
         context['DamLevel'] = True
         context['table_damlevel_filter'] = txts2tab(damlevel_stat)
         if os.path.exists(damlevel_anno_file[0]):
+            
             context['damlevel_anno'] = txts2tab(damlevel_anno_file)[:6]
 
     if 'model_dominant' in ANALYSIS:
@@ -2681,9 +2683,9 @@ if datastat == 'Y':
         --sample {sam} \\
         --suffix {suffix} \\
         --analy_array {analy_array} \\
-        --mail '{mail}' \\
+        --mail "{mail}" \\
         --seqsty {seq_ty} \\
-        --repsty {rep_ty} \\
+        --repsty {rep_ty}
     '''
 
 cmd = cmd.format(**locals())
