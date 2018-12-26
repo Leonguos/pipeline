@@ -69,7 +69,6 @@ class CNV(object):
                     sampleID=sampleID, analydir=self.analydir)
                 out.write('{}\t{}\n'.format(sampleID, bam))
 
-        samples = ' '.join(sampleIDs)
         REF = 'hg19' if self.__dict__['ref'] == 'b37' else self.__dict__['ref']
 
         cmd = '''
@@ -85,12 +84,12 @@ class CNV(object):
                 --suffix {newjob} \\
                 --out {analydir}/SV
 
-            for s in {samples};do
+            while read s b;do
                 python {moduledir}/Varition/CNV/CoNIFER/conifer_v0.2.2/cnv_chrom_plot.py \\
                     {analydir}/SV/$s/conifer/$s.conifer.{REF}_multianno.xls \\
                     {ref} \\
                     {samp_info}
-            done
+            done < sample_for_cnv_call
 
             rm -f *.hdf5
 

@@ -74,7 +74,7 @@ def get_args(config):
     parser.add_argument(
         '--odir', help="the path of output files", required=True)
     parser.add_argument(
-        '--mail', help="mail", default='yuhuan@novogene.com')
+        '--mail', help="mail", default='suqingdong@novogene.com')
     parser.add_argument(
         '--HPAmode', help="HPA", choices=['brief', 'complex'], default='brief')
     parser.add_argument(

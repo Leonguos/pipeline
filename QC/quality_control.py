@@ -111,7 +111,7 @@ class QC(object):
                     -O {sampleID}_{novoid}_{flowcell}_L{lane}_2.clean.fq.gz \\
                     -j {sampleID}_{novoid}_{flowcell}_L{lane}.fastp.json \\
                     -h {sampleID}_{novoid}_{flowcell}_L{lane}.fastp.html \\
-                    -q 5 -u 50 -n 15 \\
+                    -q 5 -u 50 -n 15 -l {PE} \\
                     -w 4
 
                 python {moduledir}/QC/fastp_convert.py \\

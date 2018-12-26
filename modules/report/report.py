@@ -62,7 +62,7 @@ hpa_mode = args['HPAmode']
 analy_array = args['analy_array'].split(',')
 seq_ty = args['seqsty']
 rep_ty = args['repsty']
-odir = args['odir']
+odir = os.path.abspath(args['odir'])
 english = args['english']
 WES_xten = args['WES_xten']
 sf = args['sf']
@@ -707,7 +707,6 @@ if rep_ty != 'qc':
     assert not os.system('collectCovByChr.sh %s %s' %
                          (odir + "/covByChr.list",
                           odir + '/src/pictures/depth/covByChr.png'))
-    # rm temp
     assert not os.system('rm %s %s %s %s %s' %
                          (odir + "/depth.list", odir + "/cumu.list",
                           odir + "/covByChr.list", odir + "/depth.out",
@@ -1682,10 +1681,16 @@ for i in samplename:
     for j in samplelane[i]:
         num = ['0']
         halfline = 0
-        assert not os.system(
-            "cd " + projdir + "/QC/" + i + "&& tail -1 " + j +
-            ".stat|awk -F '\t' -v OFS='\t' '{print $2,$3,$4,$5,$6}' >" + odir +
-            "/src/qcclean.stat")
+
+        cmd = string.Template('''
+            tail -1 ${projdir}/QC/${i}/${j}.stat |
+            awk -F '\\t' -v OFS='\\t' '{print $2, $3, $4, $5, $6}' \\
+            > ${odir}/src/qcclean.stat
+        ''').safe_substitute(**locals())
+
+        # print cmd
+        assert not os.system(cmd)
+
         with open(odir + "/src/qcclean.stat", 'r') as f:
             for k in f:
                 k = k.strip()
@@ -1696,6 +1701,7 @@ for i in samplename:
             for k in f:
                 halfline += 1
                 num.append(str(halfline))
+
         assert not os.system(
             "cd " + projdir + "/QC/" + i + "&& awk -F '\t' '{print $3}' clean_"
             + j + ".QM|tr -s '\\n' ',' >" + odir + "/src/qcclean.stat")
@@ -2654,12 +2660,14 @@ hetong = '{}-{}'.format(
 
 cmd = '''
     source  ~/.bash_profile
-    cd {projdir}/Report/{newjob}
+
+    set -e
+    cd {odir}/..
 
     tar -hcf {hetong}.{report_date}.{ReportType}.tar {ReportType}
     ln -sf {hetong}.{report_date}.{ReportType}.tar {hetong}-5.tar
 
-    python {REPORT_DIR}/report_trans.py {odir} {remote_report_dir}
+    python2 {REPORT_DIR}/report_upload.py {odir} {remote_report_dir}
 
     sendEmail -f humaninfo@novogene.com -t {mail} \\
         -u "[{projdir}] {ReportType} report" \\

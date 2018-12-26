@@ -79,12 +79,13 @@ legendallclose(ute);
 		}],
 		color:['#058DC7','#50B432','#e39475','#DDDF00','#24CBE5','#64E572','#FF9655','#6AF9C4','#AF94FF','#FFF263','#05C766','#10B6Ff','#43a102','#065fb9','#a2b700','#ffc45c','#b4f593','#5aacdc','#4acca0','#FF6633','#61a2ff','#f17D54'],
 		series: legendata})};
+
 	if(document.getElementById("etu")){
 		ute = echarts.init(document.getElementById("etu"));
 	ute.setOption({
 		legend: {
 			data: names,
-			show:0
+			show: 0
 		},title:{show:0,text:"每条染色体的覆盖深度和覆盖率"},
 		tooltip:{show:1,trigger:'item',formatter: "{a}</br>{b} : {c}"},
 		toolbox: {
@@ -104,31 +105,39 @@ legendallclose(ute);
 			type: "category",
 			data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y"]
 		}],
-		yAxis: [{
-			type: "value",
-			name: "覆盖深度",
-			splitArea: {
-				show: !0
+		yAxis: [
+			{
+				type: "value",
+				name: "覆盖深度",
+				splitArea: {
+					show: !0
+				},
+				axisLabel: {
+					formatter: "{value}x"
+				},
+				min: 0
 			},
-			axisLabel: {
-				formatter: "{value}x"
-			},
-			min: 0
-		}, {
-			type: "value",
-			name: "覆盖率",
-			splitArea: {
-				show: !0
-			},
-			axisLabel: {
-				formatter: function(value){var data=value*100;return data.toString()+"%"}
-			},
-			min: 0,
-			max: 1
-		}],
-		color:['#058DC7','#058DC7','#50B432','#50B432','#e39475','#e39475','#DDDF00','#DDDF00','#24CBE5','#24CBE5','#64E572','#64E572','#FF9655','#FF9655','#6AF9C4','#6AF9C4','#AF94FF','#AF94FF','#FFF263','#FFF263','#05C766','#05C766','#10B6Ff','#10B6Ff','#43a102','#43a102','#065fb9','#065fb9','#a2b700','#a2b700','#ffc45c','#ffc45c','#b4f593','#b4f593','#5aacdc','#5aacdc','#4acca0','#4acca0','#FF6633','#FF6633','#61a2ff','#61a2ff','#f17D54','#f17D54'],
+			{
+				type: "value",
+				name: "覆盖率",
+				splitArea: {
+					show: !0
+				},
+				axisLabel: {
+					formatter: function(value){var data=value*100; return data.toString()+"%"}
+				},
+				min: 0,
+				max: 1
+			}
+		],
+		color:[
+			'#058DC7','#058DC7','#50B432','#50B432','#e39475','#e39475','#DDDF00','#DDDF00','#24CBE5','#24CBE5','#64E572','#64E572',
+			'#FF9655','#FF9655','#6AF9C4','#6AF9C4','#AF94FF','#AF94FF','#FFF263','#FFF263','#05C766','#05C766','#10B6Ff','#10B6Ff',
+			'#43a102','#43a102','#065fb9','#065fb9','#a2b700','#a2b700','#ffc45c','#ffc45c','#b4f593','#b4f593','#5aacdc','#5aacdc',
+			'#4acca0','#4acca0','#FF6633','#FF6633','#61a2ff','#61a2ff','#f17D54','#f17D54'],
 		series: chrdata
 })}; 
+
 if(document.getElementById("eta")){
 	ate = echarts.init(document.getElementById("eta")), 
 	ate.setOption({

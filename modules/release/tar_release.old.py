@@ -28,6 +28,15 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
+RELEASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(RELEASE_DIR))
+
+
+if 'NJ' in ROOT_DIR:
+    host = 'njlogin04'
+else:
+    host = 'login04'
+
 # just suit for /PROJ/HUMAN/share/Disease_pipeline/Human_reseq/Human_reseq_pipeline.py pipeline.
 # from django.template import Context, Template, loader
 # from django.conf import settings
@@ -264,7 +273,7 @@ class Release(object):
                         self.raw_release, " ".join(data_release_dict.values())))
                     # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                     #     self.raw_release, self.raw_tar_checklist))
-                    os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                    os.system("dirCheckSize.pl {0} -s {1}".format(
                         self.raw_tardir, self.raw_tar_checklist))
                     return self.raw_tardir, self.raw_tar_checklist
                 else:
@@ -274,7 +283,7 @@ class Release(object):
                         self.release, " ".join(data_release_dict.values())))
                     # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                     #     self.release, self.tar_checklist))
-                    os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                    os.system("dirCheckSize.pl {0} -s {1}".format(
                         self.tardir, self.tar_checklist))
                     return self.tardir, self.tar_checklist
             else:  # force not_tar
@@ -293,7 +302,7 @@ class Release(object):
                         self.raw_release, " ".join(data_release_dict.values())))
                     if len(self.job_name) == 1:
                         # dirCheckSize.pl
-                        os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                        os.system("dirCheckSize.pl {0} -s {1}".format(
                             self.raw_release_dir, self.not_tar_raw_checklist))
                         return self.raw_release_dir, self.not_tar_raw_checklist
                     else:
@@ -309,7 +318,7 @@ class Release(object):
                     os.system("tar cphf {0} {1}".format(
                         self.release, " ".join(data_release_dict.values())))
                     if len(self.job_name) == 1:
-                        os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                        os.system("dirCheckSize.pl {0} -s {1}".format(
                             self.release_dir, self.not_tar_checklist))
                         return self.release_dir, self.not_tar_checklist
                     else:
@@ -325,7 +334,7 @@ class Release(object):
                     self.raw_release, " ".join(data_release_dict.values())))
                 # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                 #     self.raw_release, self.raw_tar_checklist))
-                os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                os.system("dirCheckSize.pl {0} -s {1}".format(
                     self.raw_tardir, self.raw_tar_checklist))
                 return self.raw_tardir, self.raw_tar_checklist
             else:
@@ -335,7 +344,7 @@ class Release(object):
                     self.release, " ".join(data_release_dict.values())))
                 # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                 #     self.release, self.tar_checklist))
-                os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                os.system("dirCheckSize.pl {0} -s {1}".format(
                     self.tardir, self.tar_checklist))
                 return self.tardir, self.tar_checklist
         elif data_size < 50 and self.separate=="Y":# tar separately modify 20180512
@@ -358,7 +367,7 @@ class Release(object):
                 # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                 #     self.raw_release, self.raw_tar_checklist))
                 print(self.raw_release_dir)
-                os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                os.system("dirCheckSize.pl {0} -s {1}".format(
                     self.raw_release_dir, self.raw_tar_checklist))
                 return self.raw_tardir, self.raw_tar_checklist
             else:
@@ -378,7 +387,7 @@ class Release(object):
                 
                 # os.system('''less {0} | awk '{{print $3"\t"$6}}' > {1} && unix2dos {1}'''.format(
                 #     self.release, self.tar_checklist))
-                os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                os.system("dirCheckSize.pl {0} -s {1}".format(
                     self.tardir, self.tar_checklist))
                 return self.tardir, self.tar_checklist
         if data_size >= 50:
@@ -397,7 +406,7 @@ class Release(object):
                         self.raw_release, " ".join(data_release_dict.values())))
                     if len(self.job_name) == 1:
                         # dirCheckSize.pl
-                        os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                        os.system("dirCheckSize.pl {0} -s {1}".format(
                             self.raw_release_dir, self.not_tar_raw_checklist))
                         return self.raw_release_dir, self.not_tar_raw_checklist
                     else:
@@ -413,7 +422,7 @@ class Release(object):
                     os.system("tar cphf {0} {1}".format(
                         self.release, " ".join(data_release_dict.values())))
                     if len(self.job_name) == 1:
-                        os.system("perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0} -s {1}".format(
+                        os.system("dirCheckSize.pl {0} -s {1}".format(
                             self.release_dir, self.not_tar_checklist))
                         return self.release_dir, self.not_tar_checklist
                     else:
@@ -473,7 +482,7 @@ class Release(object):
                     for dir_ in multi_release:
                         os.system("cp -a {0} {1}".format(dir_, release_d))
                     os.system(
-                        "perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0}".format(release_d))
+                        "dirCheckSize.pl {0}".format(release_d))
                     self.multi_checklist = release_d + '/checkSize.xls'
                 else:
                     release_d = self.outdir + "/analysis_" + self.pn + "_" + self.now
@@ -482,7 +491,7 @@ class Release(object):
                     for dir_ in multi_release:
                         os.system("cp -a {0} {1}".format(dir_, release_d))
                     os.system(
-                        "perl /NJPROJ1/DISEASE/share/Software/bin/dirCheckSize.pl {0}".format(release_d))
+                        "dirCheckSize.pl {0}".format(release_d))
                     self.multi_checklist = release_d + '/checkSize.xls'
                 for i in multi_release:
                     os.system("rm -rf {0}".format(i))
@@ -621,7 +630,7 @@ Hi {0}：
         cmd = '\n. ~/.bash_profile &&'
         cmd += '\n/NJPROJ1/DISEASE/share/Software/bin/sendEmail -f humaninfo@novogene.com  -t %s -u %s -o message-file=%s message-content-type=text -o message-charset=GB2312 -xu humaninfo@novogene.com -xp DhumanB0206 -s 183.57.48.39 -o tls=no' % (receivers, title, email_path)
         rm = '&& rm -f {0}'.format(email_path) 
-        os.system('ssh njlogin04 \'' + cmd + rm + '\'')
+        os.system('ssh ' host + ' \'' + cmd + rm + '\'')
         # os.system('rm -f %s/mail.txt' % self.job_dir)        
         # print('Email has been sent successfully!')
         return checklist
@@ -717,10 +726,10 @@ if __name__ == '__main__':
         print('record to database')
         cmd = "\n. ~/.bash_profile &&"
         cmd += "\n python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir {0} --analy_array {1} --odir {2} --date {3} --pre {4} --pn {5} --yymail {6} --release {7}".format(args["projdir"],args["analy_array"],args["odir"],args["date"],args["pre"],args["pn"],args["yymail"],args["release"])
-        os.system('ssh njlogin04 \'' + cmd +'\'')
+        os.system('ssh ' host + ' \'' + cmd +'\'')
         #os.system("python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir " + args["projdir"] + " --analy_array " + args["analy_array"] + " --odir " + args["odir"] +  " --date " + args["date"] + " --pre " + args["pre"] + "  --pn " + args["pn"] + " --yymail " + args["yymail"] + " --release " + args["release"])
     else:
         cmd = "\n. ~/.bash_profile &&"
         cmd += "\n python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir {0} --analy_array {1} --odir {2} --date {3} --pre {4} --pn {5} --yymail {6} --release {7}".format(args["projdir"],args["analy_array"],args["odir"],args["date"],args["pre"],args["pn"],args["yymail"],",".join(Release.releaseType()))
-        os.system('ssh njlogin04 \'' + cmd +'\'')
+        os.system('ssh ' host + ' \'' + cmd +'\'')
         #os.system("python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir " + args["projdir"] + " --analy_array " + args["analy_array"] + " --odir " + args["odir"] +  " --date " + args["date"] + " --pre " + args["pre"] + "  --pn " + args["pn"] + " --yymail " + args["yymail"] + " --release " + ",".join(Release.releaseType()))
