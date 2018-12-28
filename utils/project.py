@@ -23,7 +23,7 @@ class Project(object):
         self.is_advance = is_advance
 
     @staticmethod
-    def get_sample_infos(sample_list, sample_info, sample_info_done, is_advance=True):
+    def get_sample_infos(sample_list, sample_info, sample_info_done=None, is_advance=True):
 
         fenqi = 'B1'
         tissue = None
@@ -40,6 +40,9 @@ class Project(object):
                 elif line.startswith('#') and 'sampleid' in line.lower():
                     headerlist = map(str.lower, linelist)
                     continue
+                elif line.startswith('#'):
+                    continue
+
                 sampleid = linelist[headerlist.index('sampleid')]
                 samples_in_list.add(sampleid)
 

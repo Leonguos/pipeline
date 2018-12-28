@@ -672,7 +672,7 @@ class Mapping(object):
 
         # add order
         before_jobs = []
-        after_jobs = ['final_bam_{sampleID}'.format(sampleID=sampleID)]
+        after_jobs = ['final_bam_{sampleID}'.format(sampleID=sampleID), 'data_release']
         utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
 # the end

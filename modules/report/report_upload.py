@@ -3,7 +3,7 @@
 import glob
 import argparse
 import paramiko
-from scp import SCPClient
+from scp import SCPClient, SCPException
 
 
 def main():
@@ -27,7 +27,14 @@ def main():
     with SCPClient(ssh.get_transport(), socket_timeout=60) as scp:
         for each in glob.glob('{files}/*'.format(**args)):
             print '> uploading {} ...'.format(each)
-            scp.put(each, args['remote_path'], recursive=True)
+            n = 0
+            while n < 2:
+                try:
+                    scp.put(each, args['remote_path'] + '/', recursive=True)
+                    n += 1
+                except SCPException as e:
+                    print e
+                    n += 1
 
     ssh.close()
 

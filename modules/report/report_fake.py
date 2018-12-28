@@ -400,6 +400,10 @@ for n in A:
         library[l[2]].append(items)
     B.close()
 A.close()
+
+
+
+
 samli = []
 sam = args['sample']
 A = utils.safe_open(sam, 'r')
@@ -483,6 +487,10 @@ hetongdir = os.path.join(projdir, 'Report', hetongnum)
 context['reportnum'] = reportnum
 context['hetongnum'] = hetongnum
 context['hetongname'] = hetongname
+
+
+
+
 
 lenTR = 0
 #sqchoices=['WES_ag','WES_illu','WGS']
@@ -2664,7 +2672,7 @@ cmd = '''
     set -e
     cd {odir}/..
 
-    tar --ignore-failed-read -hcf {hetong}.{report_date}.{ReportType}.tar {ReportType}
+    tar -hcf {hetong}.{report_date}.{ReportType}.tar {ReportType}
     ln -sf {hetong}.{report_date}.{ReportType}.tar {hetong}-5.tar
 
     python2 {REPORT_DIR}/report_upload.py {odir} {remote_report_dir}
@@ -2704,4 +2712,11 @@ if 'NJ' in ROOT_DIR:
 else:
     host = 'login04'
 
-os.system("ssh {} '{}'".format(host, cmd))
+# os.system("ssh {} '{}'".format(host, cmd))
+
+print cumudep
+print '---' * 10
+print distdep
+
+# import json
+# print json.dumps(context, indent=2, ensure_ascii=False)
