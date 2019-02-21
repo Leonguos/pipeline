@@ -71,15 +71,22 @@ class Report(object):
                 -seq {seqstrag} \\
                 -arr {array} \\
                 -o {analydir}/Report/{newjob}/{outdir}/src/materials_methods.docx
-
+        '''
+        
+        if report_type in ('primary', 'advance'):
+            cmd += '''
             paper_chart \\
                 -p {analydir} \\
                 -s {samp_info} \\
                 -job {newjob} \\
                 -o {analydir}/Report/{newjob}/{outdir}/src/paper_chart
+            '''
 
+        cmd += '''
             echo {report_type} report done: `date "+%F %T"`
-        '''.format(
+        '''
+
+        cmd = cmd.format(
             report_type=report_type,
             array=','.join(map(str, array)),
             outdir='QC' if report_type == 'qc' else report_type.title(),
