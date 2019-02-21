@@ -223,7 +223,7 @@ class Denovo(object):
                     cd ${analydir}/Advance/${newjob}/Denovo/DenovoSam/${familyid}/
 
                     bcftools-1.6 filter \\
-                        -i '%QUAL>15 && DP>12' \\
+                        -i '%QUAL>15 && INFO/DP>12' \\
                         ../../CallTrio/${familyid}/${familyid}.raw.trio.vcf.gz |
                     awk '$1~/^#/ || ($10!~/0\/0/ && $10!~/\.\/\./ && $11~/0\/0/ && $12~/0\/0/)' \\
                         > ${familyid}.denovo.vcf

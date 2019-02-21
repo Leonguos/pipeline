@@ -629,8 +629,7 @@ Hi {0}：
         # 从流程脚本中复制过来的邮件部分
         cmd = '\n. ~/.bash_profile &&'
         cmd += '\n/NJPROJ1/DISEASE/share/Software/bin/sendEmail -f humaninfo@novogene.com  -t %s -u %s -o message-file=%s message-content-type=text -o message-charset=GB2312 -xu humaninfo@novogene.com -xp DhumanB0206 -s 183.57.48.39 -o tls=no' % (receivers, title, email_path)
-        rm = '&& rm -f {0}'.format(email_path) 
-        os.system('ssh ' host + ' \'' + cmd + rm + '\'')
+        os.system("ssh {} '{} && rm -f {}'".format(host, cmd, email_path))
         # os.system('rm -f %s/mail.txt' % self.job_dir)        
         # print('Email has been sent successfully!')
         return checklist
@@ -718,6 +717,7 @@ if __name__ == '__main__':
         path_owner = ls_output.strip().split(' ')[2]
         Release.mail = path_owner + '@novogene.com'
         print(Release)
+
     checklist = Release.sendEmail()
     if args['no_record']:
         exit('done')
@@ -726,10 +726,8 @@ if __name__ == '__main__':
         print('record to database')
         cmd = "\n. ~/.bash_profile &&"
         cmd += "\n python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir {0} --analy_array {1} --odir {2} --date {3} --pre {4} --pn {5} --yymail {6} --release {7}".format(args["projdir"],args["analy_array"],args["odir"],args["date"],args["pre"],args["pn"],args["yymail"],args["release"])
-        os.system('ssh ' host + ' \'' + cmd +'\'')
-        #os.system("python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir " + args["projdir"] + " --analy_array " + args["analy_array"] + " --odir " + args["odir"] +  " --date " + args["date"] + " --pre " + args["pre"] + "  --pn " + args["pn"] + " --yymail " + args["yymail"] + " --release " + args["release"])
     else:
         cmd = "\n. ~/.bash_profile &&"
         cmd += "\n python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir {0} --analy_array {1} --odir {2} --date {3} --pre {4} --pn {5} --yymail {6} --release {7}".format(args["projdir"],args["analy_array"],args["odir"],args["date"],args["pre"],args["pn"],args["yymail"],",".join(Release.releaseType()))
-        os.system('ssh ' host + ' \'' + cmd +'\'')
-        #os.system("python /NJPROJ2/DISEASE/share/Disease/Result/Version_4.6/Record_Data_releaseV2.0.py  --projdir " + args["projdir"] + " --analy_array " + args["analy_array"] + " --odir " + args["odir"] +  " --date " + args["date"] + " --pre " + args["pre"] + "  --pn " + args["pn"] + " --yymail " + args["yymail"] + " --release " + ",".join(Release.releaseType()))
+
+    os.system("ssh {} '{}'".format(host, cmd))

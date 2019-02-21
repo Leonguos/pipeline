@@ -67,6 +67,17 @@ class Report(object):
                 --odir {analydir}/Report/{newjob}/{outdir} \\
                 --analy_array {array}
 
+            materials_methods \\
+                -seq {seqstrag} \\
+                -arr {array} \\
+                -o {analydir}/Report/{newjob}/{outdir}/src/materials_methods.docx
+
+            paper_chart \\
+                -p {analydir} \\
+                -s {samp_info} \\
+                -job {newjob} \\
+                -o {analydir}/Report/{newjob}/{outdir}/src/paper_chart
+
             echo {report_type} report done: `date "+%F %T"`
         '''.format(
             report_type=report_type,

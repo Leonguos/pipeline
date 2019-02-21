@@ -105,7 +105,7 @@ class File:
                 diseases = tmpline[0].split(':')[1]
                 diseases = '"{}"'.format(diseases.strip().strip('"').strip("'"))
                 fidInfo['diseases'] = diseases
-            elif tmpline[0].startswith('#b'):
+            elif tmpline[0].startswith('#'):
                 pass
             else:
                 uline = line.strip().split('\t')

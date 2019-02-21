@@ -137,7 +137,7 @@ class FilterDB(object):
                 cd ${ACMG}/${familyid}
 
                 python ${moduledir}/Varition/Filter/acmg.class.py \\
-                    -in ${Merged_vcf}/VCF/snp.merged.annovar.hg19_multianno.xls.gz,${Merged_vcf}/VCF/indel.merged.annovar.hg19_multianno.xls.gz \\
+                    -in '${Merged_vcf}/VCF/snp.merged.annovar.hg19_multianno.xls.gz;${Merged_vcf}/VCF/indel.merged.annovar.hg19_multianno.xls.gz' \\
                     -ed F \\
                     -fid ${familyid} \\
                     -samp_info ${samp_info} \\

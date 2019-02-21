@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding=utf-8 -*-
+import os
 import glob
 import utils
 
@@ -31,7 +32,12 @@ class HLA(object):
         print '>  hla start ...'
 
         hla_beds = glob.glob('{athlates_db_dir}/bed/*.non*.bed'.format(**self.__dict__))
-        hla_genes = map(lambda x: x.rsplit('.')[-2].strip('non-'), hla_beds)
+        bed_genes = set(map(lambda x: x.rsplit('.')[-2].strip('non-'), hla_beds))
+
+        hla_msas = glob.glob('{athlates_db_dir}/msa/*_nuc.txt'.format(**self.__dict__))
+        msa_genes = set(map(lambda x: os.path.basename(x).split('_', 1)[0], hla_msas))
+
+        hla_genes = bed_genes.intersection(msa_genes)
         
         if self.args['hla_gene']:
             new_hla_genes = []
@@ -46,28 +52,33 @@ class HLA(object):
 
         for sampleid, items in self.sample_lists.iteritems():
 
-            sort_bams = []
             lanes = items.get('lanes')
-            # print sampleid, lanes
-            for lane in lanes:
-                # print lane
-                sort_bam = '{sampleid}_{novoid}_{flowcell}_L{lane}.sort.bam'.format(
-                    sampleid=sampleid, **lane)
-                # patientid = lane['patientID']
-                if sort_bam not in sort_bams:
-                    sort_bams.append(sort_bam)
+            # # print sampleid, lanes
 
-                self.hla_bwa_mem(sampleid, lane)
+            # ATHLATES
+            if 'athlates' in self.args['hla_software'].lower():
+                sort_bams = []
+                for lane in lanes:
+                    # print lane
+                    sort_bam = '{sampleid}_{novoid}_{flowcell}_L{lane}.sort.bam'.format(
+                        sampleid=sampleid, **lane)
+                    # patientid = lane['patientID']
+                    if sort_bam not in sort_bams:
+                        sort_bams.append(sort_bam)
 
-            self.hla_sambamba_merge(sampleid, sort_bams)
-            # self.hla_sambamba_markdup(sampleid)
-            self.hla_picard_markdup(sampleid)
+                    self.hla_bwa_mem(sampleid, lane)
 
-            for gene in hla_genes:
-                self.hla_sort_by_name(sampleid, gene)
-                self.hla_athlates_typing(sampleid, gene)
+                self.hla_sambamba_merge(sampleid, sort_bams)
+                # self.hla_sambamba_markdup(sampleid)
+                self.hla_picard_markdup(sampleid)
 
-            self.hla_hlahd_typing(sampleid, lanes)
+                for gene in hla_genes:
+                    self.hla_sort_by_name(sampleid, gene)
+                    self.hla_athlates_typing(sampleid, gene)
+
+            # HLAHD
+            if 'hlahd' in self.args['hla_software'].lower():
+                self.hla_hlahd_typing(sampleid, lanes)
 
     def hla_bwa_mem(self, sampleid, lane):
 
@@ -279,7 +290,8 @@ class HLA(object):
 
             rm -rf TMP
 
-            rm -f ../../{sampleid}.nodup.bam
+            # rm -f ../../{sampleid}.sort.bam
+            # rm -f ../../{sampleid}.nodup.bam
 
             echo hla sort by name for {sampleid} {gene} done: `date "+%F %T"`
         '''.format(

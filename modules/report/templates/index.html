@@ -4540,21 +4540,23 @@ svg.attr("height", g.graph().height + 40);})
     <a name="附录D"></a>
     <hr />
     <h2>附录D PDF版结题报告</h2>
-    <a href="{{ pdf_report_href }}" target=_blank>PDF版结题报告</a>
+    <a href="{{ pdf_report_href }}" target="_blank">PDF版结题报告</a>
   {% endif %}
 
   <!------------------------------------------------------------------- 附录E ------------------------------------------------------------------------->
   <a name="附录E"></a>
   <hr />
-  <h2>附录E PDF版分析方法</h2>
-  {% if WES_ag %}
-    <a href="src/pictures/Other/英文WES方法.pdf" target=_blank>PDF版英文WES材料方法</a>
-    <br>
-    <a href="src/pictures/Other/中文WES方法.pdf" target=_blank>PDF版中文WES材料方法</a>
-  {% elif WGS %}
-    <a href="src/pictures/Other/英文WGS方法.pdf" target=_blank>PDF版英文WGS材料方法</a>
-    <br>
-    <a href="src/pictures/Other/中文WGS方法.pdf" target=_blank>PDF版中文WGS材料方法</a>
+  <h2>附录E 英文版材料与方法</h2>
+
+  <a href="src/materials_methods.docx" target="_blank">英文版材料与方法</a>
+
+  <!------------------------------------------------------------------- 附录F ------------------------------------------------------------------------->
+  {% if rep_primary or rep_advance %}
+  <a name="附录F"></a>
+  <hr />
+  <h2>附录F 文章图表</h2>
+
+  <a href="src/paper_chart.xlsx" target="_blank">文章图表</a>
   {% endif %}
 
   </div>

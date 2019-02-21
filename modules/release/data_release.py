@@ -209,7 +209,7 @@ class DataRelease(object):
             self.context['filter_noncoding'].update({'counter': self.final_result_counter})
 
         # ModelF
-        if self.ANALY_DICT['filter_model']:
+        if self.ANALY_DICT['filter_model'] and not self.ANALY_DICT['share_compare']:
             self.final_result_counter += 1
             self.release_filter_model()
             self.context['filter_model'] = {'name': '{ModelF}'.format(**self.__dict__)}

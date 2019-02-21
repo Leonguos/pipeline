@@ -8,7 +8,7 @@ import sys
 import gzip
 import commands
 from datetime import datetime
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from ConfigParser import ConfigParser
 
 try:
@@ -419,7 +419,7 @@ def get_softwares(analy_array, ANALY_DICT, args=None, seqstrag=None):
         except Exception as e:
             print 'invalid software format, ignore'
 
-    print softwares
+    # print softwares
     return softwares
 
 
@@ -536,7 +536,7 @@ def sampleinfo2ped(sample_infos):
 
 def get_analysis_dict(analy_array, ANALYSIS_CODE):
 
-    ANALYSIS_DICT = {}
+    ANALYSIS_DICT = OrderedDict()
 
     for code in ANALYSIS_CODE:
         ANALYSIS_DICT[ANALYSIS_CODE[code][0]] = False

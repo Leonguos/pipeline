@@ -198,7 +198,7 @@ def get_args(config, utils, __version__):
         default='Y')
     parser.add_argument(
         '--MT',
-        help="Call ",
+        help="Call mutation on MT",
         action='store_true')
     # parser.add_argument(
     #     '--sf',
@@ -301,6 +301,11 @@ def get_args(config, utils, __version__):
     parser.add_argument(
         '--hla-gene',
         help='the gene to do HLA typing for ATHLATES, default will do all genes')
+
+    parser.add_argument(
+        '--hla-software',
+        help='the software for hla typing[default="%(default)s"]',
+        default='athlates,hlahd')
 
     parser.add_argument(
         '-sps',

@@ -11,6 +11,7 @@ config_default = os.path.join(BASE_DIR, 'config_default.ini')
 CONFIG = ConfigParser()
 CONFIG.read(config_default)
 
+# CONFIG.get('software', 'database_dir')
 
 # Override the default configration
 config_nanjing = os.path.join(BASE_DIR, 'config_nanjing.ini')
@@ -74,7 +75,7 @@ ANALYSIS_CODE[6.2] = 'filter_acmg', [1, 2, 3]
 ANALYSIS_CODE[6.3] = 'filter_sv', [1, 2, 4]
 ANALYSIS_CODE[6.4] = 'filter_cnv', [1, 2, 5]
 ANALYSIS_CODE[6.5] = 'filter_noncoding', [1, 2, 3]
-ANALYSIS_CODE[6.6] = 'filter_drug', [1, 2, 3, 6]
+# ANALYSIS_CODE[6.6] = 'filter_drug', [1, 2, 3, 6]
 
 ANALYSIS_CODE[7]   = 'filter_model', [1, 2, 3, 6]
 ANALYSIS_CODE[7.1] = 'model_dominant', [1, 2, 3, 6]
@@ -85,10 +86,8 @@ ANALYSIS_CODE[8]   = 'denovo', [1, 2]
 ANALYSIS_CODE[8.1] = 'denovo_samtools', [1, 2]
 ANALYSIS_CODE[8.2] = 'denovo_denovogear', [1, 2]
 ANALYSIS_CODE[8.3] = 'denovo_triodenovo', [1, 2]
-# ANALYSIS_CODE[8.3] = 'denovo_filter', [1, 2, 3]
-# ANALYSIS_CODE[8.4] = 'denovo_raw', [1, 2, 3]
-ANALYSIS_CODE[8.5] = 'denovo_sv', [1, 2, 4]
-ANALYSIS_CODE[8.6] = 'denovo_cnv', [1, 2, 5]
+ANALYSIS_CODE[8.4] = 'denovo_sv', [1, 2, 4]
+ANALYSIS_CODE[8.5] = 'denovo_cnv', [1, 2, 5]
 
 ANALYSIS_CODE[9]   = 'linkage', [1, 2]
 ANALYSIS_CODE[9.1] = 'merlinkage', [1, 2]
@@ -156,11 +155,12 @@ ANALYSIS_POINTS = {
     'sentieon_vqsr':       ['1G', (3, 0, 4)],
 
     # call gatk
-    'gatk_recal':       ['16G', (3, 0, 0)],
-    'gatk_hc_call':     ['16G', (3, 0, 1)],
-    'gatk_consolidate': ['1G', (3, 0, 2)],
-    'gatk_joint_call':  ['4G', (3, 0, 3)],
-    'gatk_vqsr':        ['4G', (3, 0, 4)],
+    # 'gatk_recal':       ['16G', (3, 0, 0)],
+    'gatk_hc_call':     ['15G', (3, 0, 0)],
+    'gatk_concat':     ['15G', (3, 0, 1)],
+    'gatk_consolidate': ['15G', (3, 0, 2)],
+    # 'gatk_joint_call':  ['4G', (3, 0, 3)],
+    'gatk_vqsr':        ['15G', (3, 0, 3)],
 
     # annotation or merge
     'annotate_vcf':        ['3G', (3, 0, 3)],
@@ -242,6 +242,7 @@ ANALYSIS_POINTS = {
     'hla_picard_markdup':   ['6G', (6, 5, 2)],
     'hla_sort_by_name':     ['6G', (6, 5, 3)],
     'hla_athlates_typing':  ['6G', (6, 5, 4)],
+    
     'hla_hlahd_typing':     ['2G', (6, 6, 0)],
 
     # ROH
@@ -257,9 +258,9 @@ ANALYSIS_MEM_WGS = {
     'mapping': '20G',
     'bwa_mem': '20G',
     'sentieon_bwa_mem': '20G',
-    'gatk_recal': '17G',
-    'gatk_hc_call': '17G',
-    'gatk_vqsr': '7G',
+    'gatk_recal': '15G',
+    'gatk_hc_call': '15G',
+    'gatk_vqsr': '15G',
     'annotate_merged_vcf_snp': '15G',
     'annotate_merged_vcf_indel': '10G',
 }

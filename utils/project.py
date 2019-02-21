@@ -35,7 +35,7 @@ class Project(object):
         with open(sample_list) as f:
             for line in f:
                 linelist = line.strip().split('\t')
-                if not linelist:
+                if not line.strip():
                     continue
                 elif line.startswith('#') and 'sampleid' in line.lower():
                     headerlist = map(str.lower, linelist)

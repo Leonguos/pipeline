@@ -47,9 +47,6 @@ class Mutation(object):
             'sentieon_hc_call': 8,
             'sentieon_joint_call': 8,
             'sentieon_vqsr': 8,
-
-            'gatk_hc_call': 8,
-
             'annotate_merge': 4,
         }
 
@@ -66,7 +63,7 @@ class Mutation(object):
                 chrom_list = utils.get_chrom_list(self.ref, sex)
                 # self.gatk_recal(sampleid)
                 self.gatk_hc_call(sampleid, chrom_list)
-                self.gatk_concat(sampleid, sex, chrom_list)
+                self.gatk_concat(sampleid, chrom_list)
             self.gatk_consolidate()
             # self.gatk_joint_call()
             self.gatk_vqsr()
@@ -102,13 +99,13 @@ class Mutation(object):
             if self.mutation_soft == 'samtools':
                 self.bcftools_merge(self.sample_infos)
 
-        # 注释和拆分
-        if self.mutation_soft not in ('mtoolbox', ):
-            for mtype in ('snp', 'indel'):
-                self.annotate_merged_vcf(mtype)
-                for sampleid, infos in self.sample_infos.iteritems():
-                    sex = infos['sex']
-                    self.extract_annotation_vcf(sampleid, mtype, sex)
+            # 注释和拆分
+            if self.mutation_soft not in ('mtoolbox', ):
+                for mtype in ('snp', 'indel'):
+                    self.annotate_merged_vcf(mtype)
+                    for sampleid, infos in self.sample_infos.iteritems():
+                        sex = infos['sex']
+                        self.extract_annotation_vcf(sampleid, mtype, sex)
 
         # 统计
         self.variation_summary()
@@ -383,8 +380,6 @@ class Mutation(object):
     def gatk_hc_call(self, sampleid, chrom_list):
 
         # print '> mutation call with gatk...'
-        hc_call_threads = self.threads['gatk_hc_call']
-
         for chrom in chrom_list:
             cmd = '''
                 set -eo pipefail
@@ -416,42 +411,38 @@ class Mutation(object):
                     -O {sampleid}.{chrom}.recal.bam
 
                 # ---------------------------------------
-                echo variant calling:  `date "+%F %T"`
+                echo variant calling:  `date "+%F %T"
 
                 gatk --java-options -Xmx10g HaplotypeCaller \\
                     -I {sampleid}.{chrom}.recal.bam \\
                     -R {reffasta} \\
                     -L {chrom} \\
                     -stand-call-conf 30 \\
-                    --native-pair-hmm-threads {hc_call_threads} \\
+                    --native-pair-hmm-threads 8 \\
                     -ERC GVCF \\
                     -O {sampleid}.{chrom}.gatk.g.vcf.gz
 
                 echo gatk call variation for {sampleid} at chrom {chrom} done: `date "+%F %T"`
             '''.format(**dict(self.__dict__, **locals()))
 
-            shell_path = '{analydir}/Mutation/{sampleid}.gatk/bychr/gatk_hc_call_{sampleid}_{chrom}.sh'.format(
-                **dict(self.__dict__, **locals()))
-            utils.write_shell(shell_path, cmd)
+        shell_path = '{analydir}/Mutation/{sampleid}.gatk/bychr/gatk_hc_call_{sampleid}.sh'.format(
+            **dict(self.__dict__, **locals()))
+        utils.write_shell(shell_path, cmd)
 
-            # add job
-            now_point = 'gatk_hc_call'
-            job_name = 'gatk_hc_call_{sampleid}_{chrom}'.format(**locals())
-            utils.add_job(self.jobs, now_point, self.args['startpoint'],
-                        self.ANALYSIS_POINTS, job_name, shell_path, self.queues, threads=hc_call_threads)
+        # add job
+        now_point = 'gatk_hc_call'
+        job_name = 'gatk_hc_call_{sampleid}_{chrom}'.format(**locals())
+        utils.add_job(self.jobs, now_point, self.args['startpoint'],
+                      self.ANALYSIS_POINTS, job_name, shell_path, self.queues)
 
-            # add order
-            before_jobs = ['final_bam_{sampleid}'.format(sampleid=sampleid)]
-            after_jobs = ['gatk_concat_{sampleid}'.format(sampleid=sampleid)]
-            utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
+        # add order
+        before_jobs = ['final_bam_{sampleid}'.format(sampleid=sampleid)]
+        after_jobs = ['gatk_concat_{sampleid}'.format(sampleid=sampleid)]
+        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
 
-    def gatk_concat(self, sampleid, sex, chrom_list, bychr=True):
+    def gatk_concat(self, sampleid, chrom_list, bychr=True):
 
         chroms = '{%s}' % ','.join(chrom_list)
-
-        filter_XY = ''
-        if sex.lower() in ('m', 'male'):
-            filter_XY = ' filterXY - |'
 
         cmd = '''
             set -eo pipefail
@@ -460,14 +451,10 @@ class Mutation(object):
             cd {analydir}/Mutation/{sampleid}.gatk
             
             bcftools-1.6 concat \\
-                bychr/{sampleid}.{chroms}.gatk.g.vcf.gz |{filter_XY}
-            bcftools-1.6 view \\
-                -i 'FORMAT/DP>4' \\
-                -Oz -o {sampleid}.gatk.g.vcf.gz
-            
+                -Oz -o {sampleid}.gatk.g.vcf.gz \\
+                bychr/{sampleid}.{chroms}.gatk.g.vcf.gz
+                
             bcftools-1.6 index -tf {sampleid}.gatk.g.vcf.gz
-
-            # rm -f bychr/*recal* bychr/*vcf*
             
             echo concat gvcfs for {sampleid} done: `date "+%F %T"`
         '''.format(**dict(self.__dict__, **locals()))
@@ -484,17 +471,9 @@ class Mutation(object):
                         self.ANALYSIS_POINTS, job_name, shell_path,
                         self.queues)
 
-        # add order
-        before_jobs = []
-        after_jobs = ['gatk_consolidate']
-        utils.add_order(self.orders, job_name, before_jobs=before_jobs, after_jobs=after_jobs)
-
     def gatk_consolidate(self):
 
         # print '> gatk consolidate gvcfs...'
-        # chroms = map(str, range(1, 23)) + ['X', 'Y']
-
-        intervals = '{{1..22},X,Y}'
 
         cmd = '''
             set -eo pipefail
@@ -512,8 +491,7 @@ class Mutation(object):
                 --batch-size 50 \\
                 --genomicsdb-workspace-path my_database \\
                 --tmp-dir tmp \\
-                -L{intervals} \\
-                --reader-threads 1
+                --reader-threads 5
 
             gatk --java-options -Xmx10G GenotypeGVCFs \\
                 -R {reffasta} \\
@@ -529,12 +507,12 @@ class Mutation(object):
         utils.write_shell(shell_path, cmd)
 
         gvcf_list = '{analydir}/Advance/{newjob}/Merged_vcf/gvcf.list'.format(
-            **dict(self.__dict__, **locals()))
+            **dict(self.__dict__, locals()))
 
-        with utils.safe_open(gvcf_list, 'w') as out:
+        with utils.safe_open() as out:
             for sampleid in self.sample_infos:
                 line = '{sampleid}\t{analydir}/Mutation/{sampleid}.gatk/{sampleid}.gatk.g.vcf.gz\n'.format(
-                    **dict(self.__dict__, **locals()))
+                    **dict(self.__dict__, locals()))
                 out.write(line)
 
         # add job
@@ -629,7 +607,7 @@ class Mutation(object):
             # 4 INDEL Apply VQSR
             gatk --java-options -Xmx10g ApplyVQSR \\
                 -R {reffasta} \\
-                -V VCF/all.merged.snp.recal.vcf.gz \\
+                -V VCF/all.merged.snp.vcf.gz \\
                 -mode INDEL \\
                 --recal-file VCF/all.merged.snp.indel.recal \\
                 --tranches-file VCF/all.merged.snp.indel.tranches \\
@@ -638,12 +616,12 @@ class Mutation(object):
 
             # Filter and Separate
             bcftools-1.6 view \\
-                -i 'FILTER=="PASS" && TYPE="SNP" && (%QUAL>20 && MQ>30)' \\
+                -i 'FILTER=="PASS" && TYPE="SNP" && (%QUAL>20 && FORMAT/DP>4 && MQ>30)' \\
                 -Oz -o VCF/snp.merged.vcf.gz \\
                 VCF/all.merged.snp.indel.recal.vcf.gz 
 
             bcftools-1.6 view \\
-                -i 'FILTER=="PASS" && TYPE="INDEL" && (%QUAL>20 && MQ>30)' \\
+                -i 'FILTER=="PASS" && TYPE="INDEL" && (%QUAL>20 && FORMAT/DP>4 && MQ>30)' \\
                 -Oz -o VCF/indel.merged.vcf.gz \\
                 VCF/all.merged.snp.indel.recal.vcf.gz
 
@@ -1331,8 +1309,9 @@ class Mutation(object):
     def extract_annotation_vcf(self, sampleid, mut_type, sex):
 
         # print '  extract annotation from merged...'
-        chrom_list = utils.get_chrom_list(self.ref, sex)
-        chroms = ','.join(chrom_list)
+        chroms = ','.join(map(str, range(1, 23)) + ['X'])
+        if sex.lower() in ('m', 'male'):
+            chroms += ',Y'
 
         cmd = '''
             set -eo pipefail

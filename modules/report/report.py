@@ -35,6 +35,8 @@ templates_dir = [
     os.path.join(disease_db, 'Disease_BackGround')
 ]
 
+print 'Template directories:', templates_dir
+
 env = Environment(loader=FileSystemLoader(templates_dir))
 
 
@@ -45,8 +47,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-report_host = '192.168.20.19:8086'
-remote_dir = '/VM/Report'
+report_host = 'http://39.106.135.106/project/report'
+remote_dir = '/data/www/project/report'
 
 
 args = get_args(config)
@@ -478,7 +480,8 @@ except:
 
 reportnum = pn.split()[0] + '-' + bg + '-5'
 hetongname = pn.split()[1]
-hetongnum = pn.split()[0]
+# hetongnum = pn.split()[0]
+hetongnum = re.sub(r'-[a-zA-Z]\d+$', '', pn.split()[0])
 hetongdir = os.path.join(projdir, 'Report', hetongnum)
 context['reportnum'] = reportnum
 context['hetongnum'] = hetongnum
@@ -914,7 +917,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
 
             if 'sv_call_crest' in ANALYSIS:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'crest',
-                                            m2 + '.crest.gff.ann.stat.xls')
+                                            m2 + '.crest.ann.stat.xls')
                 sv_stat.append(sv_stat_file)
                 sv_anno_file = os.path.join(projdir, 'SV', m2, 'crest',
                                             m2 + '.crest.hg19_multianno.xls')
@@ -1001,7 +1004,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
 
             if 'sv_call_breakmer' in ANALYSIS:
                 sv_stat_file = os.path.join(projdir, 'SV', m2, 'breakmer',
-                                            m2 + '.breakmer.gff.ann.stat.xls')
+                                            m2 + '.breakmer.ann.stat.xls')
                 sv_stat.append(sv_stat_file)
                 sv_anno_file = os.path.join(
                     projdir, 'SV', m2, 'breakmer',
@@ -1049,7 +1052,7 @@ if rep_ty == 'primary' or rep_ty == 'advance':
 
             if ('cnv_call_cnvnator' in ANALYSIS) and ('cnv_call_freec' not in ANALYSIS):
                 cnv_stat_file = os.path.join(projdir, 'SV', m2, 'cnvnator',
-                                             m2 + '.cnvnator.gff.ann.stat.xls')
+                                             m2 + '.cnvnator.ann.stat.xls')
                 cnv_stat.append(cnv_stat_file)
                 cnv_anno_file = os.path.join(
                     projdir, 'SV', m2, 'cnvnator',
@@ -2359,20 +2362,18 @@ if sam != 'Null':
                     linkage_stat = []
                     context['fig_linkage'] = []
                     if 'linkage' in ANALYSIS:
-                        linkage_dir = os.path.join(advanceDir, 'MerLinkage')
+                        linkage_dir = os.path.join(advanceDir, 'Linkage')
                         linkage_stat_file = os.path.join(
-                            linkage_dir, 'Linkage_' + each + '_me', 'report',
+                            linkage_dir, each,
                             'LinkageAnalysis_' + each + '.xls')
                         linkage_stat.append(linkage_stat_file)
                         linkagefile = len(
-                            utils.safe_open(linkage_stat_file, 'r').readlines())
+                            utils.safe_open(linkage_stat_file).readlines())
                         if linkagefile > 1:
                             context['Linkage'] = True
                             context['table_linkage_stat'] = txts2tab(
                                 [linkage_stat[0]])[:6]
-                            linkage_pic_dir = os.path.join(
-                                linkage_dir, 'Linkage_' + each + '_me',
-                                'report')
+                            linkage_pic_dir = os.path.join(linkage_dir, each)
                             linkage_images_dir = os.path.join(
                                 odir, 'src/pictures/Other')
                             assert not os.system(
@@ -2655,13 +2656,12 @@ os.system('ln -sf %s %s' % (odir, projectreportdir))
 odir_base = os.path.basename(odir)
 analy_array = args['analy_array']
 report_date = utils.get_now_time('%Y%m%d')
-hetong = '{}-{}'.format(
-    pn.split()[0], bg)
+hetong = '{}-{}'.format(pn.split()[0], bg)
 
 cmd = '''
     source  ~/.bash_profile
 
-    set -e
+    # set -e
     cd {odir}/..
 
     tar --ignore-failed-read -hcf {hetong}.{report_date}.{ReportType}.tar {ReportType}
@@ -2678,8 +2678,8 @@ cmd = '''
         -s 183.57.48.39 \\
         -o tls=no -m "
     Congratulations! Your {ReportType} report of {projdir} has done!\n
-    Please visit http://{report_host}/{tmpname}/{newjob}/{odir_base}/{ReportType}_Report.html for the full report.\n
-    and visit http://{report_host}/{tmpname}/{newjob}/{odir_base}/src/pictures/GC/GCcheck.html for GC check information."
+    Please visit {report_host}/{tmpname}/{newjob}/{odir_base}/{ReportType}_Report.html for the full report.\n
+    and visit {report_host}/{tmpname}/{newjob}/{odir_base}/src/pictures/GC/GCcheck.html for GC check information."
 '''
 
 if datastat == 'Y':
@@ -2697,11 +2697,14 @@ if datastat == 'Y':
     '''
 
 cmd = cmd.format(**locals())
-print textwrap.dedent('\033[33;40m' + cmd + '\033[0m')
 
 if 'NJ' in ROOT_DIR:
     host = 'njlogin04'
 else:
     host = 'login04'
 
-os.system("ssh {} '{}'".format(host, cmd))
+cmd = "ssh {} '{}'".format(host, cmd)
+
+print '\033[33;40m' + cmd + '\033[0m'
+
+os.system(cmd)
