@@ -40,7 +40,7 @@ class QC(object):
                 self.link_raw(sampleID, lane)
                 self.md5_raw(sampleID, lane)
                 self.qc(sampleID, lane)
-                if self.args['ANALY_DICT']['quality_control'] or self.args['ANALY_DICT']['quality_control_keep_clean']:
+                if self.args['ANALY_DICT']['quality_control'] and not self.args['ANALY_DICT']['quality_control_rm_clean']:
                     self.gzip_md5_clean(sampleID, lane)
 
             self.qc_check(sampleID)
