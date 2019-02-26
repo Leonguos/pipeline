@@ -65,6 +65,8 @@ class Denovo(object):
 
         peds_raw = utils.sampleinfo2ped(self.sample_infos)
 
+        # print peds_raw
+
         peds = []
         for ped in peds_raw:
             # print ped
@@ -88,6 +90,8 @@ class Denovo(object):
                 ped['pa_context']['familyid'] = familyid_sampleid
                 ped['ma_context']['familyid'] = familyid_sampleid
                 peds.append(ped)
+
+        # print peds
 
         if not peds:
             print '[error] no sample can do denovo analysis according to your sample_info, please check!'
@@ -469,8 +473,8 @@ class Denovo(object):
 
         print '>   denovo rate calculate'
 
-        familyids = [ped['familyid'] for ped in peds]
-        # print familyids
+        # familyids = [ped['familyid'] for ped in peds]
+        # # print familyids
 
         for mtype in ('snp', 'indel'):
             MTYPE=mtype.upper()
@@ -478,8 +482,9 @@ class Denovo(object):
                 mtype=mtype, **self.__dict__)
             # print configfile
             with utils.safe_open(configfile, 'w') as conf:
-                for familyid in familyids:
-                    sampleid = familyid.split('_', 1)[1]
+                for ped in peds:
+                    familyid = ped['familyid']
+                    sampleid = ped['sampleid']
                     linelist = [
                         '{familyid}',
                         '{analydir}/Alnstat/{sampleid}/{sampleid}.sample_cumulative_coverage_counts',
