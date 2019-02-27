@@ -3,6 +3,8 @@
 import os
 import argparse
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 def get_args(config, utils, __version__):
 
@@ -317,6 +319,12 @@ def get_args(config, utils, __version__):
         '--software',
         help='speify software, like "roh=plink;", "aligment=sentieon;merge=picard"')
 
+    parser.add_argument(
+        '-doc',
+        '--document',
+        action='store_true',
+        help='show the document')
+
     args = vars(parser.parse_args())
 
     if all((args['samp_info'], args['samp_list'])):
@@ -325,6 +333,9 @@ def get_args(config, utils, __version__):
         for k, v in sorted(
                 config.ANALYSIS_POINTS.iteritems(), key=lambda (k, v): v[1]):
             print '{} -- {}'.format('.'.join(map(str, v[1])), k)
+    elif args['document']:
+        print 'local document: {}/doc/Human_disease_pipeline_v4.7.pdf'.format(BASE_DIR)
+        print 'online document: https://github.com/suqingdong/pipeline/doc/Human_disease_pipeline_v4.7.pdf'
     else:
         parser.print_help()
 
