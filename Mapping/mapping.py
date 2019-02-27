@@ -91,20 +91,6 @@ class Mapping(object):
             elif self.markdup_soft == 'sentieon':
                 self.sentieon_markdup(patientID, sampleID)
 
-            # # sentieon realign and recal
-            # if self.args['softwares']['recal'] == 'sentieon':
-            #     self.sentieon_recal(patientID, sampleID)
-            # elif self.args['softwares']['recal'] == 'gatk':
-
-            # # gatk realign and recal
-            # if self.mapping_code == 2.2:
-            #     self.gatk_realign(patientID, sampleID)
-            #     self.gatk_recal(patientID, sampleID)
-
-            # # gatk just recal
-            # if self.mapping_code == 2.3:
-            #     self.gatk_recal(patientID, sampleID)
-
             # final bam
             self.final_bam(patientID, sampleID)
 
@@ -256,7 +242,10 @@ class Mapping(object):
 
         # print '  sambamba merge...'
         # write shell
-        print sort_bams
+        if is_jiace:
+            print 'jiace sort bams:', sort_bams
+        else:
+            print 'total sort bams:', sort_bams
 
         merge_threads = self.threads['merge']
 

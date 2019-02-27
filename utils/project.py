@@ -246,12 +246,18 @@ class Project(object):
                         if flowcell:
                             out.write('\t'.join(linelist) + '\n')
         else:
-            print 'update qc_list ...'
+            print '> update qc_list ...'
+
+            if not os.path.exists(self.qc_list + '.bak'):
+                cmd = 'cp {0} {0}.bak'.format(self.qc_list)
+                os.system(cmd)
+
             qc_lists = self.get_qc_lists(self.qc_list)
             # print qc_lists
-            jiace_samples = []
+            jiace_samples = set()
             with open(self.qc_list, 'a') as out:
                 for sampleid, items in sample_lists.items():
+                    new_flowcell_lanes = set(['{flowcell}_L{lane}'.format(**item) for item in items['lanes']])
                     for item in items['lanes']:
                         flowcell = item['flowcell']
 
@@ -266,21 +272,39 @@ class Project(object):
                         index = item['index']
                         path = item['path']
                         linelist = [flowcell_lane, patientID, sampleid, libID, novoid, index, path]
+
+                        # ======================== 加测样本处理 ======================
+                        # 判断qc_list中是否有该样本的flowcell_lane
+                        #     如果没有则为加测数据，merge到原有的sort.bam(需检测是否存在)中
+                        #     如果有则还需判断是否还有旧的flowcell_lane(和sort.bam)
+                        #         如果有则给出提示，处理后重新刷脚本
+                        #             1. 重复刷脚本 -- 移除qc_list中加测的lane
+                        #             2. 重测数据   -- 删除不需要的lane
+                        # ============================================================
+
                         if sampleid in qc_lists:
-                            old_flowcell_lanes = [each.get('flowcell_lane') for each in qc_lists[sampleid]['lanes']]
+                            old_flowcell_lanes = set(each.get('flowcell_lane') for each in qc_lists[sampleid]['lanes'])
+                            other_flowcell_lanes = old_flowcell_lanes.difference(new_flowcell_lanes)
                             # print sampleid, flowcell_lane, old_flowcell_lanes
-                            # exit()
+                            # print old_flowcell_lanes
                             # print sampleid, flowcell_lane
                             if flowcell_lane not in old_flowcell_lanes:
+                                print '  jiace lane for {sampleid}: {flowcell_lane}'.format(**locals())
                                 self.check_sort_bam(patientID, sampleid)
-                                jiace_samples.append(sampleid)
+                                jiace_samples.add(sampleid)
                                 sample_lists[sampleid].update({'jiace': True})
-                        out.write('\t'.join(linelist) + '\n')
+                                out.write('\t'.join(linelist) + '\n')
+                            elif other_flowcell_lanes:
+                                print '[warn] qc_list中含有样本{}的其他flowcell_lanes: {}'.format(sampleid, list(other_flowcell_lanes))
+                                print '可能原因：重复刷了加测脚本'
+                                print '解决办法：删除qc_list中加测的lane，再重新刷加测脚本'
+                                exit()
             if jiace_samples:
-                print '  jiace samples: \033[31m{}\033[0m'.format(jiace_samples)
-            cmd = 'sort -u {qc_list} > temp && mv temp {qc_list}'.format(qc_list=self.qc_list)
-            os.system(cmd)
-            print '  updated qc_list ...'
+                print '  jiace samples: \033[31m{}\033[0m'.format(list(jiace_samples))
+            
+            # cmd = 'sort -u {qc_list} > temp && mv temp {qc_list}'.format(qc_list=self.qc_list)
+            # os.system(cmd)
+            # print '  updated qc_list ...'
             
         return sample_lists
 
@@ -293,5 +317,7 @@ class Project(object):
         if not os.path.exists(sort_bam):
             print '[error] sort.bam not exists for jiace sample: {}'.format(sampleID)
             exit(1)
+
+        return True
 
 # the end
