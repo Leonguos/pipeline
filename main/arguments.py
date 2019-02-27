@@ -335,7 +335,7 @@ def get_args(config, utils, __version__):
             print '{} -- {}'.format('.'.join(map(str, v[1])), k)
     elif args['document']:
         print 'local document: {}/doc/Human_disease_pipeline_v4.7.pdf'.format(BASE_DIR)
-        print 'online document: https://github.com/suqingdong/pipeline/doc/Human_disease_pipeline_v4.7.pdf'
+        print 'online document: https://github.com/suqingdong/pipeline/blob/master/doc/Human_disease_pipeline_v4.7.pdf'
     else:
         parser.print_help()
 
